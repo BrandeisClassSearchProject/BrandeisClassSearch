@@ -4,4 +4,4 @@ Setup tutorials
 
 2  pull a project from Gituhub to Android Studio : https://youtu.be/E0MjorpDWxc
 
-3  Jsoup Library tutorial https://youtu.be/lZmuHyiKQdE?list=PL2k4Q1S5CYhHC0PIV5veJKMzLBO8I3ih3
+3......
