@@ -13,4 +13,19 @@
     tools:context="brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <SearchView
+        android:id="@+id/searchClass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:id="@+id/theContentList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/searchClass"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
