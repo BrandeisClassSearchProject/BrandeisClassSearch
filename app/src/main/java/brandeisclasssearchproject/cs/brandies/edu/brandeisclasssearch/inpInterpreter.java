@@ -12,6 +12,16 @@ public class inpInterpreter {
     ArrayList<String> classInfos;
 
     public ArrayList<String> getClassInfos() {
+
+
+
+        //default for debug only
+        classInfos = new ArrayList<>();
+        classInfos.add("COSI 131A");
+        classInfos.add("Computer Science");
+        classInfos.add("/1400");
+        classInfos.add("131");
+        //default for debug only
         return classInfos;
     }
 
