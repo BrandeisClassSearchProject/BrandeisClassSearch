@@ -1,5 +1,7 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /*the only purpose of this class is to convert the user's input
@@ -7,17 +9,34 @@ import java.util.List;
   */
 public class inpInterpreter {
 
+    ArrayList<String> classInfos;
+
+    public ArrayList<String> getClassInfos() {
+        return classInfos;
+    }
+
+    public inpInterpreter(String rowInput) {
+        this.classInfos = phraseRowInput(rowInput);
+    }
 
     //use this method to phrase the row input
-    public static List<String> phraseRowInput(String input){
+    public static ArrayList<String> phraseRowInput(String input){
 
         return null;
     }
 
+    //This method is called in phraseRowInout
+    //it will convert a user input to a legit class number
+    //e.g from "cs 131a" to "COSI 131A"
+    private String makeCorrect(String rowInput){
+
+        return rowInput;
+    }
+
     /*The following xml is copied from the class search
     The phraseRowInput have to be able to take in
-    for example "cs 131"
-    and return a list of Strings ,Computer Science, 1400, 131
+    for example "COSI 131A"
+    and return a list of Strings COSI 131A ,Computer Science, 1400, 131
     a constant time search is preferable
     maybe implemented with a hashMap
     or take advantages of android XmlPullParser and have done the searched on web
