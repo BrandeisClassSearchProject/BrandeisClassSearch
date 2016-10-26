@@ -20,11 +20,12 @@ import android.widget.Toast;
 import java.util.List;
 
 /*
-Tutorials about phrasing XML:
-https://developer.android.com/training/basics/network-ops/xml.html
+
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    ClassSearchTask CST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,9 @@ public class MainActivity extends AppCompatActivity
              */
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List<String> userInput=inpInterpreter.phraseRowInput(query);
+                CST= new ClassSearchTask(query);
+                CST.execute();
+                //List<String> userInput=inpInterpreter.phraseRowInput(query);
                 //String targetURL
                 return false;
             }

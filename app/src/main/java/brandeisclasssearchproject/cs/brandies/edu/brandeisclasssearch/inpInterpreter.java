@@ -30,7 +30,7 @@ public class inpInterpreter {
     }
 
     //use this method to phrase the row input
-    public static ArrayList<String> phraseRowInput(String input){
+    private static ArrayList<String> phraseRowInput(String input){
 
         return null;
     }

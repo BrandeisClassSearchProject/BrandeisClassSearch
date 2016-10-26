@@ -19,13 +19,13 @@ public class ExtructionURLs {
     private String bookURL;
     private String teacherURL;
     private String sourceURL;
+    private Boolean isFound;
     private String classDescriptionURL;
-    private String schedules;
-    private inpInterpreter iip;
+    private String schedules;//not implemented yet
     private final String classSearchURL = "http://registrar-prod.unet.brandeis.edu/registrar/schedule/classes";
     private String season; //for example "/Fall"
     private String year; // for example "/2017"
-    private String gra;//for example "/UGRD"
+    private String gra="/UGRD";//for example "/UGRD"
     private String subjectID; // for example "/100"
     private String classID;
 
@@ -33,13 +33,12 @@ public class ExtructionURLs {
 
 
     //input need to be guaranteed to have form COSI 131A ,Computer Science, 1400, 131
-    public ExtructionURLs(inpInterpreter IIP) {
-        this.iip=IIP;
-        this.classID=IIP.getClassInfos().get(0);
-        this.subjectID=IIP.getClassInfos().get(2);
-        this.season="/Fall";
-        this.year="/2017";
-        this.gra="/UGRD";
+    public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y) {
+        this.isFound=false;
+        this.classID=classInfo.get(0);
+        this.subjectID=classInfo.get(2);
+        this.season=s.getSeason();
+        this.year=y.getYear();
         this.sourceURL =classSearchURL+year+season+subjectID+gra;
         try {
             setOutputs(sourceURL);
@@ -70,19 +69,21 @@ public class ExtructionURLs {
             InputStream is = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line;
-            boolean isFound=false;
             boolean isDone = false;
             while((line=br.readLine())!=null && !isDone){
                 line=line.trim();
                 if( !line.isEmpty()) {
-                    Log.d("lines",line);
+                    Log.d("ExtructionURLs","line:   "+line);
                     if(line.equals(searchTarget)){
-                        isFound=true;
+                        this.isFound=true;
                     }
-                    if(isFound){
+                    if(this.isFound){
                         isDone=doSpecificSearch(line);
                     }
                 }
+            }
+            if(!this.isFound){
+                Log.w("ExtructionURLs","CLASS ID "+classID+" NOT FOUND!");
             }
 
             Log.i("ExtructionURLs","setOutputs takes "+(System.currentTimeMillis() - startTime)+"ms");//count time
@@ -130,5 +131,6 @@ public class ExtructionURLs {
     public String getTeacherURL() {
         return teacherURL;
     }
+
 
 }
