@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "What's up", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });//set the on Click of fab buttom
@@ -99,8 +99,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-
-
+            //<a class="def" name="COSI 131A"
         });
 
 

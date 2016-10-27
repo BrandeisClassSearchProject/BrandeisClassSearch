@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ExtructionURLs {
     private String bookURL;
     private String teacherURL;
-    private String sourceURL;
+    //private String sourceURL;
     private Boolean isFound;
     private String classDescriptionURL;
     private String schedules;//not implemented yet
@@ -39,9 +39,8 @@ public class ExtructionURLs {
         this.subjectID=classInfo.get(2);
         this.season=s.getSeason();
         this.year=y.getYear();
-        this.sourceURL =classSearchURL+year+season+subjectID+gra;
         try {
-            setOutputs(sourceURL);
+            setOutputs(classSearchURL+year+season+subjectID+gra);
         } catch (IOException e) {
             Log.e("ExtructionURLs","ExtructionURLs.setOutputs had an IOException!");
         }
@@ -49,6 +48,7 @@ public class ExtructionURLs {
     }
 
     private void setOutputs(String source) throws IOException {
+        Log.i("ExtructionURLs","The url for "+classID+" is:\n"+source);
         URL url=null;
         HttpURLConnection connection=null;
         try {
@@ -65,7 +65,8 @@ public class ExtructionURLs {
             if(connection.getResponseCode()!=HttpURLConnection.HTTP_OK){
                 Log.e("ExtructionURLs",connection.getResponseMessage()+": with "+source);
             }
-            String searchTarget =  " <a class=\"def\" name=\""+classID+"\"";
+            String searchTarget =  "<a class=\"def\" name=\""+classID+"\"";
+            Log.i("ExtructionURLs","the search target is:  "+searchTarget);
             InputStream is = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line;
@@ -73,8 +74,9 @@ public class ExtructionURLs {
             while((line=br.readLine())!=null && !isDone){
                 line=line.trim();
                 if( !line.isEmpty()) {
-                    Log.d("ExtructionURLs","line:   "+line);
+                        //Log.d("ExtructionURLs","line:   "+line);
                     if(line.equals(searchTarget)){
+
                         this.isFound=true;
                     }
                     if(this.isFound){
@@ -95,23 +97,40 @@ public class ExtructionURLs {
     }
 
     private boolean doSpecificSearch(String line) {
+        //Log.i("ExtructionURLs","******");//debug
+        //Log.d("ExtructionURLs","line:   "+line);//debug
+        //Log.i("ExtructionURLs","******");//debug
+
+        if(line.length()>8){
+            //Log.d("ExtructionURLs","<a href**vs**"+line.substring(0,7)+"**");//debug
+            if(line.substring(0,7).equals("<a href")){//found the teacher page
+                this.teacherURL=line.split("\"")[1];
+                Log.i("ExtructionURLs","GET TEACHER URLS! : "+this.teacherURL);
+                return false;
+            }
+        }else {
+            return false;
+        }
+
         if(line.length()>25){
+            //Log.d("ExtructionURLs","a href=\"javascript:popUp(**vs**"+line.substring(0,25)+"**");//debug
             if(line.substring(0,25).equals("a href=\"javascript:popUp(")){//found the teacher page
                 this.classDescriptionURL="http://registrar-prod.unet.brandeis.edu/registrar/schedule/"+line.split("'")[1];
                 Log.i("ExtructionURLs","GET DESCRIPTION URLS! : "+this.classDescriptionURL);
+                return false;
             }
-        } else if(line.length()>24){
+        }
+
+        if(line.length()>24){
+            //Log.d("ExtructionURLs","<a target=\"_blank\" href=**vs**"+line.substring(0,24)+"**");//debug
             if(line.substring(0,24).equals("<a target=\"_blank\" href=")){//found the teacher page
                 this.bookURL=line.split("'")[1];
                 Log.i("ExtructionURLs","GET BOOKS URLS! : "+this.bookURL);
                 return true;
             }
-        }else if(line.length()>8){
-            if(line.substring(0,7).equals("<a href")){//found the teacher page
-                this.teacherURL=line.split("\"")[1];
-                Log.i("ExtructionURLs","GET TEACHER URLS! : "+this.teacherURL);
-            }
         }
+
+
 
 
         //

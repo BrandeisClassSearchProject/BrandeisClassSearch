@@ -38,7 +38,7 @@ public class ClassSearchTask {
         return this.isDone;
     }
 
-    private class searchTask extends AsyncTask<Void,Void,Void>{
+    private class searchTask extends AsyncTask<Object,Void,Void>{
 
 
         /**
@@ -56,10 +56,11 @@ public class ClassSearchTask {
          * @see #publishProgress
          */
         @Override
-        protected Void doInBackground(Void... params) {//do all URL connections task here!
+        protected Void doInBackground(Object... params) {
+
             if(classInfos!=null){
                 Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
-                extractionUrls = new ExtructionURLs(classInfos,AcademicSeason.FALL,AcademicYear._2017);
+                extractionUrls = new ExtructionURLs(classInfos,AcademicSeason.FALL,AcademicYear._2016);
             }else{
                 Log.w("ClassSearchTask","array list classInfos is null.");
             }
