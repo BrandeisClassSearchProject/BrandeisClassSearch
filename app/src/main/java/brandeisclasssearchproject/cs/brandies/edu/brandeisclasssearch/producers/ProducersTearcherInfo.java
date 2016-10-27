@@ -4,5 +4,5 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
  * INCOMPLETE!!!
  */
 
-public class ProducersTearcherInfo {
+public class ProducersTearcherInfo extends ProducersAbstract {
 }
