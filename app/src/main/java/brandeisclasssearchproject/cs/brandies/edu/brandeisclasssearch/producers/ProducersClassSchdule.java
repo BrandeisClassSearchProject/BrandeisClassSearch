@@ -1,8 +1,8 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 
 /**
- * INCOMPLETE!!!
+ * Created by rozoa on 10/27/2016.
  */
 
-public class ProcudersClassDescription {
+public class ProducersClassSchdule {
 }
