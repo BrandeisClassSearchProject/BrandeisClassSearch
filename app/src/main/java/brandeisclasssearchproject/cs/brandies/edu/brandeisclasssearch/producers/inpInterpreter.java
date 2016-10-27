@@ -1,16 +1,24 @@
-package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
+package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-/*the only purpose of this class is to convert the user's input
-  have not implemented yet
+/**
+ * INCOMPLETE!!!
+ *
+ * the only purpose of this class is to convert the user's input
+ * however it is hard
+ * for example need to support "cs" to "COSI"
+ * need to support "cs131" to "COSI 131A"
+ * most importantly, need to convert "cosi" to the id number "1400"
+ *
+ * The output has to be an ArrayList<String> with 4 elements
+ * with the format of "COSI 131A","Computer Science","/1400","131"
   */
 public class inpInterpreter {
 
     ArrayList<String> classInfos;
 
+    //NOT IMPLEMENTED YET
     public ArrayList<String> getClassInfos() {
 
 
@@ -29,6 +37,8 @@ public class inpInterpreter {
         this.classInfos = phraseRowInput(rowInput);
     }
 
+
+    //NOT IMPLEMENTED YET
     //use this method to phrase the row input
     private static ArrayList<String> phraseRowInput(String input){
 

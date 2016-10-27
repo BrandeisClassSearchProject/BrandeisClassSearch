@@ -1,4 +1,4 @@
-package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
+package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 
 /*
 This class takes in a CORRECT Class number
@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
 
 public class ExtructionURLs {
     private String bookURL;

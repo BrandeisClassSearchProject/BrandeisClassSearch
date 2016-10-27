@@ -1,7 +1,7 @@
-package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
+package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums;
 
 /**
- * Created by rozoa on 10/25/2016.
+ * Enum of all years available
  */
 
 public enum AcademicYear {

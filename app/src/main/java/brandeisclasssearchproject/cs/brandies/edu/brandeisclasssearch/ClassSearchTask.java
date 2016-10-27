@@ -5,7 +5,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
+
 /**
+ * The main runs this task in onQueryTextSubmit
  * This is the process that do all the works
  * pulling information from internet
  * it has to be in a separated thread, android does not allow connection to internet in main thread
@@ -60,7 +66,7 @@ public class ClassSearchTask {
 
             if(classInfos!=null){
                 Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
-                extractionUrls = new ExtructionURLs(classInfos,AcademicSeason.FALL,AcademicYear._2016);
+                extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016);
             }else{
                 Log.w("ClassSearchTask","array list classInfos is null.");
             }
