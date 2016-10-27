@@ -20,11 +20,12 @@ import android.widget.Toast;
 import java.util.List;
 
 /*
-Tutorials about phrasing XML:
-https://developer.android.com/training/basics/network-ops/xml.html
+
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    ClassSearchTask CST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "What's up", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });//set the on Click of fab buttom
@@ -80,7 +81,9 @@ public class MainActivity extends AppCompatActivity
              */
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List<String> userInput=inpInterpreter.phraseRowInput(query);
+                CST= new ClassSearchTask(query);
+                CST.execute();
+                //List<String> userInput=inpInterpreter.phraseRowInput(query);
                 //String targetURL
                 return false;
             }
@@ -96,8 +99,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-
-
+            //<a class="def" name="COSI 131A"
         });
 
 

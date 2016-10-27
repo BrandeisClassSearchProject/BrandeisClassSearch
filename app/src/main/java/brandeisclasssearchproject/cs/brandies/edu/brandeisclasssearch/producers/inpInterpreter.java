@@ -1,23 +1,62 @@
-package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
+package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 
-import java.util.List;
+import java.util.ArrayList;
 
-/*the only purpose of this class is to convert the user's input
-  have not implemented yet
+/**
+ * INCOMPLETE!!!
+ *
+ * the only purpose of this class is to convert the user's input
+ * however it is hard
+ * for example need to support "cs" to "COSI"
+ * need to support "cs131" to "COSI 131A"
+ * most importantly, need to convert "cosi" to the id number "1400"
+ *
+ * The output has to be an ArrayList<String> with 4 elements
+ * with the format of "COSI 131A","Computer Science","/1400","131"
   */
 public class inpInterpreter {
 
+    ArrayList<String> classInfos;
 
+    //NOT IMPLEMENTED YET
+    public ArrayList<String> getClassInfos() {
+
+
+
+        //default for debug only
+        classInfos = new ArrayList<>();
+        classInfos.add("COSI 131A");
+        classInfos.add("Computer Science");
+        classInfos.add("/1400");
+        classInfos.add("131");
+        //default for debug only
+        return classInfos;
+    }
+
+    public inpInterpreter(String rowInput) {
+        this.classInfos = phraseRowInput(rowInput);
+    }
+
+
+    //NOT IMPLEMENTED YET
     //use this method to phrase the row input
-    public static List<String> phraseRowInput(String input){
+    private static ArrayList<String> phraseRowInput(String input){
 
         return null;
     }
 
+    //This method is called in phraseRowInout
+    //it will convert a user input to a legit class number
+    //e.g from "cs 131a" to "COSI 131A"
+    private String makeCorrect(String rowInput){
+
+        return rowInput;
+    }
+
     /*The following xml is copied from the class search
     The phraseRowInput have to be able to take in
-    for example "cs 131"
-    and return a list of Strings ,Computer Science, 1400, 131
+    for example "COSI 131A"
+    and return a list of Strings COSI 131A ,Computer Science, 1400, 131
     a constant time search is preferable
     maybe implemented with a hashMap
     or take advantages of android XmlPullParser and have done the searched on web
