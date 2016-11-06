@@ -117,7 +117,7 @@ public class ExtructionURLs {
 
         if(line.length()>25){
             //Log.d("ExtructionURLs","a href=\"javascript:popUp(**vs**"+line.substring(0,25)+"**");//debug
-            if(line.substring(0,25).equals("a href=\"javascript:popUp(")){//found the teacher page
+            if(line.substring(0,25).equals("a href=\"javascript:popUp(")){//found the description page
                 this.classDescriptionURL="http://registrar-prod.unet.brandeis.edu/registrar/schedule/"+line.split("'")[1];
                 Log.i("ExtructionURLs","GET DESCRIPTION URLS! : "+this.classDescriptionURL);
                 return false;
@@ -126,7 +126,7 @@ public class ExtructionURLs {
 
         if(line.length()>24){
             //Log.d("ExtructionURLs","<a target=\"_blank\" href=**vs**"+line.substring(0,24)+"**");//debug
-            if(line.substring(0,24).equals("<a target=\"_blank\" href=")){//found the teacher page
+            if(line.substring(0,24).equals("<a target=\"_blank\" href=")){//found the book page
                 this.bookURL=line.split("'")[1];
                 Log.i("ExtructionURLs","GET BOOKS URLS! : "+this.bookURL);
                 return true;
