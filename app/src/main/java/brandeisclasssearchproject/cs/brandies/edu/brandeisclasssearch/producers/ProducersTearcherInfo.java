@@ -26,14 +26,6 @@ public class ProducersTearcherInfo extends ProducersAbstract {
         CalcResult();
     }
 
-    public ArrayList<String> getResult() {
-        return Results;
-    }
-
-    public String getInput() {
-        return inputURL;
-    }
-
     public void CalcResult(){
         try {
             this.document = Jsoup.connect(inputURL).get();
