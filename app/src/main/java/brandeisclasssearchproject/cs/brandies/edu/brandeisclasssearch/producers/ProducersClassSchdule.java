@@ -24,6 +24,18 @@ public class ProducersClassSchdule extends ProducersAbstract {
     }
 
     public void CalcResult(){
+        try {
+            this.document = Jsoup.connect(inputURL).get();
 
+            //get the schedule
+            content = document.getElementById("content");
+            list = content.getElementsByTag("a");
+            org.jsoup.nodes.Element node = list.get(0);
+            Results.add(node.text() + "\n");
+
+        } catch (IOException e) {
+            System.err.println("construction failed");
+            e.printStackTrace();
+        }
     }
 }
