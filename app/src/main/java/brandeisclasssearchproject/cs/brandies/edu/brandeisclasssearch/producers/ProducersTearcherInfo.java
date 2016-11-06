@@ -1,96 +1,96 @@
+package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
+//package com.ZexiJin.JsoupGetHTMLTest.Test1;
+
 /**
  * Created by Zexi Jin on 2016/11/6.
  *
  * INCOMPLETE!!!
  */
-package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
-//package com.ZexiJin.JsoupGetHTMLTest.Test1;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class ProducersTearcherInfo extends ProducersAbstract {
-    private ArrayList<String> scholarships = new ArrayList<String>();
-    private ArrayList<String> degrees = new ArrayList<String>();
-    private ArrayList<String> courses = new ArrayList<String>();
-    private ArrayList<String> awards = new ArrayList<String>();
-    private String profile = null;
-    private String expertise = null;
-    private String depts = null;
-    private String deptURL = null;
     private Document document;
+    protected ArrayList<String> Results;
+    protected String inputURL;
+    org.jsoup.nodes.Element content;
+    Elements list;
 
-    public ProducersTearcherInfo(String url) {
+    public ProducersTearcherInfo(String URL) {
+        this.inputURL = URL;
+        this.Results = new ArrayList<String>();
+        CalcResult();
+    }
+
+    public ArrayList<String> getResult() {
+        return Results;
+    }
+
+    public String getInput() {
+        return inputURL;
+    }
+
+    public void CalcResult(){
         try {
-            document = Jsoup.connect(url).get();
-            this.profile = SetUpProfile();
-            this.expertise = SetUpExpertise();
-            this.depts = SetUpdepts();
-            SetUpScholarships();
-            SetUpAwards();
+            this.document = Jsoup.connect(inputURL).get();
+
+            //get the name
+            content = document.getElementById("content");
+            list = content.getElementsByTag("a");
+            org.jsoup.nodes.Element node = list.get(0);
+            Results.add(node.text() + "\n");
+
+            //get the depts
+            content = document.getElementById("depts");
+            list = content.getElementsByTag("a");
+            for (org.jsoup.nodes.Element tmpNode : list)
+                Results.add(tmpNode.text() + "\n");
+
+            //get the degrees
+            content = document.getElementById("degrees");
+            Results.add(content.text().substring(8) + "\n");
+
+            //get the expertise
+            content = document.getElementById("expertise");
+            Results.add(content.text().substring(10) + "\n");
+
+            //get the profile
+            content = document.getElementById("profile");
+            Results.add(content.text().substring(8) + "\n");
+
+            //get the courses
+            content = document.getElementById("courses");
+            list = content.getElementsByTag("tr");
+            String courseString = "";
+            for (org.jsoup.nodes.Element tmpNode : list){
+                courseString = courseString + tmpNode.text() + "\n";
+            }
+            Results.add(courseString);
+
+            //get the awards
+            content = document.getElementById("awards");
+            list = content.getElementsByTag("p");
+            String awardString = "";
+            for (org.jsoup.nodes.Element tmpNode : list){
+                awardString = awardString + tmpNode.text() + "\n";
+            }
+            Results.add(awardString.substring(18));
+
+            //get the scholarships
+            content = document.getElementById("scholarship");
+            list = content.getElementsByTag("p");
+            String scholarString = "";
+            for (org.jsoup.nodes.Element tmpNode : list){
+                scholarString = scholarString + tmpNode.text() + "\n";
+            }
+            Results.add(scholarString.substring(15));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             System.err.println("construction failed");
             e.printStackTrace();
         }
     }
-
-    private String SetUpProfile(){
-        org.jsoup.nodes.Element content = getContent("profile");
-        String profileTmp = content.text().substring(8);
-        return profileTmp;
-    }
-
-    private String SetUpExpertise(){
-        org.jsoup.nodes.Element content = getContent("expertise");
-        String expertiseTmp = content.text().substring(10);
-        return expertiseTmp;
-    }
-
-    private String SetUpdepts(){
-        org.jsoup.nodes.Element content = getContent("depts");
-        String deptsTmp = content.text().substring(21);
-        return deptsTmp;
-    }
-
-    private void SetUpScholarships(){
-        org.jsoup.nodes.Element content = getContent("scholarship");
-        Elements tmpList = content.getElementsByTag("p");
-        for (org.jsoup.nodes.Element nod : tmpList){
-            scholarships.add(nod.text());
-        }
-    }
-
-    private void SetUpAwards(){
-        org.jsoup.nodes.Element content = getContent("awards");
-        Elements tmpList = content.getElementsByTag("p");
-        for (org.jsoup.nodes.Element nod : tmpList){
-            awards.add(nod.text());
-        }
-    }
-
-    private org.jsoup.nodes.Element getContent(String IdName) {
-        return document.getElementById(IdName);
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public String getDeptURL() {
-        return deptURL;
-    }
-
-    public String getExpertise() {
-        return expertise;
-    }
-
-    public String getDepts() {
-        return depts;
-    }
-
 }
