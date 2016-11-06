@@ -2,7 +2,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
 //package com.ZexiJin.JsoupGetHTMLTest.Test1;
 
 /**
- * Created by hangyanjiang on 2016/11/6.
+ * Created by Zexi Jin on 2016/11/6.
  */
 
 import java.io.IOException;
