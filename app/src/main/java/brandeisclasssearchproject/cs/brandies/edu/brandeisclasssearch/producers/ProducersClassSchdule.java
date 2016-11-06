@@ -22,4 +22,8 @@ public class ProducersClassSchdule extends ProducersAbstract {
         this.Results = new ArrayList<String>();
         CalcResult();
     }
+
+    public void CalcResult(){
+
+    }
 }
