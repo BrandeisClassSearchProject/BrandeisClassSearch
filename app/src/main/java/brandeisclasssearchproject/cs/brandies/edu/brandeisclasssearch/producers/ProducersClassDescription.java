@@ -33,7 +33,7 @@ public class ProducersClassDescription {
             this.document = Jsoup.connect(inputURL).get();
             content = document.getElementById("coursepage");
             String tmpString = content.html();
-            tmpString = tmpString.replace("<h2>", "");
+            tmpString = tmpString.replaceAll("<h2>", "");
             tmpString = tmpString.replaceAll("</h2> \\[", "");
             tmpString = tmpString.replaceAll("<span class=\"requirement\" title=", "");
             tmpString = tmpString.replaceAll(" </span> \\]", "");
