@@ -24,6 +24,7 @@ public class ProducersClassSchdule extends ProducersAbstract {
     }
 
     public void CalcResult(){
+        /**
         try {
             this.document = Jsoup.connect(inputURL).get();
 
@@ -37,5 +38,6 @@ public class ProducersClassSchdule extends ProducersAbstract {
             System.err.println("construction failed");
             e.printStackTrace();
         }
+         */
     }
 }
