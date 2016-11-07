@@ -5,6 +5,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
  */
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,18 +27,36 @@ public class ProducersClassSchdule extends ProducersAbstract {
     public void CalcResult(){
         /**
         try {
-            this.document = Jsoup.connect(inputURL).get();
-
-            //get the schedule
-            content = document.getElementById("content");
-            list = content.getElementsByTag("a");
-            org.jsoup.nodes.Element node = list.get(0);
-            Results.add(node.text() + "\n");
-
+         //get the courses
+            content = document.getElementById("courses");
+            list = content.getElementsByTag("tr");
+            String courseString = "";
+            for (org.jsoup.nodes.Element tmpNode : list){
+                courseString = courseString + tmpNode.text() + "\n";
+             }
+            Results.add(courseString);
         } catch (IOException e) {
             System.err.println("construction failed");
             e.printStackTrace();
         }
          */
+        try {
+            //get the schedule
+            content = document.getElementById("contentText");
+            list = content.getElementsByTag("Table");
+            Document doc = Jsoup.connect(inputURL).get();
+
+            for (org.jsoup.nodes.Element table : doc.select("table.classes-list")) {
+                for (org.jsoup.nodes.Element row : table.select("tr")) {
+                    Elements tds = row.select("td");
+                    if (tds.size() > 6) {
+                        System.out.println(tds.get(0).text() + ":" + tds.get(1).text());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("construction failed");
+            e.printStackTrace();
+        }
     }
 }
