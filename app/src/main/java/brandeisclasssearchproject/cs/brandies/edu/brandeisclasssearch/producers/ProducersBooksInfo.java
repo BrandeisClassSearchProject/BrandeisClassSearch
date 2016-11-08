@@ -1,9 +1,12 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class ProducersBooksInfo {
@@ -29,8 +32,17 @@ public class ProducersBooksInfo {
 
     public void CalcResult() {
         try {
+            Log.i("ProducersBooksInfo",inputURL);
             this.document = Jsoup.connect(inputURL).get();
-            String numberOfBooks = document.getElementById("material-group-name_REQUIRED_1_1").text();
+            if(document==null){
+                Log.e("ProducersBooksInfo","teh document is null!");
+            }
+            Element e = document.getElementById("material-group-name_REQUIRED_1_1");
+            if(e==null){
+                Results.add("Not specified yet.");
+                return;
+            }
+            String numberOfBooks = e.text();
             if (numberOfBooks.length() == 24)
                 numberOfBooks = numberOfBooks.substring(numberOfBooks.length()-2, numberOfBooks.length()-1);
             else
@@ -53,7 +65,7 @@ public class ProducersBooksInfo {
             //System.out.println(content.text());
             //System.out.println();
             //System.out.println(content.html());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("construction failed");
             e.printStackTrace();
         }

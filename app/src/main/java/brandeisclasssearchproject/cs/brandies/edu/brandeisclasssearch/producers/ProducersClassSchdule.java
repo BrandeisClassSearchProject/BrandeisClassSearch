@@ -4,6 +4,8 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
  * Created by rozoa on 10/27/2016.
  */
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,8 +57,19 @@ public class ProducersClassSchdule extends ProducersAbstract {
                 }
             }
         } catch (IOException e) {
-            System.err.println("construction failed");
+            Log.w("ProducersClassSchdule","construction failed");
+
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ArrayList<String> getResult() {
+        return null;
+    }
+
+    @Override
+    public String getInput() {
+        return null;
     }
 }

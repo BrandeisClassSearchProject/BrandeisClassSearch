@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
 /**
@@ -67,6 +70,24 @@ public class ClassSearchTask {
             if(classInfos!=null){
                 Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
                 extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016);
+                ArrayList<String> ab= new ProducersTearcherInfo(extractionUrls.getTeacherURL()).getResult();
+                if(ab==null){
+                    Log.w("Task","the teacher info is null");
+                }else {
+                    for (String s : ab) {
+                        Log.i("teacher", s);
+                    }
+                }
+                ArrayList<String> a= new ProducersBooksInfo(extractionUrls.getBookURL()).getResult();
+                for(String s:a){
+                    Log.i("book info",s);
+                }
+                a= new ProducersClassDescription(extractionUrls.getClassDescription()).getResult();
+                for(String s:a){
+                    Log.i("class Des",s);
+                }
+
+
             }else{
                 Log.w("ClassSearchTask","array list classInfos is null.");
             }

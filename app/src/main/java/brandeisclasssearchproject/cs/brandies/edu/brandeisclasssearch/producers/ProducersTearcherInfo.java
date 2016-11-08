@@ -7,6 +7,8 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
  * INCOMPLETE!!!
  */
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
@@ -24,6 +26,16 @@ public class ProducersTearcherInfo extends ProducersAbstract {
         this.inputURL = URL;
         this.Results = new ArrayList<String>();
         CalcResult();
+    }
+
+    @Override
+    public ArrayList<String> getResult() {
+        return Results;
+    }
+
+    @Override
+    public String getInput() {
+        return inputURL;
     }
 
     public void CalcResult(){
@@ -81,7 +93,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             }
             Results.add(scholarString.substring(15));
         } catch (IOException e) {
-            System.err.println("construction failed");
+            Log.w("ProducersTearcherInfo","construction failed");
             e.printStackTrace();
         }
     }

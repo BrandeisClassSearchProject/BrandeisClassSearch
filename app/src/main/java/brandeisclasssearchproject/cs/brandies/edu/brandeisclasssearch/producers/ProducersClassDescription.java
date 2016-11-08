@@ -1,13 +1,15 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers;
 //package com.ZexiJin.JsoupGetHTMLTest.Test1;
 
+        import android.util.Log;
+
         import java.io.IOException;
         import java.util.ArrayList;
         import org.jsoup.Jsoup;
         import org.jsoup.nodes.Document;
         import org.jsoup.select.Elements;
 
-public class ProducersClassDescription {
+public class ProducersClassDescription extends ProducersAbstract{
     private Document document;
     protected ArrayList<String> Results;
     protected String inputURL;
@@ -43,7 +45,7 @@ public class ProducersClassDescription {
             tmpString = tmpString.replaceAll(">", "");
             Results.add(tmpString);
         } catch (IOException e) {
-            System.err.println("construction failed");
+            Log.w("ProducersClassDes","construction failed");
             e.printStackTrace();
         }
     }
