@@ -9,6 +9,7 @@ import java.util.HashMap;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
@@ -33,9 +34,12 @@ public class ClassSearchTask {
     private HashMap<String, ArrayList<String>> datas;
     //private Boolean isDone;//indicates if the process is still running
     private Boolean isFailed;//indicates if the process is done, but failed
+    private ArrayList<Producers> producerList;
+    private String classId;
 
 
     public ClassSearchTask(String s,HashMap<String, ArrayList<String>> data) {
+        classId=s;
         datas=data;
         isDone=false;
         classInfos=new inpInterpreter(s).getClassInfos();
@@ -75,37 +79,54 @@ public class ClassSearchTask {
          */
         @Override
         protected Void doInBackground(Object... params) {
-            if(classInfos!=null){
-                Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
-                extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016,datas);
+            if (classInfos != null) {
+                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
+                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
+                extractionUrls = new ExtructionURLs(classId,datas);
+                producerList = extractionUrls.getProducers();
+                if (producerList==null){
+                    isDone=true;
+                    Log.i("ClassSearchTask", "Class not found");
+                    return null;
 
-
-                ArrayList<String> ab= new ProducersTearcherInfo(extractionUrls.getTeacherURL()).getResult();
-                if(ab==null){
-                    Log.w("Task","the teacher info is null");
-                }else {
-                    for (String s : ab) {
-                        Log.i("teacher", s);
+                }
+                Log.i("ClassSearchTask", "found it ");
+                for (Producers p : producerList) {
+                    ArrayList<String> al = p.getResult();
+                    if (p instanceof ProducersTearcherInfo) {
+                        for (String s : al) {
+                            Log.i("teacher", s);
+                        }
+                    } else if (p instanceof ProducersBooksInfo) {
+                        for (String s : al) {
+                            Log.i("books", s);
+                        }
+                    } else if (p instanceof ProducersClassDescription) {
+                        for (String s : al) {
+                            Log.i("class description", s);
+                        }
                     }
+
+                    //ArrayList<String> ab= new ProducersTearcherInfo(extractionUrls.getTeacherURL()).getResult();
+                    //if(ab==null){
+                    //    Log.w("Task","the teacher info is null");
+                    //}else {
+                    //
+                    //}
+                    //ArrayList<String> a= new ProducersBooksInfo(extractionUrls.getBookURL()).getResult();
+                    //for(String s:a){
+                    //   Log.i("book info",s);
+                    // }
+                    //a= new ProducersClassDescription(extractionUrls.getClassDescription()).getResult();
+                    //for(String s:a){
+                    //   Log.i("class Des",s);
+                    //}
+
+
+                    isDone = true;
+
                 }
-                ArrayList<String> a= new ProducersBooksInfo(extractionUrls.getBookURL()).getResult();
-                for(String s:a){
-                    Log.i("book info",s);
-                }
-                a= new ProducersClassDescription(extractionUrls.getClassDescription()).getResult();
-                for(String s:a){
-                    Log.i("class Des",s);
-                }
-
-
-            }else{
-                Log.w("ClassSearchTask","array list classInfos is null.");
-            }
-
-
-
-            isDone=true;
-            return null;
+            }return null;
         }
-    }
+}
 }

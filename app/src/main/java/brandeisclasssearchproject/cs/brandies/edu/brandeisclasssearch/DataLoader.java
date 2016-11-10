@@ -23,6 +23,13 @@ import java.util.HashMap;
  */
 
 public class DataLoader extends AsyncTask<Object,Void,Void> {
+    private final String time=    "        TIMES: ";
+    private final String block=   "        BLOCK: ";
+    private final String books=   "        BOOKS: ";
+    private final String syllabus="     SYLLABUS: ";
+    private final String desc=    "  DESCRIPTION: ";//11
+    private final String teacher= "      TEACHER: ";
+
 
     private final String filename="saves" ;
     private int countLine=0;
@@ -107,8 +114,13 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 if(!temp.equals(".")){
                     tempArray.add(temp);
                 }
-                hm.put(title,tempArray);
+                ArrayList<String> tt =new ArrayList<String>();
+                tt.addAll(tempArray);
+                hm.put(title,tt);
                 tempArray.clear();
+                Log.i("DataLoader","ADD MAP");
+                Log.i("DataLoader","key: "+title);
+                Log.i("DataLoader","list size "+String.valueOf(tt.size()));
             }else{
                 if(!temp.equals(".")){
                     tempArray.add(temp);
@@ -122,7 +134,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
 
     private boolean shouldUpdate(File file) {
         return !file.exists();
-
+        //return true;
 
     }
 
@@ -179,7 +191,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                             } else {
 
                                 if (line.length() > 10 && line.substring(0, 10).equals("Block&nbsp")) {
-                                    outputStream.write(("   BLOCK: " + line.substring(11)+"\n").getBytes());
+                                    outputStream.write((block + line.substring(11)+"\n").getBytes());
                                     //System.out.println("   BLOCK: " + line.substring(11));
                                     countLine++;
                                     //find out the block
@@ -222,7 +234,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
         try {
             countLine++;
             String[] s = line.split("&ndash;");
-            outputStream.write(("   TIMES: " + days + "  ").getBytes());
+            outputStream.write((time + days + "  ").getBytes());
             //System.out.print("   TIMES: " + days + "  ");
             outputStream.write((s[0] + " - ").getBytes());
             //System.out.print(s[0] + " - ");
@@ -252,7 +264,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 try {
                     Log.i("DataLoader",(String.valueOf(n)+"\n"));
                     outputStream.write((classNumb+"\n").getBytes());
-                    outputStream.write(("   BOOKS: "+"http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1171&div-1=&dept-1="
+                    outputStream.write((books+"http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1171&div-1=&dept-1="
                             +classNumbID[0]+"&course-1="+classNumbID[1]+"&sect-1=1\n").getBytes());
 
                 }catch (Exception e){
@@ -278,11 +290,11 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
           if(line.substring(0,7).equals("<a href")){//found the teacher page
                 if(line.substring(line.length()-12).equals("Syllabus</a>")){
                     //System.out.println("   SYLLABUS: "+line.split("\"")[1]);
-                    outputStream.write(("   SYLLABUS: "+line.split("\"")[1]+"\n").getBytes());
+                    outputStream.write((syllabus+line.split("\"")[1]+"\n").getBytes());
                     countLine++;
                 }else{
                     //System.out.println("   TEACHER: "+line.split("\"")[1]);
-                    outputStream.write(("   TEACHER: "+line.split("\"")[1]+"\n").getBytes());
+                    outputStream.write((teacher+line.split("\"")[1]+"\n").getBytes());
                     countLine++;
                 }
               return false;
@@ -294,7 +306,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
         if(line.length()>22){
             if(line.substring(0,23).equals("href=\"javascript:popUp(")){//found the description page
                 //System.out.println("   DESCRIPTION: "+"http://registrar-prod.unet.brandeis.edu/registrar/schedule/"+line.split("'")[1]);
-                outputStream.write(("   DESCRIPTION: "+"http://registrar-prod.unet.brandeis.edu/registrar/schedule/"+line.split("'")[1]+"\n").getBytes());
+                outputStream.write((desc+"http://registrar-prod.unet.brandeis.edu/registrar/schedule/"+line.split("'")[1]+"\n").getBytes());
                 countLine++;
                 return false;
             }
@@ -303,7 +315,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
         if(line.length()>24){
             if(line.substring(0,24).equals("<a target=\"_blank\" href=")){//found the book page
                 //System.out.println("   BOOK: "+line.split("'")[1]);
-                outputStream.write(("   BOOK: "+line.split("'")[1]+"\n").getBytes());
+                outputStream.write((books+line.split("'")[1]+"\n").getBytes());
                 countLine++;
                 return true;
             }
