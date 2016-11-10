@@ -94,7 +94,7 @@ public class ExtructionURLs {
 
             String contents=s.substring(14).trim();
             String attr = s.substring(0,13);
-            Log.i("ExtructionURLs",attr);
+            //Log.i("ExtructionURLs",attr);
             switch(attr){
                 case "  DESCRIPTION":
                     Log.i("ExtructionURLs","  DESCRIPTION: "+contents);
@@ -108,7 +108,7 @@ public class ExtructionURLs {
                     Log.i("ExtructionURLs","        BOOKS: "+contents);
                     producersList.add(new ProducersBooksInfo(contents));
                     break;
-                default: Log.i("ExtructionURLs","setOutWithMap String s is"+s);
+                default: //Log.i("ExtructionURLs","setOutWithMap String s is"+s);
                     break;
 
             }
