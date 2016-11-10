@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
@@ -29,11 +30,13 @@ public class ClassSearchTask {
     private ArrayList<String> classInfos;
     private AsyncTask task;
     private Boolean isDone;
+    private HashMap<String, ArrayList<String>> datas;
     //private Boolean isDone;//indicates if the process is still running
     private Boolean isFailed;//indicates if the process is done, but failed
 
 
-    public ClassSearchTask(String s) {
+    public ClassSearchTask(String s,HashMap<String, ArrayList<String>> data) {
+        datas=data;
         isDone=false;
         classInfos=new inpInterpreter(s).getClassInfos();
     }
@@ -49,6 +52,12 @@ public class ClassSearchTask {
 
     private class searchTask extends AsyncTask<Object,Void,Void>{
 
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
 
         /**
          * Override this method to perform a computation on a background thread. The
@@ -66,10 +75,11 @@ public class ClassSearchTask {
          */
         @Override
         protected Void doInBackground(Object... params) {
-
             if(classInfos!=null){
                 Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
-                extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016);
+                extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016,datas);
+
+
                 ArrayList<String> ab= new ProducersTearcherInfo(extractionUrls.getTeacherURL()).getResult();
                 if(ab==null){
                     Log.w("Task","the teacher info is null");

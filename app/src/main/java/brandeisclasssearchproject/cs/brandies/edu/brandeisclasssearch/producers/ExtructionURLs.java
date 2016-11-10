@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
@@ -32,21 +33,32 @@ public class ExtructionURLs {
     private String subjectID; // for example "/100"
     private String classID;
 
+    private HashMap<String, ArrayList<String>> datas;
+
 
 
 
     //input need to be guaranteed to have form COSI 131A ,Computer Science, 1400, 131
-    public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y) {
+    public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y,  HashMap<String, ArrayList<String>> d) {
+        this.datas=d;
+
         this.isFound=false;
         this.classID=classInfo.get(0);
         this.subjectID=classInfo.get(2);
         this.season=s.getSeason();
         this.year=y.getYear();
+
         try {
             setOutputs(classSearchURL+year+season+subjectID+gra);
         } catch (IOException e) {
             Log.e("ExtructionURLs","ExtructionURLs.setOutputs had an IOException!");
         }
+
+    }
+
+
+
+    private void setOutoutsWithMap(){
 
     }
 
