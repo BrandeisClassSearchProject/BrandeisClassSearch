@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
@@ -31,22 +32,89 @@ public class ExtructionURLs {
     private String gra="/UGRD";//for example "/UGRD"
     private String subjectID; // for example "/100"
     private String classID;
+    private ArrayList<Producers>producersList=null;
+    private HashMap<String, ArrayList<String>> datas;
 
 
 
 
     //input need to be guaranteed to have form COSI 131A ,Computer Science, 1400, 131
-    public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y) {
+    public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y,  HashMap<String, ArrayList<String>> d) {
+        this.datas=d;
+
         this.isFound=false;
         this.classID=classInfo.get(0);
         this.subjectID=classInfo.get(2);
         this.season=s.getSeason();
         this.year=y.getYear();
-        try {
-            setOutputs(classSearchURL+year+season+subjectID+gra);
-        } catch (IOException e) {
-            Log.e("ExtructionURLs","ExtructionURLs.setOutputs had an IOException!");
+
+        setOutWithMap(classID);
+        //try {
+        //    setOutputs(classSearchURL+year+season+subjectID+gra);
+        //} catch (IOException e) {
+        //    Log.e("ExtructionURLs","ExtructionURLs.setOutputs had an IOException!");
+        //}
+
+    }
+
+    public ExtructionURLs(String classID,HashMap<String, ArrayList<String>> d){
+        this.datas=d;
+        this.isFound=false;
+        this.classID=classID;
+        setOutWithMap(classID);
+    }
+
+
+
+    private void setOutWithMap(String subjectID){
+        Log.i("ExtructionURLs","Search for "+subjectID);
+        String[] tempS = subjectID.split(" ");
+        if(tempS.length!=2){
+            isFound=false;
+            return;
         }
+        String a = tempS[0].trim();
+        String b = tempS[1].trim();
+        if(b.length()==4){
+            b="  "+b;
+        }else if(b.length()==3){
+            b="   "+b;
+        }else if(b.length()==2){
+            b="    "+b;
+        }
+        Log.i("ExtructionURLs","Search for "+a+b);
+        ArrayList<String> temp = datas.get(a+b);
+        if (temp==null){
+            isFound=false;
+            return;
+        }
+        isFound=true;
+        producersList = new ArrayList<>();
+        for(String s : temp){
+
+            String contents=s.substring(14).trim();
+            String attr = s.substring(0,13);
+            //Log.i("ExtructionURLs",attr);
+            switch(attr){
+                case "  DESCRIPTION":
+                    Log.i("ExtructionURLs","  DESCRIPTION: "+contents);
+                    producersList.add(new ProducersClassDescription(contents));
+                    break;
+                case "      TEACHER":
+                    Log.i("ExtructionURLs","      TEACHER: "+contents);
+                    producersList.add(new ProducersTearcherInfo(contents));
+                    break;
+                case "        BOOKS":
+                    Log.i("ExtructionURLs","        BOOKS: "+contents);
+                    producersList.add(new ProducersBooksInfo(contents));
+                    break;
+                default: //Log.i("ExtructionURLs","setOutWithMap String s is"+s);
+                    break;
+
+            }
+        }
+
+
 
     }
 
@@ -142,17 +210,13 @@ public class ExtructionURLs {
     }
 
 
-    public String getClassDescription() {
-        return classDescriptionURL;
+
+    public ArrayList<Producers> getProducers() {
+        if(isFound){
+            Log.i("ExtructionURLs",classID+" found return results");
+        }else{
+            Log.i("ExtructionURLs",classID+" not found, return null");
+        }
+        return producersList;
     }
-
-    public String getBookURL() {
-        return bookURL;
-    }
-
-    public String getTeacherURL() {
-        return teacherURL;
-    }
-
-
 }

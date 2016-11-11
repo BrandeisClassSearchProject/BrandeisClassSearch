@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class ProducersBooksInfo {
+public class ProducersBooksInfo extends ProducersAbstract{
     private Document document;
     protected ArrayList<String> Results;
     protected String inputURL;
