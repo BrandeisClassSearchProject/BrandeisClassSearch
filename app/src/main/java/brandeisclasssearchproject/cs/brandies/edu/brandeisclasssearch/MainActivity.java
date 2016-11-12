@@ -24,7 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
 /*
 
@@ -32,7 +37,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ClassSearchTask CST;
+    ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
     AsyncTask dataLoader;
     ArrayList<Producers> producersList;
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
 
                 if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
-                    CST= new ClassSearchTask(query,datas);
+                    CST= new ClassSearchingTask(query);
                     CST.execute();
                     return true;
                 }
@@ -205,5 +210,60 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
+        private ArrayList<String> classInfos;
+        private String classId;
+        private Boolean isDone;
+
+        public ClassSearchingTask(String s) {
+            classId=s;
+            classInfos=new inpInterpreter(s).getClassInfos();
+        }
+
+
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            while (datas==null){Log.i("ClassSearchTask","waiting for map");}
+            if (classInfos != null) {
+                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
+                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
+                producersList = new ExtructionURLs(classId,datas).getProducers();
+                if (producersList==null){
+                    isDone=true;
+                    Log.i("ClassSearchTask", "Class not found");
+                    return null;
+
+                }
+                Log.i("ClassSearchTask", "found it ");
+                for (Producers p : producersList) {
+                    ArrayList<String> al = p.getResult();
+                    if (p instanceof ProducersTearcherInfo) {
+                        for (String s : al) {
+                            Log.i("teacher", s);
+                        }
+                    } else if (p instanceof ProducersBooksInfo) {
+                        for (String s : al) {
+                            Log.i("books", s);
+                        }
+                    } else if (p instanceof ProducersClassDescription) {
+                        for (String s : al) {
+                            Log.i("class description", s);
+                        }
+                    }
+                    isDone = true;
+                }
+            }return null;
+        }
+
     }
 }
