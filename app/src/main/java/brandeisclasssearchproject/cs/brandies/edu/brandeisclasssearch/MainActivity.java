@@ -1,6 +1,5 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,8 +20,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
@@ -41,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     HashMap<String, ArrayList<String>> datas;
     AsyncTask dataLoader;
     ArrayList<Producers> producersList;
-
+    InfoListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +86,8 @@ public class MainActivity extends AppCompatActivity
         //The list view is the one we put all the infomations
         ListView lv = (ListView) findViewById(R.id.theContentList);
         SearchView sv = (SearchView) findViewById(R.id.searchClass);
-
-
+        adapter = new InfoListAdapter(producersList);
+        lv.setAdapter(adapter);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
@@ -228,6 +225,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            //update the list
+            adapter.notifyDataSetChanged();
 
         }
 
@@ -264,6 +263,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }return null;
         }
+
 
     }
 }
