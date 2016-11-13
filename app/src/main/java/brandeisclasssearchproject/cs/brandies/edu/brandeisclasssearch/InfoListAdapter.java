@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class InfoListAdapter extends BaseAdapter {
 
     public InfoListAdapter(ArrayList<Producers> ap) {
         this.producerList=ap;
-
     }
 
     @Override
@@ -75,6 +75,9 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_schedule, parent, false);
         //do something!
+        if (p.getResult().size()>0) {
+
+        }
         return temp;
     }
 
@@ -98,6 +101,11 @@ public class InfoListAdapter extends BaseAdapter {
         View temp = inflater.inflate(R.layout.entry_default, parent, false);
         //do something!
         return temp;
+    }
+
+    static class scheduleHolder
+    {
+        TextView schedule;
     }
 
 }
