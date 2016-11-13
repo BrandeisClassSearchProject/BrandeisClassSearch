@@ -67,6 +67,28 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_teacher, parent, false);
         //do something!
+        if (p.getResult().size()==8) {
+            teacherHolder holder = new teacherHolder();
+            holder.name = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.department = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.degrees = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.expertise = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.profile = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.courses= (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.awards = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.scholarship = (TextView) temp.findViewById(R.id.TextView_description_entry);
+
+            holder.name.setText(p.getResult().get(0));
+            holder.department.setText(p.getResult().get(1));
+            holder.degrees.setText(p.getResult().get(2));
+            holder.expertise.setText(p.getResult().get(3));
+            holder.profile.setText(p.getResult().get(4));
+            holder.courses.setText(p.getResult().get(5));
+            holder.awards.setText(p.getResult().get(6));
+            holder.scholarship.setText(p.getResult().get(7));
+
+            temp.setTag(holder);
+        }
         return temp;
     }
 
@@ -76,7 +98,10 @@ public class InfoListAdapter extends BaseAdapter {
         View temp = inflater.inflate(R.layout.entry_schedule, parent, false);
         //do something!
         if (p.getResult().size()>0) {
-
+            defaultHolder holder = new defaultHolder();
+            holder.entry = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.entry.setText(p.getResult().get(0));
+            temp.setTag(holder);
         }
         return temp;
     }
@@ -93,6 +118,12 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_description, parent, false);
         //do something!
+        if (p.getResult().size()>0) {
+            defaultHolder holder = new defaultHolder();
+            holder.entry = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.entry.setText(p.getResult().get(0));
+            temp.setTag(holder);
+        }
         return temp;
     }
 
@@ -103,9 +134,21 @@ public class InfoListAdapter extends BaseAdapter {
         return temp;
     }
 
-    static class scheduleHolder
+    static class defaultHolder
     {
-        TextView schedule;
+        TextView entry;
+    }
+
+    static class teacherHolder
+    {
+        TextView name;
+        TextView department;
+        TextView degrees;
+        TextView expertise;
+        TextView profile;
+        TextView courses;
+        TextView awards;
+        TextView scholarship;
     }
 
 }

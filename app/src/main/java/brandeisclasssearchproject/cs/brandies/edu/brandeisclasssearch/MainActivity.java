@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         //The list view is the one we put all the infomations
         ListView lv = (ListView) findViewById(R.id.theContentList);
         SearchView sv = (SearchView) findViewById(R.id.searchClass);
-        /*
+
         adapter = new InfoListAdapter(producersList);
         lv.setAdapter(adapter);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        */
 
 
     }
