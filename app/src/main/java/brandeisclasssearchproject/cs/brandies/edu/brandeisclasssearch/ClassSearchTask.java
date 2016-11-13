@@ -4,10 +4,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicSeason;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.enums.AcademicYear;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
 /**
@@ -26,11 +31,17 @@ public class ClassSearchTask {
     private ArrayList<String> classInfos;
     private AsyncTask task;
     private Boolean isDone;
+    private HashMap<String, ArrayList<String>> datas;
     //private Boolean isDone;//indicates if the process is still running
     private Boolean isFailed;//indicates if the process is done, but failed
+    private ArrayList<Producers> producerList;
+    private String classId;
 
 
-    public ClassSearchTask(String s) {
+    public ClassSearchTask(String s,HashMap<String, ArrayList<String>> data) {
+        classId=s;
+
+        datas=data;
         isDone=false;
         classInfos=new inpInterpreter(s).getClassInfos();
     }
@@ -40,41 +51,67 @@ public class ClassSearchTask {
         task.execute();
     }
 
-    public Boolean isDone() {
-        return this.isDone;
-    }
-
     private class searchTask extends AsyncTask<Object,Void,Void>{
 
 
-        /**
-         * Override this method to perform a computation on a background thread. The
-         * specified parameters are the parameters passed to {@link #execute}
-         * by the caller of this task.
-         * <p>
-         * This method can call {@link #publishProgress} to publish updates
-         * on the UI thread.
-         *
-         * @param params The parameters of the task.
-         * @return A result, defined by the subclass of this task.
-         * @see #onPreExecute()
-         * @see #onPostExecute
-         * @see #publishProgress
-         */
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
+
         @Override
         protected Void doInBackground(Object... params) {
+            while (datas==null){Log.i("ClassSearchTask","waiting for map");}
 
-            if(classInfos!=null){
-                Log.i("ClassSearchTask","array list classInfos is OK. Initialize extractionURLs");
-                extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016);
-            }else{
-                Log.w("ClassSearchTask","array list classInfos is null.");
-            }
+            if (classInfos != null) {
+                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
+                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
+                extractionUrls = new ExtructionURLs(classId,datas);
+                producerList = extractionUrls.getProducers();
+                if (producerList==null){
+                    isDone=true;
+                    Log.i("ClassSearchTask", "Class not found");
+                    return null;
+
+                }
+                Log.i("ClassSearchTask", "found it ");
+                for (Producers p : producerList) {
+                    ArrayList<String> al = p.getResult();
+                    if (p instanceof ProducersTearcherInfo) {
+                        for (String s : al) {
+                            Log.i("teacher", s);
+                        }
+                    } else if (p instanceof ProducersBooksInfo) {
+                        for (String s : al) {
+                            Log.i("books", s);
+                        }
+                    } else if (p instanceof ProducersClassDescription) {
+                        for (String s : al) {
+                            Log.i("class description", s);
+                        }
+                    }
+
+                    //ArrayList<String> ab= new ProducersTearcherInfo(extractionUrls.getTeacherURL()).getResult();
+                    //if(ab==null){
+                    //    Log.w("Task","the teacher info is null");
+                    //}else {
+                    //
+                    //}
+                    //ArrayList<String> a= new ProducersBooksInfo(extractionUrls.getBookURL()).getResult();
+                    //for(String s:a){
+                    //   Log.i("book info",s);
+                    // }
+                    //a= new ProducersClassDescription(extractionUrls.getClassDescription()).getResult();
+                    //for(String s:a){
+                    //   Log.i("class Des",s);
+                    //}
 
 
+                    isDone = true;
 
-            isDone=true;
-            return null;
+                }
+            }return null;
         }
-    }
+}
 }

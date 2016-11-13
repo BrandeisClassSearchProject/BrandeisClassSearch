@@ -7,7 +7,18 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
  * INCOMPLETE!!!
  */
 
+/**
+ * recently undated, catches nullpointer exception
+ *
+ * to be tested
+ *
+ * josh 2016/11/11, happy single dog's day!
+ */
+
+import android.util.Log;
+
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,74 +26,75 @@ import org.jsoup.select.Elements;
 
 public class ProducersTearcherInfo extends ProducersAbstract {
     private Document document;
-    protected ArrayList<String> Results;
-    protected String inputURL;
-    org.jsoup.nodes.Element content;
-    Elements list;
+    private ArrayList<String> Results;
+    private String inputURL;
+    private org.jsoup.nodes.Element content;
+    private Elements list;
 
     public ProducersTearcherInfo(String URL) {
         this.inputURL = URL;
-        this.Results = new ArrayList<String>();
+        this.Results = new ArrayList<>();
         CalcResult();
     }
 
-    public void CalcResult(){
+    @Override
+    public ArrayList<String> getResult() {
+        return Results;
+    }
+
+    @Override
+    public String getInput() {
+        return inputURL;
+    }
+
+    private String convertSimpleString(String keyWord, int numTmp){
+        content = document.getElementById(keyWord);
+        if(content != null)
+            return content.text().substring(numTmp) + "\n";
+        else
+            return "no information about " + keyWord + " found\n";
+    }
+
+    private String convertStringList(String keyWord, String tagName, int numTmp){
+        content = document.getElementById(keyWord);
+        if(content != null){
+            list = content.getElementsByTag(tagName);
+            String tmpString = "";
+            for (org.jsoup.nodes.Element tmpNode : list){
+                tmpString = tmpString + tmpNode.text() + "\n";
+            }
+            return tmpString.substring(numTmp);
+        } else
+            return "no information about " + keyWord + " found\n";
+    }
+
+    private String convertTeacherName(String keyWord, String tagName){
+        content = document.getElementById(keyWord);
+        if(content != null){
+            list = content.getElementsByTag(tagName);
+            org.jsoup.nodes.Element node = list.get(0);
+            return node.text() + "\n";
+        }
+        else
+            return "no information about " + keyWord + " found\n";
+    }
+
+    private void CalcResult(){
         try {
             this.document = Jsoup.connect(inputURL).get();
-
-            //get the name
-            content = document.getElementById("content");
-            list = content.getElementsByTag("a");
-            org.jsoup.nodes.Element node = list.get(0);
-            Results.add(node.text() + "\n");
-
-            //get the depts
-            content = document.getElementById("depts");
-            list = content.getElementsByTag("a");
-            for (org.jsoup.nodes.Element tmpNode : list)
-                Results.add(tmpNode.text() + "\n");
-
-            //get the degrees
-            content = document.getElementById("degrees");
-            Results.add(content.text().substring(8) + "\n");
-
-            //get the expertise
-            content = document.getElementById("expertise");
-            Results.add(content.text().substring(10) + "\n");
-
-            //get the profile
-            content = document.getElementById("profile");
-            Results.add(content.text().substring(8) + "\n");
-
-            //get the courses
-            content = document.getElementById("courses");
-            list = content.getElementsByTag("tr");
-            String courseString = "";
-            for (org.jsoup.nodes.Element tmpNode : list){
-                courseString = courseString + tmpNode.text() + "\n";
-            }
-            Results.add(courseString);
-
-            //get the awards
-            content = document.getElementById("awards");
-            list = content.getElementsByTag("p");
-            String awardString = "";
-            for (org.jsoup.nodes.Element tmpNode : list){
-                awardString = awardString + tmpNode.text() + "\n";
-            }
-            Results.add(awardString.substring(18));
-
-            //get the scholarships
-            content = document.getElementById("scholarship");
-            list = content.getElementsByTag("p");
-            String scholarString = "";
-            for (org.jsoup.nodes.Element tmpNode : list){
-                scholarString = scholarString + tmpNode.text() + "\n";
-            }
-            Results.add(scholarString.substring(15));
+            Results.add(convertTeacherName("content", "a"));
+            Results.add(convertStringList("depts", "a", 0));
+            Results.add(convertSimpleString("degrees", 8));
+            Results.add(convertSimpleString("expertise", 10));
+            Results.add(convertSimpleString("profile", 8));
+            Results.add(convertStringList("courses", "tr", 0));
+            Results.add(convertStringList("awards", "p", 18));
+            Results.add(convertStringList("scholarship", "p", 15));
+        } catch (UnknownHostException e) {
+            System.err.println("invalid URL");
         } catch (IOException e) {
-            System.err.println("construction failed");
-            e.printStackTrace();
+            System.out.println("Construction failed");
         }
     }
+
 }

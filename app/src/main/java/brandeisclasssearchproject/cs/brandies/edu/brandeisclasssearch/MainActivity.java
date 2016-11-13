@@ -1,5 +1,6 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,15 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
 /*
 
@@ -25,13 +34,26 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ClassSearchTask CST;
-
+    ClassSearchingTask CST;
+    HashMap<String, ArrayList<String>> datas;
+    AsyncTask dataLoader;
+    ArrayList<Producers> producersList;
+    InfoListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //default generated code.
+
         super.onCreate(savedInstanceState);
+        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
+            @Override
+            public void processFinish(HashMap<String, ArrayList<String>> output) {
+                datas=output;//set the hashmap for use in the main thread;
+            }
+        },getApplicationContext());
+        Log.i("Main","dataLoader.execute()");
+        dataLoader.execute();
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,44 +87,31 @@ public class MainActivity extends AppCompatActivity
         ListView lv = (ListView) findViewById(R.id.theContentList);
         SearchView sv = (SearchView) findViewById(R.id.searchClass);
 
-
+        adapter = new InfoListAdapter(producersList);
+        lv.setAdapter(adapter);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
-            /**
-             * Called when the user submits the query. This could be due to a key press on the
-             * keyboard or due to pressing a submit button.
-             * The listener can override the standard behavior by returning true
-             * to indicate that it has handled the submit request. Otherwise return false to
-             * let the SearchView handle the submission by launching any associated intent.
-             *
-             * @param query the query text that is to be submitted
-             * @return true if the query has been handled by the listener, false to let the
-             * SearchView perform the default action.
-             */
             @Override
             public boolean onQueryTextSubmit(String query) {
-                CST= new ClassSearchTask(query);
-                CST.execute();
-                //List<String> userInput=inpInterpreter.phraseRowInput(query);
-                //String targetURL
-                return false;
+
+                if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
+                    CST= new ClassSearchingTask(query);
+                    CST.execute();
+                    return true;
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Loading not Finished, Waiting", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
 
-            /**
-             * Called when the query text is changed by the user.
-             *
-             * @param newText the new content of the query text field.
-             * @return false if the SearchView should perform the default action of showing any
-             * suggestions if available, true if the action was handled by the listener.
-             */
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-            //<a class="def" name="COSI 131A"
         });
-
 
 
 
@@ -198,5 +207,63 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
+        private ArrayList<String> classInfos;
+        private String classId;
+        private Boolean isDone;
+
+        public ClassSearchingTask(String s) {
+            classId=s;
+            classInfos=new inpInterpreter(s).getClassInfos();
+        }
+
+
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //update the list
+            adapter.notifyDataSetChanged();
+
+        }
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            while (datas==null){Log.i("ClassSearchTask","waiting for map");}
+            if (classInfos != null) {
+                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
+                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
+                producersList = new ExtructionURLs(classId,datas).getProducers();
+                if (producersList==null){
+                    isDone=true;
+                    Log.i("ClassSearchTask", "Class not found");
+                    return null;
+
+                }
+                Log.i("ClassSearchTask", "found it ");
+                for (Producers p : producersList) {
+                    ArrayList<String> al = p.getResult();
+                    if (p instanceof ProducersTearcherInfo) {
+                        for (String s : al) {
+                            Log.i("teacher", s);
+                        }
+                    } else if (p instanceof ProducersBooksInfo) {
+                        for (String s : al) {
+                            Log.i("books", s);
+                        }
+                    } else if (p instanceof ProducersClassDescription) {
+                        for (String s : al) {
+                            Log.i("class description", s);
+                        }
+                    }
+                    isDone = true;
+                }
+            }return null;
+        }
+
+
     }
 }
