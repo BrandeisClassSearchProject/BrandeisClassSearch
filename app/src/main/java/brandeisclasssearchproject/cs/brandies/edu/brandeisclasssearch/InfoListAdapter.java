@@ -69,14 +69,14 @@ public class InfoListAdapter extends BaseAdapter {
         //do something!
         if (p.getResult().size()==8) {
             teacherHolder holder = new teacherHolder();
-            holder.name = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.department = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.degrees = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.expertise = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.profile = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.courses= (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.awards = (TextView) temp.findViewById(R.id.TextView_description_entry);
-            holder.scholarship = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
+            holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
+            holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
+            holder.expertise = (TextView) temp.findViewById(R.id.Layout_Teacher_expertise);
+            holder.profile = (TextView) temp.findViewById(R.id.Layout_Teacher_profile);
+            holder.courses= (TextView) temp.findViewById(R.id.Layout_Teacher_courses);
+            holder.awards = (TextView) temp.findViewById(R.id.Layout_Teacher_awards);
+            holder.scholarship = (TextView) temp.findViewById(R.id.Layout_Teacher_scholarship);
 
             holder.name.setText(p.getResult().get(0));
             holder.department.setText(p.getResult().get(1));
@@ -99,7 +99,7 @@ public class InfoListAdapter extends BaseAdapter {
         //do something!
         if (p.getResult().size()>0) {
             defaultHolder holder = new defaultHolder();
-            holder.entry = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.entry = (TextView) temp.findViewById(R.id.Layout_schedule_entryOne);
             holder.entry.setText(p.getResult().get(0));
             temp.setTag(holder);
         }
@@ -120,7 +120,7 @@ public class InfoListAdapter extends BaseAdapter {
         //do something!
         if (p.getResult().size()>0) {
             defaultHolder holder = new defaultHolder();
-            holder.entry = (TextView) temp.findViewById(R.id.TextView_description_entry);
+            holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
             holder.entry.setText(p.getResult().get(0));
             temp.setTag(holder);
         }
