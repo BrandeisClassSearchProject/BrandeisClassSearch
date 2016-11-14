@@ -54,7 +54,7 @@ public class InfoListAdapter extends BaseAdapter {
         }else if(p instanceof ProducersBooksInfo){
             return getViewBooks(p,parent);
         }else if(p instanceof ProducersClassSchdule){
-            return getViewSchdule(p,parent);
+            return getViewSchedule(p,parent);
         }else if(p instanceof ProducersTearcherInfo){
             return getViewTeacher(p,parent);
         }else{
@@ -93,7 +93,7 @@ public class InfoListAdapter extends BaseAdapter {
     }
 
 
-    private View getViewSchdule(Producers p, ViewGroup parent) {
+    private View getViewSchedule(Producers p, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_schedule, parent, false);
         //do something!
@@ -131,6 +131,24 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_default, parent, false);
         //do something!
+        if (p.getResult().size()==6) {
+            bookHolder holder = new bookHolder();
+            holder.name = (TextView) temp.findViewById(R.id.Layout_book_name);
+            holder.department = (TextView) temp.findViewById(R.id.Layout_book_depts);
+            holder.degrees = (TextView) temp.findViewById(R.id.Layout_book_degrees);
+            holder.expertise = (TextView) temp.findViewById(R.id.Layout_book_expertise);
+            holder.profile = (TextView) temp.findViewById(R.id.Layout_book_profile);
+            holder.courses= (TextView) temp.findViewById(R.id.Layout_book_courses);
+
+            holder.name.setText(p.getResult().get(0));
+            holder.department.setText(p.getResult().get(1));
+            holder.degrees.setText(p.getResult().get(2));
+            holder.expertise.setText(p.getResult().get(3));
+            holder.profile.setText(p.getResult().get(4));
+            holder.courses.setText(p.getResult().get(5));
+
+            temp.setTag(holder);
+        }
         return temp;
     }
 
@@ -149,6 +167,16 @@ public class InfoListAdapter extends BaseAdapter {
         TextView courses;
         TextView awards;
         TextView scholarship;
+    }
+
+    static class bookHolder
+    {
+        TextView name;
+        TextView department;
+        TextView degrees;
+        TextView expertise;
+        TextView profile;
+        TextView courses;
     }
 
 }
