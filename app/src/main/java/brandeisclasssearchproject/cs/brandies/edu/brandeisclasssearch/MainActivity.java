@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
     AsyncTask dataLoader;
-    ArrayList<Producers> producersList;
+    ArrayList<Producers> producersList = new ArrayList<Producers>();
     InfoListAdapter adapter;
 
     @Override
