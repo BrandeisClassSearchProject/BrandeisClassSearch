@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Loading not Finished, Waiting", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Loading not Finished yet, please wait few more seconds~", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -213,11 +213,11 @@ public class MainActivity extends AppCompatActivity
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
         private ArrayList<String> classInfos;
         private String classId;
-        private Boolean isDone;
+        //private Boolean isDone;
 
         public ClassSearchingTask(String s) {
-            classId=s;
-            classInfos=new inpInterpreter(s).getClassInfos();
+            classId=s.toUpperCase();
+            classInfos=new inpInterpreter(classId).getClassInfos();
         }
 
 
@@ -226,7 +226,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             //update the list
-            Toast.makeText(getApplicationContext(), "notifyDataSetChanged", Toast.LENGTH_SHORT).show();
+            if(producersList==null){
+                Toast.makeText(getApplicationContext(), "We cannot find relevant information, maybe the class ID is wrong?", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Toast.makeText(getApplicationContext(), "Showing", Toast.LENGTH_SHORT).show();
             ListView lv = (ListView) findViewById(R.id.theContentList);
             adapter = new InfoListAdapter(producersList);
             lv.setAdapter(adapter);
@@ -242,7 +246,7 @@ public class MainActivity extends AppCompatActivity
                 //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
                 producersList = new ExtructionURLs(classId,datas).getProducers();
                 if (producersList==null){
-                    isDone=true;
+                    //isDone=true;
                     Log.i("ClassSearchTask", "Class not found");
                     return null;
 
@@ -263,7 +267,7 @@ public class MainActivity extends AppCompatActivity
                             Log.i("class description", s);
                         }
                     }
-                    isDone = true;
+                    //isDone = true;
                 }
             }return null;
         }

@@ -1,5 +1,6 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
     private HashMap<String,ArrayList<String>> datas;
     private Context c;
     private boolean isDone;
+    private ProgressDialog pDialog;
 
 
     public interface AsyncResponse{
@@ -48,14 +50,26 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
     public AsyncResponse delegate = null;
 
     public DataLoader(AsyncResponse d,Context context){
+
         isDone=false;
         c=context;
         this.delegate=d;
     }
 
 
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+
+
+
+    }
+
     @Override
     protected void onPostExecute(Void aVoid) {
+
         delegate.processFinish(datas);
     }
 
