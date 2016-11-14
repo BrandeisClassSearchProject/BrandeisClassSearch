@@ -133,8 +133,8 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
 
 
     private boolean shouldUpdate(File file) {
-        //return !file.exists();
-        return true;
+        return !file.exists();
+        //return true;
 
     }
 

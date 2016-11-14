@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity
         ListView lv = (ListView) findViewById(R.id.theContentList);
         SearchView sv = (SearchView) findViewById(R.id.searchClass);
 
-        adapter = new InfoListAdapter(producersList);
-        lv.setAdapter(adapter);
+        //adapter = new InfoListAdapter(producersList);
+        //lv.setAdapter(adapter);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
 
 
     /*
-    Option Menu stuffs
+    Option Menu
     set up and inflate option menu
     and defines select behaviors
      */
@@ -226,7 +226,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             //update the list
-            adapter.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(), "notifyDataSetChanged", Toast.LENGTH_SHORT).show();
+            ListView lv = (ListView) findViewById(R.id.theContentList);
+            adapter = new InfoListAdapter(producersList);
+            lv.setAdapter(adapter);
+            //adapter.notifyDataSetChanged();
 
         }
 
