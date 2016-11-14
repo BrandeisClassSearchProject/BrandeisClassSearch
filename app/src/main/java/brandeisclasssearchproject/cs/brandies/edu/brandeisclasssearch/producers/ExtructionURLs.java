@@ -61,6 +61,7 @@ public class ExtructionURLs {
         this.datas=d;
         this.isFound=false;
         this.classID=classID;
+
         setOutWithMap(classID);
     }
 
@@ -117,6 +118,18 @@ public class ExtructionURLs {
 
 
     }
+
+    public ArrayList<Producers> getProducers() {
+        if(isFound){
+            Log.i("ExtructionURLs",classID+" found return results");
+        }else{
+            Log.i("ExtructionURLs",classID+" not found, return null");
+        }
+        return producersList;
+    }
+
+
+
 
     private void setOutputs(String source) throws IOException {
         Log.i("ExtructionURLs","The url for "+classID+" is:\n"+source);
@@ -211,12 +224,5 @@ public class ExtructionURLs {
 
 
 
-    public ArrayList<Producers> getProducers() {
-        if(isFound){
-            Log.i("ExtructionURLs",classID+" found return results");
-        }else{
-            Log.i("ExtructionURLs",classID+" not found, return null");
-        }
-        return producersList;
-    }
+
 }
