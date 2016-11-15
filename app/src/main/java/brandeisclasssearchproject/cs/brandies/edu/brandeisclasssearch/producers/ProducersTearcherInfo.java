@@ -50,7 +50,10 @@ public class ProducersTearcherInfo extends ProducersAbstract {
     private String convertSimpleString(String keyWord, int numTmp){
         content = document.getElementById(keyWord);
         if(content != null)
-            return content.text().substring(numTmp) + "\n";
+            if (content.text().length() <= numTmp)
+                return content.text().substring(numTmp) + "\n";
+            else
+                return content.text() + "\n";
         else
             return "no information about " + keyWord + " found\n";
     }
