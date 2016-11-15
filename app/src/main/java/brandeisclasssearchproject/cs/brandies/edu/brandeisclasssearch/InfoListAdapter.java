@@ -118,10 +118,15 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_description, parent, false);
         //do something!
-        if (p.getResult().size()>0) {
+        ArrayList<String> al = p.getResult();
+        if (al.size()>0) {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
-            holder.entry.setText(p.getResult().get(0));
+            String s = "";
+            for(String temps:al){
+                s = s+temps+"\n";
+            }
+            holder.entry.setText(s);
             temp.setTag(holder);
         }
         return temp;

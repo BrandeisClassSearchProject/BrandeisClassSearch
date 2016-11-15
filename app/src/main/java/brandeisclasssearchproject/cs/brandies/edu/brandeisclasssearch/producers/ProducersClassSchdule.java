@@ -25,6 +25,17 @@ public class ProducersClassSchdule extends ProducersAbstract {
     org.jsoup.nodes.Element content;
     Elements list;
 
+
+    public ProducersClassSchdule() {
+        this.Results = new ArrayList<String>();
+        this.inputURL=null;
+
+    }
+
+    public void add(String s){
+        Results.add(s);
+    }
+
     public ProducersClassSchdule(String URL) {
         this.inputURL = URL;
         this.Results = new ArrayList<String>();
@@ -52,11 +63,11 @@ public class ProducersClassSchdule extends ProducersAbstract {
 
     @Override
     public ArrayList<String> getResult() {
-        return null;
+        return Results;
     }
 
     @Override
     public String getInput() {
-        return null;
+        return inputURL;
     }
 }

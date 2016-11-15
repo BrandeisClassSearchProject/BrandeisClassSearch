@@ -124,7 +124,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
             if(counter%14==1){
                 title=temp;
             }else if(counter%14==0){
-                Log.i("DataLoader","map: key: "+title);
+                Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
                 if(!temp.equals(".")){
                     tempArray.add(temp);
                 }
@@ -132,7 +132,6 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 tt.addAll(tempArray);
                 hm.put(title,tt);
                 tempArray.clear();
-                Log.i("DataLoader","ADD MAP");
                 Log.i("DataLoader","key: "+title);
                 Log.i("DataLoader","list size "+String.valueOf(tt.size()));
             }else{
@@ -142,13 +141,14 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
             }
             counter++;
         }
+        Log.i("DataLoader","The size of the map is "+ hm.size());
         return hm;
     }
 
 
     private boolean shouldUpdate(File file) {
-        return !file.exists();
-        //return true;
+//        return !file.exists();
+        return true;
 
     }
 
@@ -276,7 +276,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 }
                 countLine=1;
                 try {
-                    Log.i("DataLoader",(String.valueOf(n)+"\n"));
+                    Log.i("DataLoader",(String.valueOf(n)+" "+classNumb+"\n"));
                     outputStream.write((classNumb+"\n").getBytes());
                     outputStream.write((books+"http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1171&div-1=&dept-1="
                             +classNumbID[0]+"&course-1="+classNumbID[1]+"&sect-1=1\n").getBytes());
