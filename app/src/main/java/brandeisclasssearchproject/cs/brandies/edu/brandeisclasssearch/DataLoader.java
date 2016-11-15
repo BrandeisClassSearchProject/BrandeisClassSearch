@@ -124,7 +124,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
             if(counter%14==1){
                 title=temp;
             }else if(counter%14==0){
-                Log.i("DataLoader",String.valueOf(hm.size())+" map: key: "+title);
+                Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
                 if(!temp.equals(".")){
                     tempArray.add(temp);
                 }
@@ -132,7 +132,6 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 tt.addAll(tempArray);
                 hm.put(title,tt);
                 tempArray.clear();
-                Log.i("DataLoader","ADD MAP");
                 Log.i("DataLoader","key: "+title);
                 Log.i("DataLoader","list size "+String.valueOf(tt.size()));
             }else{

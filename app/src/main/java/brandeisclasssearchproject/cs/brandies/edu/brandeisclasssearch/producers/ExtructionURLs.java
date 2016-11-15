@@ -91,6 +91,7 @@ public class ExtructionURLs {
         }
         isFound=true;
         producersList = new ArrayList<>();
+        ProducersClassSchdule timeProducer = new ProducersClassSchdule();
         for(String s : temp){
 
             String contents=s.substring(14).trim();
@@ -109,12 +110,22 @@ public class ExtructionURLs {
                     Log.i("ExtructionURLs","        BOOKS: "+contents);
                     producersList.add(new ProducersBooksInfo(contents));
                     break;
+                case "        BLOCK":
+                    Log.i("ExtructionURLs","       BLOCKS: "+contents);
+                    timeProducer.add(contents);
+                    break;
+                case "        TIMES":
+                    Log.i("ExtructionURLs","        TIMES: "+contents);
+                    timeProducer.add(contents);
+                    break;
                 default: //Log.i("ExtructionURLs","setOutWithMap String s is"+s);
                     break;
 
             }
         }
-
+        Producers tempP=producersList.get(1);
+        producersList.set(1,timeProducer);
+        producersList.add(tempP);
 
 
     }
