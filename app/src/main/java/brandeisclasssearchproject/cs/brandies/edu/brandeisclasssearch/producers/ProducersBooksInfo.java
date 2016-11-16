@@ -71,7 +71,6 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     builder.insert(allText.indexOf("ISBN:")+1, "\n");
                     builder.insert(allText.indexOf("Copyright Year:")+2, "\n");
                     builder.insert(allText.indexOf("Publisher:")+3, "\n");
-                    builder.insert(allText.length()+4, "\n");
                     builder.insert(0, tmpString+"\n"+"\n");
                     allText = builder.toString();
                     results.add(allText);
