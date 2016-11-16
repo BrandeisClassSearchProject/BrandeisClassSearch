@@ -268,6 +268,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                 //String[] a = line.substring(21,line.length()).split("\"");
                 String classNumb = line.split("\"")[3];
                 String[] classNumbID = classNumb.split(" ");
+
                 n++;
                 if(countLine!=0) {
                     for (int i = 13 - countLine; i > 0; i--) {
@@ -279,7 +280,7 @@ public class DataLoader extends AsyncTask<Object,Void,Void> {
                     Log.i("DataLoader",(String.valueOf(n)+" "+classNumb+"\n"));
                     outputStream.write((classNumb+"\n").getBytes());
                     outputStream.write((books+"http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1171&div-1=&dept-1="
-                            +classNumbID[0]+"&course-1="+classNumbID[1]+"&sect-1=1\n").getBytes());
+                            +classNumbID[0]+"&course-1="+classNumbID[classNumbID.length-1]+"&sect-1=1\n").getBytes());
 
                 }catch (Exception e){
                     Log.w("DataLoader","isTitle failed"+line+" "+String.valueOf(n));
