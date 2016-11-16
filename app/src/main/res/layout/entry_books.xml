@@ -4,39 +4,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/Layout_book_name"
+        android:id="@+id/Layout_Book_entryOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/Layout_book_depts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_book_degrees"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_book_expertise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_book_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_book_courses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
 
 </LinearLayout>

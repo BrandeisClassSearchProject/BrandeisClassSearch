@@ -111,22 +111,15 @@ public class InfoListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_books, parent, false);
         //do something!
-        if (p.getResult().size()==6) {
-            bookHolder holder = new bookHolder();
-            holder.name = (TextView) temp.findViewById(R.id.Layout_book_name);
-            holder.department = (TextView) temp.findViewById(R.id.Layout_book_depts);
-            holder.degrees = (TextView) temp.findViewById(R.id.Layout_book_degrees);
-            holder.expertise = (TextView) temp.findViewById(R.id.Layout_book_expertise);
-            holder.profile = (TextView) temp.findViewById(R.id.Layout_book_profile);
-            holder.courses= (TextView) temp.findViewById(R.id.Layout_book_courses);
+        if (p.getResult().size()>0) {
+            defaultHolder holder = new defaultHolder();
+            holder.entry = (TextView) temp.findViewById(R.id.Layout_Book_entryOne);
 
-            holder.name.setText(p.getResult().get(0));
-            holder.department.setText(p.getResult().get(1));
-            holder.degrees.setText(p.getResult().get(2));
-            holder.expertise.setText(p.getResult().get(3));
-            holder.profile.setText(p.getResult().get(4));
-            holder.courses.setText(p.getResult().get(5));
-
+            String s = "";
+            for(String temps:p.getResult()){
+                s = s+temps+"\n";
+            }
+            holder.entry.setText(s);
             temp.setTag(holder);
         }
         return temp;
