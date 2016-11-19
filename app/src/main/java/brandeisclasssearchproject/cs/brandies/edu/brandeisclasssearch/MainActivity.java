@@ -1,5 +1,6 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -22,10 +24,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSchedule;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSyllabus;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassSchdule;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersSyllabus;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
@@ -238,6 +247,25 @@ public class MainActivity extends AppCompatActivity
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Producers p = producersList.get(position);
+                    Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
+                    Intent i = null;
+                    if(p instanceof ProducersClassDescription){
+                        i = new Intent(getApplicationContext(),ShowDescription.class);
+                    }else if(p instanceof ProducersTearcherInfo){
+                        i = new Intent(getApplicationContext(),ShowTeacher.class);
+                    }else if(p instanceof ProducersBooksInfo){
+                        i = new Intent(getApplicationContext(),ShowBooks.class);
+                    }else if(p instanceof ProducersSyllabus){
+                        i = new Intent(getApplicationContext(),ShowSyllabus.class);
+                    }else if(p instanceof ProducersClassSchdule){
+                        i = new Intent(getApplicationContext(),ShowSchedule.class);
+                    }
+                    if(i != null){
+                        i.putExtra("list",p.getResult());
+                        startActivity(i);
+                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
+                    }
 
                 }
             });

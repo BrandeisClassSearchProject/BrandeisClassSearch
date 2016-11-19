@@ -17,6 +17,7 @@ public class ProducersClassDescription extends ProducersAbstract{
     Elements list;
 
     public ProducersClassDescription(String URL) {
+        Name = "Description";
         this.inputURL = URL;
         this.Results = new ArrayList<String>();
         CalcResult();

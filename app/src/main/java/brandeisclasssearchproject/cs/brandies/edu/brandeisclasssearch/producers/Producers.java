@@ -10,5 +10,6 @@ public interface Producers {
 
     ArrayList<String> getResult();
     String getInput();
+    String getName();
 
 }

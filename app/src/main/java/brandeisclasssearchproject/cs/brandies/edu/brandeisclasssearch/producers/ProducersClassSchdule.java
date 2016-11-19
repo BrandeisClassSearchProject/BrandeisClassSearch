@@ -27,6 +27,7 @@ public class ProducersClassSchdule extends ProducersAbstract {
 
 
     public ProducersClassSchdule() {
+        Name="Schdule";
         this.Results = new ArrayList<String>();
         this.inputURL=null;
 

@@ -14,6 +14,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
     private Document document;
 
     public ProducersBooksInfo(String URL) {
+        Name="Books";
         this.inputURL = URL;
         this.results = new ArrayList<>();
         CalcResult();

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ProducersSyllabus extends ProducersAbstract {
 
     public ProducersSyllabus() {
+        Name="Syllabus";
     }
 
     @Override

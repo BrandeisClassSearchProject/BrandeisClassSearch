@@ -32,6 +32,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
     private Elements list;
 
     public ProducersTearcherInfo(String URL) {
+        Name = "Teacher";
         this.inputURL = URL;
         this.Results = new ArrayList<>();
         CalcResult();
