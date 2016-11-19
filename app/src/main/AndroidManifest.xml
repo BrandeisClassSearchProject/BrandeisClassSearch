@@ -40,7 +40,8 @@
         <activity android:name=".activities.ShowDescription" />
         <activity android:name=".activities.ShowTeacher" />
         <activity android:name=".activities.ShowSchedule" />
-        <activity android:name=".activities.ShowSyllabus"></activity>
+        <activity android:name=".activities.ShowSyllabus" />
+        <activity android:name=".activities.ScheduleTable"></activity>
     </application>
 
 </manifest>
