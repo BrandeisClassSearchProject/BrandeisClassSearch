@@ -1,6 +1,8 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,9 +54,12 @@ public class MainActivity extends AppCompatActivity
 
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
+    ArrayList<HashMap<String,ArrayList<String>>> datasMap;
     AsyncTask dataLoader;
     ArrayList<Producers> producersList = new ArrayList<Producers>();
     InfoListAdapter adapter;
+    ProgressDialog pDialog;
+    final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +71,8 @@ public class MainActivity extends AppCompatActivity
             }
         },getApplicationContext());
         Log.i("Main","dataLoader.execute()");
-        dataLoader.execute();
-
+        //dataLoader.execute();
+        //new LoadingData().execute();//not ready yet
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -240,8 +249,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
-
         @Override
         protected void onPostExecute(Void aVoid) {
             //update the list
@@ -318,4 +325,106 @@ public class MainActivity extends AppCompatActivity
             }return null;
         }
     }
+
+    private class LoadingData extends AsyncTask<Object,Void,Void>{
+        ProgressDialog pDialog;
+        ArrayList<HashMap<String,ArrayList<String>>> dataMap;
+        private String filename = "DATA.txt";
+
+        public LoadingData() {
+            pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
+            this.dataMap = null;
+        }
+
+
+
+        @Override
+        protected Void doInBackground(Object... params) {
+
+            AssetManager am = getApplicationContext().getAssets();
+            try {
+                InputStream is = am.open(filename);
+                InputStreamReader isr= new InputStreamReader(is);
+                dataMap=putInMap(isr);
+            } catch (IOException e) {
+                Log.wtf("Main.LoadingData","DATA.txt not found");
+            }
+
+
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            //pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
+            //pDialog.show();
+            pDialog=ProgressDialog.show(getApplicationContext(),"Loading","",true,false);
+            //pDialog.setMessage("Loading...");
+            //pDialog.setCancelable(false);
+            //pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //pDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(pDialog.isShowing()){
+                pDialog.dismiss();
+            }
+            datasMap=dataMap;
+        }
+
+        private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
+            ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
+            HashMap<String,ArrayList<String>> hm = new HashMap<>();
+            BufferedReader br = new BufferedReader(isr);
+            String temp;
+            String title=null;
+            ArrayList<String> tempArray=new ArrayList<>();
+            String updateDate = br.readLine().split(" ")[0];
+            int counter=1;
+            while((temp=br.readLine())!=null ){
+                Log.i("DataLoader",temp);
+                if(counter%14==1){
+                    title=temp;
+                    if(title.length()>updateDate.length()){
+                        if(title.substring(0,updateDate.length()).equals(updateDate)){
+                            counter--;
+                            data.add(hm);
+                            hm = new HashMap<>();
+
+                        }
+
+                    }
+                }else if(counter%14==0){
+                    Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
+                    if(!temp.equals(".")){
+                        tempArray.add(temp);
+                    }
+                    ArrayList<String> tt =new ArrayList<String>();
+                    tt.addAll(tempArray);
+                    hm.put(title,tt);
+
+                    tempArray.clear();
+                    Log.i("DataLoader","key: "+title);
+                    Log.i("DataLoader","list size "+String.valueOf(tt.size()));
+                }else{
+                    if(!temp.equals(".")){
+                        tempArray.add(temp);
+                    }
+                }
+                counter++;
+            }
+            Log.i("DataLoader","The size of the map is "+ hm.size());
+
+            br.close();
+            return data;
+        }
+
+
+
+
+    }
+
 }
