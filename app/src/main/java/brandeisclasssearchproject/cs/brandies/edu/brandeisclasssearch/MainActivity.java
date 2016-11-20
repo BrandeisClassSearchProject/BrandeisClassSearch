@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
             }
         },getApplicationContext());
         Log.i("Main","dataLoader.execute()");
-        //dataLoader.execute();
+        dataLoader.execute();
         //new LoadingData().execute();//not ready yet
 
         setContentView(R.layout.activity_main);
