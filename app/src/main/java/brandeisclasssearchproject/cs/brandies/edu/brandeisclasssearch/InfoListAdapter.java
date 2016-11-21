@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassSchdule;
@@ -57,10 +58,22 @@ public class InfoListAdapter extends BaseAdapter {
             return getViewSchedule(p,parent);
         }else if(p instanceof ProducersTearcherInfo){
             return getViewTeacher(p,parent);
+        }else if(p instanceof ProducersBasic){
+            return getViewBasic(p,parent);
         }else{
             Log.wtf("InfoListAdapter","WTF??!!");
             return getViewDefault(p,parent);
         }
+    }
+
+    private View getViewBasic(Producers p, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View temp = inflater.inflate(R.layout.entry_basic, parent, false);
+        TextView year = (TextView) temp.findViewById(R.id.basic_Year);
+        year.setText(p.getResult().get(1));
+        TextView className = (TextView) temp.findViewById(R.id.basic_Class);
+        className.setText(p.getResult().get(0));
+        return temp;
     }
 
     private View getViewTeacher(Producers p, ViewGroup parent) {

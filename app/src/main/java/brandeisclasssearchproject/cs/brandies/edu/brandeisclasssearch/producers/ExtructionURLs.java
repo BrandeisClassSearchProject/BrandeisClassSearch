@@ -91,6 +91,7 @@ public class ExtructionURLs {
         }
         isFound=true;
         producersList = new ArrayList<>();
+        producersList.add(new ProducersBasic("2017 Spring",a+b));
         ProducersClassSchdule timeProducer = new ProducersClassSchdule();
         for(String s : temp){
 
