@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     ProgressBar pb;
     ListView lv;
 
+
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
     //final int[] oldTerms = new int[]{};
 
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity
             }
         },getApplicationContext());
         Log.i("Main","dataLoader.execute()");
-        dataLoader.execute();
-        //new LoadingData().execute();//not ready yet
+        //dataLoader.execute();
+        new LoadingData().execute();//not ready yet
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,8 +123,8 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
+                if(datas!=null){
+                //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
                     //lv.setVisibility(View.INVISIBLE);
                     CST= new ClassSearchingTask(query);
                     CST.execute();
@@ -401,6 +402,12 @@ public class MainActivity extends AppCompatActivity
             Log.i("Main.LoadingData","Done.\nTakes "+String.valueOf((System.currentTimeMillis()-startTime)/1000.0)+"s.");
         }
 
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            pb.setVisibility(View.INVISIBLE);
+        }
+
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
@@ -417,6 +424,12 @@ public class MainActivity extends AppCompatActivity
                     if(title.length()>updateDate.length()){
                         if(title.substring(0,updateDate.length()).equals(updateDate)){
                             counter--;
+                            if (datas==null){
+                                datas=hm;
+                                publishProgress();
+
+
+                            }
                             data.add(hm);
                             hm = new HashMap<>();
 

@@ -7,7 +7,8 @@
         android:id="@+id/Layout_Teacher_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000" />
+        android:textColor="#000000"
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/Layout_Teacher_depts"
@@ -21,35 +22,7 @@
         android:layout_height="wrap_content"
         android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/Layout_Teacher_expertise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/Layout_Teacher_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_Teacher_courses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_Teacher_awards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/Layout_Teacher_scholarship"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000" />
 
 
 </LinearLayout>
