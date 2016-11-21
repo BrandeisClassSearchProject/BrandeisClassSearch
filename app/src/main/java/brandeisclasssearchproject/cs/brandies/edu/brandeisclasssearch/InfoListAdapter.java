@@ -72,20 +72,10 @@ public class InfoListAdapter extends BaseAdapter {
             holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
             holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
             holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
-            holder.expertise = (TextView) temp.findViewById(R.id.Layout_Teacher_expertise);
-            holder.profile = (TextView) temp.findViewById(R.id.Layout_Teacher_profile);
-            holder.courses= (TextView) temp.findViewById(R.id.Layout_Teacher_courses);
-            holder.awards = (TextView) temp.findViewById(R.id.Layout_Teacher_awards);
-            holder.scholarship = (TextView) temp.findViewById(R.id.Layout_Teacher_scholarship);
 
             holder.name.setText(p.getResult().get(0));
             holder.department.setText(p.getResult().get(1));
             holder.degrees.setText(p.getResult().get(2));
-            holder.expertise.setText(p.getResult().get(3));
-            holder.profile.setText(p.getResult().get(4));
-            holder.courses.setText(p.getResult().get(5));
-            holder.awards.setText(p.getResult().get(6));
-            holder.scholarship.setText(p.getResult().get(7));
 
             temp.setTag(holder);
         }
@@ -133,10 +123,7 @@ public class InfoListAdapter extends BaseAdapter {
         if (al.size()>0) {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
-            String s = "";
-            for(String temps:al){
-                s = s+temps+"\n";
-            }
+            String s = al.get(0).substring(0, 300) + "\nclick for more";
             holder.entry.setText(s);
             temp.setTag(holder);
         }
@@ -160,11 +147,6 @@ public class InfoListAdapter extends BaseAdapter {
         TextView name;
         TextView department;
         TextView degrees;
-        TextView expertise;
-        TextView profile;
-        TextView courses;
-        TextView awards;
-        TextView scholarship;
     }
 
     static class bookHolder
