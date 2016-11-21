@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -58,12 +59,19 @@ public class MainActivity extends AppCompatActivity
     AsyncTask dataLoader;
     ArrayList<Producers> producersList = new ArrayList<Producers>();
     InfoListAdapter adapter;
-    ProgressDialog pDialog;
+    ProgressBar pb;
+    ListView lv;
+
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
+    //final int[] oldTerms = new int[]{};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        pb=(ProgressBar) findViewById(R.id.theProgressBar);
+        pb.setVisibility(View.INVISIBLE);
+
         dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
             @Override
             public void processFinish(HashMap<String, ArrayList<String>> output) {
@@ -74,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         dataLoader.execute();
         //new LoadingData().execute();//not ready yet
 
-        setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //The list view is the one we put all the infomations
-        ListView lv = (ListView) findViewById(R.id.theContentList);
+        lv = (ListView) findViewById(R.id.theContentList);
         SearchView sv = (SearchView) findViewById(R.id.searchClass);
 
         //adapter = new InfoListAdapter(producersList);
@@ -116,6 +124,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
 
                 if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
+                    //lv.setVisibility(View.INVISIBLE);
                     CST= new ClassSearchingTask(query);
                     CST.execute();
                     return true;
@@ -249,8 +258,18 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+
+        @Override
+        protected void onPreExecute() {
+            lv.setVisibility(View.INVISIBLE);
+            pb.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected void onPostExecute(Void aVoid) {
+
+            pb.setVisibility(View.INVISIBLE);
+            lv.setVisibility(View.VISIBLE);
             //update the list
             if(producersList==null){
                 Toast.makeText(getApplicationContext(), "We cannot find relevant information, maybe the class ID is wrong?", Toast.LENGTH_LONG).show();
@@ -327,12 +346,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
-        ProgressDialog pDialog;
+        long startTime;
+        //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
         private String filename = "DATA.txt";
 
         public LoadingData() {
-            pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
+            startTime = System.currentTimeMillis();
+            //pDialog=new ProgressDialog(MainActivity.this);
             this.dataMap = null;
         }
 
@@ -358,9 +379,12 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPreExecute() {
+            pb.setVisibility(View.VISIBLE);
+            //pDialog.setTitle("Loading");
+            //pDialog.setMessage("Please wait~");
+            //pDialog.show();
             //pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
             //pDialog.show();
-            pDialog=ProgressDialog.show(getApplicationContext(),"Loading","",true,false);
             //pDialog.setMessage("Loading...");
             //pDialog.setCancelable(false);
             //pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -369,10 +393,12 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(pDialog.isShowing()){
-                pDialog.dismiss();
-            }
+//            if(pDialog.isShowing()){
+//                pDialog.dismiss();
+//            }
+            pb.setVisibility(View.INVISIBLE);
             datasMap=dataMap;
+            Log.i("Main.LoadingData","Done.\nTakes "+String.valueOf((System.currentTimeMillis()-startTime)/1000.0)+"s.");
         }
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
@@ -385,7 +411,7 @@ public class MainActivity extends AppCompatActivity
             String updateDate = br.readLine().split(" ")[0];
             int counter=1;
             while((temp=br.readLine())!=null ){
-                Log.i("DataLoader",temp);
+                //Log.i("DataLoader",temp);
                 if(counter%14==1){
                     title=temp;
                     if(title.length()>updateDate.length()){
