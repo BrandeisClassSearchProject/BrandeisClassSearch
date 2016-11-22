@@ -92,8 +92,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "What's up", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Save this Course?", Snackbar.LENGTH_SHORT)
+                        .setAction("√ SAVE", new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
             }
         });//set the on Click of fab buttom
 
@@ -182,11 +187,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
-
-
     /*
     Option Menu
     set up and inflate option menu
@@ -239,17 +239,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_main) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_my) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_time) {
 
-        } else if (id == R.id.nav_share) {
+        }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+        }else if (id==R.id.nav_maj){
 
         }
 
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Producers p = producersList.get(position);
-                    Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
+                    //Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
                     Intent i = null;
                     if(p instanceof ProducersClassDescription){
                         i = new Intent(getApplicationContext(),ShowDescription.class);

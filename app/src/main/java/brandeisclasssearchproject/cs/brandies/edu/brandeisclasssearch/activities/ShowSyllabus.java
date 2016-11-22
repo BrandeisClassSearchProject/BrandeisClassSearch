@@ -22,13 +22,13 @@ public class ShowSyllabus extends AppCompatActivity {
         ArrayList<String> list =i.getExtras().getStringArrayList("list");
 
 
-        /**for testing purpose, delete after implementation*/
-        if(list!=null&&!list.isEmpty()){
-            Toast.makeText(getApplicationContext(),list.get(0),Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getApplicationContext(),"nothing in the list",Toast.LENGTH_SHORT).show();
-        }
-        /**for testing purpose, delete after implementation*/
+//        /**for testing purpose, delete after implementation*/
+//        if(list!=null&&!list.isEmpty()){
+//            Toast.makeText(getApplicationContext(),list.get(0),Toast.LENGTH_SHORT).show();
+//        }else{
+//            Toast.makeText(getApplicationContext(),"nothing in the list",Toast.LENGTH_SHORT).show();
+//        }
+//        /**for testing purpose, delete after implementation*/
 
 
     }
