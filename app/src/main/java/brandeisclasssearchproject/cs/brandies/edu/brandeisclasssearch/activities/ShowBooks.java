@@ -3,6 +3,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activitie
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +28,12 @@ public class ShowBooks extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"nothing in the list",Toast.LENGTH_SHORT).show();
         }
         /**for testing purpose, delete after implementation*/
+        TextView tv = (TextView) findViewById(R.id.books_show_books);
+        String content = "";
+        for (String s : list) {
+            content += s+"\n";
+        }
+        tv.setText(content);
     }
 
     @Override
