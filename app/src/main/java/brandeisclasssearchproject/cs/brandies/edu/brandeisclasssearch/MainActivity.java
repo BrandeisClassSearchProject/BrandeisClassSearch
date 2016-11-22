@@ -1,14 +1,13 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,13 +16,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -61,10 +59,11 @@ public class MainActivity extends AppCompatActivity
     InfoListAdapter adapter;
     ProgressBar pb;
     ListView lv;
+    SearchView sv;
+    MenuItem mi;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
-    //final int[] oldTerms = new int[]{};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +72,14 @@ public class MainActivity extends AppCompatActivity
         pb=(ProgressBar) findViewById(R.id.theProgressBar);
         pb.setVisibility(View.INVISIBLE);
 
-        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
-            @Override
-            public void processFinish(HashMap<String, ArrayList<String>> output) {
-                datas=output;//set the hashmap for use in the main thread;
-            }
-        },getApplicationContext());
-        Log.i("Main","dataLoader.execute()");
-        //dataLoader.execute();
+//        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
+//            @Override
+//            public void processFinish(HashMap<String, ArrayList<String>> output) {
+//                datas=output;//set the hashmap for use in the main thread;
+//            }
+//        },getApplicationContext());
+//        Log.i("Main","dataLoader.execute()");
+//        //dataLoader.execute();
         new LoadingData().execute();//not ready yet
 
 
@@ -114,29 +113,38 @@ public class MainActivity extends AppCompatActivity
 
         //The list view is the one we put all the infomations
         lv = (ListView) findViewById(R.id.theContentList);
-        SearchView sv = (SearchView) findViewById(R.id.searchClass);
-
+        //SearchView sv = (SearchView) findViewById(R.id.searchClass);
+        //SearchView sv = (SearchView) findViewById(R.id.action_settings);
         //adapter = new InfoListAdapter(producersList);
         //lv.setAdapter(adapter);
+
+
+
+
+    }
+
+    private void setSV(){
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if(datas!=null){
-                //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
+                    //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
                     //lv.setVisibility(View.INVISIBLE);
                     CST= new ClassSearchingTask(query);
                     CST.execute();
                     return true;
                 }
                 else {
+                    pb.setVisibility(View.VISIBLE);
                     Toast.makeText(getApplicationContext(), "Loading not Finished yet, please wait few more seconds~", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
 
 
+            //implement suggestion here!
             @Override
             public boolean onQueryTextChange(String newText) {
 
@@ -145,9 +153,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-
-
-
     }
 
     //http://stackoverflow.com/questions/23658567/android-actionbar-searchview-suggestions-with-a-simple-string-array
@@ -191,6 +196,12 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        mi = menu.findItem(R.id.action_settings);
+        sv = (SearchView) MenuItemCompat.getActionView(mi);
+        setSV();
+        //
+        //sv=(SearchView)findViewById(R.id.action_settings);
+
         return true;
     }
 
@@ -378,19 +389,10 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        @Override
-        protected void onPreExecute() {
-            pb.setVisibility(View.VISIBLE);
-            //pDialog.setTitle("Loading");
-            //pDialog.setMessage("Please wait~");
-            //pDialog.show();
-            //pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
-            //pDialog.show();
-            //pDialog.setMessage("Loading...");
-            //pDialog.setCancelable(false);
-            //pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //pDialog.show();
-        }
+//        @Override
+//        protected void onPreExecute() {
+//            pb.setVisibility(View.VISIBLE);
+//        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
