@@ -3,11 +3,15 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,6 +34,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
@@ -61,6 +68,8 @@ public class MainActivity extends AppCompatActivity
     ListView lv;
     SearchView sv;
     MenuItem mi;
+    private SimpleCursorAdapter mAdapter;
+    LinkedList<String> sortedClasses;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
@@ -81,6 +90,13 @@ public class MainActivity extends AppCompatActivity
 //        Log.i("Main","dataLoader.execute()");
 //        //dataLoader.execute();
         new LoadingData().execute();//not ready yet
+
+        mAdapter = new SimpleCursorAdapter(this,
+                R.layout.suggestion_entry,
+                null,
+                new String[] {"className"},
+                new int[] {R.id.suggestion_entry_text},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -129,6 +145,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setSV(){
+
+        sv.setSuggestionsAdapter(mAdapter);
+        sv.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
+
+            public boolean onSuggestionSelect(int position) {
+                Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
@@ -152,29 +184,39 @@ public class MainActivity extends AppCompatActivity
             //implement suggestion here!
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                polulateAdapter();
-
-                return false;
+                if(sortedClasses==null||newText.isEmpty()){
+                    Log.wtf("Main.onQueryTextChange","the list is null!");
+                    return false;
+                }
+                polulateAdapter(newText);
+                return true;
             }
         });
     }
 
     //http://stackoverflow.com/questions/23658567/android-actionbar-searchview-suggestions-with-a-simple-string-array
-    private void polulateAdapter() {
-        //final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
-        //do something
+    private void polulateAdapter(String query) {
+        Log.i("Main.polulateAdapter","new query is "+query);
+        MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
+        int i=0;
+        for (String s:sortedClasses) {
+            if (s.startsWith(query.toUpperCase())) {
+                Log.wtf("Main.polulateAdapter",s+"  "+query.toUpperCase());
+                c.addRow(new Object[] {i, s});
+                i++;
+            }
+
+            if(i==5){
+                break;
+            }
+        }
+        Log.i("Main.polulateAdapter",String.valueOf(i));
+        mAdapter.changeCursor(c);
+
 
 
     }
 
-
-    /*
-    The method defines the behaviour of user clicking the back button
-    The back button is the triangle button on the bottom of the screen
-    it can be on the right or left depending on the systems
-    usually on the left
-     */
     @Override
     public void onBackPressed() {
         Log.i("mylog","onBackPressed");
@@ -187,11 +229,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*
-    Option Menu
-    set up and inflate option menu
-    and defines select behaviors
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -219,20 +256,7 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-    /*
-    Option Menu stuffs
-     */
 
-
-
-
-
-    /*
-    This method defines the behavior of click items in the navigation bar
-    Important
-    implement it later
-    after implementation of the searching mechanisms
-     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -358,6 +382,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
+        private HashSet<String> tempClasses;
         long startTime;
         //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
@@ -389,18 +414,18 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-//        @Override
-//        protected void onPreExecute() {
-//            pb.setVisibility(View.VISIBLE);
-//        }
-
         @Override
         protected void onPostExecute(Void aVoid) {
-//            if(pDialog.isShowing()){
-//                pDialog.dismiss();
-//            }
             pb.setVisibility(View.INVISIBLE);
             datasMap=dataMap;
+            LinkedList<String> l= new LinkedList<>();
+            l.addAll(tempClasses);
+            sortedClasses=l;
+//            for(String s:l){
+//                Log.i("Main.onPostExecute",s);
+//            }
+
+            Log.i("Main.LoadingData","the list is "+sortedClasses==null?"NULL":String.valueOf(sortedClasses.size()));
             Log.i("Main.LoadingData","Done.\nTakes "+String.valueOf((System.currentTimeMillis()-startTime)/1000.0)+"s.");
         }
 
@@ -411,6 +436,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
+            tempClasses=new HashSet<>();
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
             BufferedReader br = new BufferedReader(isr);
@@ -423,20 +449,23 @@ public class MainActivity extends AppCompatActivity
                 //Log.i("DataLoader",temp);
                 if(counter%14==1){
                     title=temp;
+
                     if(title.length()>updateDate.length()){
                         if(title.substring(0,updateDate.length()).equals(updateDate)){
                             counter--;
                             if (datas==null){
                                 datas=hm;
                                 publishProgress();
-
-
                             }
                             data.add(hm);
                             hm = new HashMap<>();
-
+                        }else{
+                            String[] tempS=title.split(" ");
+                            tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
                         }
-
+                    }else{
+                        String[] tempS=title.split(" ");
+                        tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
                     }
                 }else if(counter%14==0){
                     Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
