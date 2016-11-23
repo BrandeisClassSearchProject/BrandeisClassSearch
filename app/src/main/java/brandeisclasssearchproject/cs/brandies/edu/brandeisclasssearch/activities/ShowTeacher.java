@@ -18,7 +18,7 @@ public class ShowTeacher extends AppCompatActivity {
         setContentView(R.layout.activity_show_teacher);
 
         Intent i =getIntent();
-        ArrayList<String> list =i.getExtras().getStringArrayList("list");
+        ArrayList<String> list = i.getExtras().getStringArrayList("list");
 
 
         /**for testing purpose, delete after implementation*/

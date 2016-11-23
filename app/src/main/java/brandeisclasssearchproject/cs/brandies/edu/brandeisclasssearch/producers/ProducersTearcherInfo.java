@@ -98,6 +98,8 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             System.err.println("invalid URL");
         } catch (IOException e) {
             System.out.println("Construction failed");
+        } catch (IndexOutOfBoundsException e) {
+            Results.add("The faculty member you requested cannot be found");
         }
     }
 

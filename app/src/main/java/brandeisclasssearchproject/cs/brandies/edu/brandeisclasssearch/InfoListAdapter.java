@@ -92,6 +92,18 @@ public class InfoListAdapter extends BaseAdapter {
 
             temp.setTag(holder);
         }
+        else {
+            teacherHolder holder = new teacherHolder();
+            holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
+            holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
+            holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
+            holder.name.setText(p.getResult().get(0));
+            holder.department.setText("");
+            holder.degrees.setText("");
+
+            temp.setTag(holder);
+
+        }
         return temp;
     }
 
