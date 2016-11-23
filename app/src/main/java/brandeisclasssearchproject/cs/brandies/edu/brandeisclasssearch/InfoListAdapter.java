@@ -132,8 +132,9 @@ public class InfoListAdapter extends BaseAdapter {
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Book_entryOne);
 
             String s = al.get(0);
-            for(int i=1; i<al.size(); i++)
-                s = s+"\n"+"\n"+al.get(i);
+            if (al.size()>1) {
+                s = s + "\n" + "and more...";
+            }
             holder.entry.setText(s);
             temp.setTag(holder);
         }

@@ -29,9 +29,9 @@ public class ShowBooks extends AppCompatActivity {
 //        }
 //        /**for testing purpose, delete after implementation*/
         TextView tv = (TextView) findViewById(R.id.books_show_books);
-        String content = "";
-        for (String s : list) {
-            content += s+"\n";
+        String content = list.get(0);
+        for (int x = 1; x<list.size(); x++) {
+            content += list.get(x)+"\n";
         }
         tv.setText(content);
     }
