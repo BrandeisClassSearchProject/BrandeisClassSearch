@@ -1,6 +1,6 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.MatrixCursor;
@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,13 +20,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -32,6 +34,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
@@ -61,10 +66,13 @@ public class MainActivity extends AppCompatActivity
     InfoListAdapter adapter;
     ProgressBar pb;
     ListView lv;
+    SearchView sv;
+    MenuItem mi;
+    private SimpleCursorAdapter mAdapter;
+    LinkedList<String> sortedClasses;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
-    //final int[] oldTerms = new int[]{};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +81,22 @@ public class MainActivity extends AppCompatActivity
         pb=(ProgressBar) findViewById(R.id.theProgressBar);
         pb.setVisibility(View.INVISIBLE);
 
-        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
-            @Override
-            public void processFinish(HashMap<String, ArrayList<String>> output) {
-                datas=output;//set the hashmap for use in the main thread;
-            }
-        },getApplicationContext());
-        Log.i("Main","dataLoader.execute()");
-        //dataLoader.execute();
+//        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
+//            @Override
+//            public void processFinish(HashMap<String, ArrayList<String>> output) {
+//                datas=output;//set the hashmap for use in the main thread;
+//            }
+//        },getApplicationContext());
+//        Log.i("Main","dataLoader.execute()");
+//        //dataLoader.execute();
         new LoadingData().execute();//not ready yet
+
+        mAdapter = new SimpleCursorAdapter(this,
+                R.layout.suggestion_entry,
+                null,
+                new String[] {"className"},
+                new int[] {R.id.suggestion_entry_text},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,8 +108,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "What's up", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Save this Course?", Snackbar.LENGTH_SHORT)
+                        .setAction("√ SAVE", new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
             }
         });//set the on Click of fab buttom
 
@@ -114,57 +134,89 @@ public class MainActivity extends AppCompatActivity
 
         //The list view is the one we put all the infomations
         lv = (ListView) findViewById(R.id.theContentList);
-        SearchView sv = (SearchView) findViewById(R.id.searchClass);
-
+        //SearchView sv = (SearchView) findViewById(R.id.searchClass);
+        //SearchView sv = (SearchView) findViewById(R.id.action_settings);
         //adapter = new InfoListAdapter(producersList);
         //lv.setAdapter(adapter);
+
+
+
+
+    }
+
+    private void setSV(){
+
+        sv.setSuggestionsAdapter(mAdapter);
+        sv.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
+
+            public boolean onSuggestionSelect(int position) {
+                Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
 
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if(datas!=null){
-                //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
+                    //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
                     //lv.setVisibility(View.INVISIBLE);
                     CST= new ClassSearchingTask(query);
                     CST.execute();
                     return true;
                 }
                 else {
+                    pb.setVisibility(View.VISIBLE);
                     Toast.makeText(getApplicationContext(), "Loading not Finished yet, please wait few more seconds~", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
 
 
+            //implement suggestion here!
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                polulateAdapter();
-
-                return false;
+                if(sortedClasses==null||newText.isEmpty()){
+                    Log.wtf("Main.onQueryTextChange","the list is null!");
+                    return false;
+                }
+                polulateAdapter(newText);
+                return true;
             }
         });
-
-
-
     }
 
     //http://stackoverflow.com/questions/23658567/android-actionbar-searchview-suggestions-with-a-simple-string-array
-    private void polulateAdapter() {
-        //final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
-        //do something
+    private void polulateAdapter(String query) {
+        Log.i("Main.polulateAdapter","new query is "+query);
+        MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
+        int i=0;
+        for (String s:sortedClasses) {
+            if (s.startsWith(query.toUpperCase())) {
+                Log.wtf("Main.polulateAdapter",s+"  "+query.toUpperCase());
+                c.addRow(new Object[] {i, s});
+                i++;
+            }
+
+            if(i==5){
+                break;
+            }
+        }
+        Log.i("Main.polulateAdapter",String.valueOf(i));
+        mAdapter.changeCursor(c);
+
 
 
     }
 
-
-    /*
-    The method defines the behaviour of user clicking the back button
-    The back button is the triangle button on the bottom of the screen
-    it can be on the right or left depending on the systems
-    usually on the left
-     */
     @Override
     public void onBackPressed() {
         Log.i("mylog","onBackPressed");
@@ -177,20 +229,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
-
-
-    /*
-    Option Menu
-    set up and inflate option menu
-    and defines select behaviors
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        mi = menu.findItem(R.id.action_settings);
+        sv = (SearchView) MenuItemCompat.getActionView(mi);
+        setSV();
+        //
+        //sv=(SearchView)findViewById(R.id.action_settings);
+
         return true;
     }
 
@@ -208,37 +256,24 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-    /*
-    Option Menu stuffs
-     */
 
-
-
-
-
-    /*
-    This method defines the behavior of click items in the navigation bar
-    Important
-    implement it later
-    after implementation of the searching mechanisms
-     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_main) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_my) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_time) {
 
-        } else if (id == R.id.nav_share) {
+        }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+        }else if (id==R.id.nav_maj){
 
         }
 
@@ -284,7 +319,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Producers p = producersList.get(position);
-                    Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
+                    //Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
                     Intent i = null;
                     if(p instanceof ProducersClassDescription){
                         i = new Intent(getApplicationContext(),ShowDescription.class);
@@ -347,6 +382,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
+        private HashSet<String> tempClasses;
         long startTime;
         //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
@@ -379,26 +415,17 @@ public class MainActivity extends AppCompatActivity
 
 
         @Override
-        protected void onPreExecute() {
-            pb.setVisibility(View.VISIBLE);
-            //pDialog.setTitle("Loading");
-            //pDialog.setMessage("Please wait~");
-            //pDialog.show();
-            //pDialog=new ProgressDialog(getApplicationContext(),ProgressDialog.STYLE_SPINNER);
-            //pDialog.show();
-            //pDialog.setMessage("Loading...");
-            //pDialog.setCancelable(false);
-            //pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //pDialog.show();
-        }
-
-        @Override
         protected void onPostExecute(Void aVoid) {
-//            if(pDialog.isShowing()){
-//                pDialog.dismiss();
-//            }
             pb.setVisibility(View.INVISIBLE);
             datasMap=dataMap;
+            LinkedList<String> l= new LinkedList<>();
+            l.addAll(tempClasses);
+            sortedClasses=l;
+//            for(String s:l){
+//                Log.i("Main.onPostExecute",s);
+//            }
+
+            Log.i("Main.LoadingData","the list is "+sortedClasses==null?"NULL":String.valueOf(sortedClasses.size()));
             Log.i("Main.LoadingData","Done.\nTakes "+String.valueOf((System.currentTimeMillis()-startTime)/1000.0)+"s.");
         }
 
@@ -409,6 +436,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
+            tempClasses=new HashSet<>();
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
             BufferedReader br = new BufferedReader(isr);
@@ -421,20 +449,23 @@ public class MainActivity extends AppCompatActivity
                 //Log.i("DataLoader",temp);
                 if(counter%14==1){
                     title=temp;
+
                     if(title.length()>updateDate.length()){
                         if(title.substring(0,updateDate.length()).equals(updateDate)){
                             counter--;
                             if (datas==null){
                                 datas=hm;
                                 publishProgress();
-
-
                             }
                             data.add(hm);
                             hm = new HashMap<>();
-
+                        }else{
+                            String[] tempS=title.split(" ");
+                            tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
                         }
-
+                    }else{
+                        String[] tempS=title.split(" ");
+                        tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
                     }
                 }else if(counter%14==0){
                     Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
