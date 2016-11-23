@@ -1,6 +1,9 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.MatrixCursor;
@@ -9,6 +12,8 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
+
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -37,12 +42,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSyllabus;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
@@ -52,9 +60,6 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
-/*
-
- */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -70,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     MenuItem mi;
     private SimpleCursorAdapter mAdapter;
     LinkedList<String> sortedClasses;
+    Toolbar toolbar;
+    Fragment fr;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -206,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                 i++;
             }
 
-            if(i==5){
+            if(i==8){
                 break;
             }
         }
@@ -264,17 +271,29 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
+            toolbar.setTitle("Brandeis Class Search");
+            fr = new FragmentBlank();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
+            lv.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_my) {
-
+            lv.setVisibility(View.INVISIBLE);
+            Log.i("onNavigationItemS","my class selected");
+            toolbar.setTitle("My Classes");
+            fr = new FragmentMyClasses();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
         } else if (id == R.id.nav_time) {
-
+            toolbar.setTitle("My Schedule");
         }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }else if (id==R.id.nav_maj){
-
+            toolbar.setTitle("Majors");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -382,7 +401,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
-        private HashSet<String> tempClasses;
+        private TreeSet<String> tempClasses;
         long startTime;
         //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
@@ -436,7 +455,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
-            tempClasses=new HashSet<>();
+            tempClasses=new TreeSet<>();
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
             BufferedReader br = new BufferedReader(isr);

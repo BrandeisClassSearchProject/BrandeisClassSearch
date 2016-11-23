@@ -9,4 +9,7 @@
     <string name="title_activity_onclick_books">OnclickBooksActivity</string>
     <string name="title_activity_onclick_discription">OnclickDiscriptionActivity</string>
     <string name="title_activity_onclick_schdule">OnclickSchduleActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">What are you looking at? There is nothing</string>
 </resources>
