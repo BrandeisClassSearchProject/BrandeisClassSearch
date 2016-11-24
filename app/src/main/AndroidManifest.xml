@@ -41,7 +41,9 @@
         <activity android:name=".activities.ShowTeacher" />
         <activity android:name=".activities.ShowSchedule" />
         <activity android:name=".activities.ShowSyllabus" />
-        <activity android:name=".activities.ScheduleTable"></activity>
+        <activity
+            android:name=".activities.ScheduleTable">
+        </activity>
     </application>
 
 </manifest>
