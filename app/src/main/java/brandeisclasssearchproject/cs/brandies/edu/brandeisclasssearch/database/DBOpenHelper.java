@@ -23,7 +23,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     // table names
     public static final String TABLE_COURSE_SELECTION = "tableForCourseSelection";
-    public static final String TABLE_COURSE_TRACK = "tableForCourseTrack";
 
     // column names
     public static final String KEY_COURSE_NAME = "courseName";
@@ -38,13 +37,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             + KEY_COURSE_NAME + " TEXT NOT NULL,"
             + KEY_COURSE_TIME + " TEXT);";
 
-    private static final String DATABASE_COURSE_TRACK_CREATE = "CREATE TABLE "
-            + TABLE_COURSE_TRACK
-            + " (" + KEY_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + KEY_COURSE_NAME + " TEXT NOT NULL,"
-            + KEY_COURSE_TIME + " TEXT);";
-
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -54,14 +46,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
         // creating required tables
         db.execSQL(TABLE_COURSE_SELECTION);
-        db.execSQL(TABLE_COURSE_TRACK);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_COURSE_SELECTION);
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_COURSE_TRACK);
 
         // create new tables
         onCreate(db);
