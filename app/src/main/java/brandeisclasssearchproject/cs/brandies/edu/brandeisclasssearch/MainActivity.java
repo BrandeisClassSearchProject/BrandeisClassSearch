@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity
                             .setAction("√ SAVE", new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
+                                    //implement add from db here
                                     Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
@@ -356,6 +357,8 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Producers p = producersList.get(position);
+                    ArrayList<String> al = new ArrayList<>();
+                    boolean isSchedule=false;
                     //Toast.makeText(getApplicationContext(), String.valueOf(position)+" "+p.getName(), Toast.LENGTH_SHORT).show();//debug purpose only
                     Intent i = null;
                     if(p instanceof ProducersClassDescription){
@@ -367,16 +370,27 @@ public class MainActivity extends AppCompatActivity
                     }else if(p instanceof ProducersSyllabus){
                         i = new Intent(getApplicationContext(),ShowSyllabus.class);
                     }else if(p instanceof ProducersClassSchdule){
-                        ArrayList<String> al = new ArrayList<>();
+                        al = new ArrayList<>();
                         al.add("CLASS");
                         al.add(currentClassName);
-                        al.addAll(p.getResult());
+                        for(String temp:p.getResult()){
+                            al.add(temp);
+                        }
                         i = new Intent(getApplicationContext(),ScheduleTable.class);
-                        i.putExtra("list",al);
+                        for(String s:al){
+                            Log.i("Main",s);
+                        }
+                        isSchedule=true;
+
 
                     }
                     if(i != null){
-                        i.putExtra("list",p.getResult());
+                        if(isSchedule){
+                            i.putExtra("list",al);
+                        }else{
+                            i.putExtra("list",p.getResult());
+                        }
+
                         startActivity(i);
                         overridePendingTransition(R.anim.right_in,R.anim.left_out);
                     }

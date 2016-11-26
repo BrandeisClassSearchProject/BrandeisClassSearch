@@ -13,36 +13,37 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".activities.ShowBooks"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activities.ShowDescription"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activities.ShowTeacher"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activities.ShowSchedule"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activities.ShowSyllabus"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
-            android:name=".activities.OnclickTeacherActivity"
-            android:label="@string/title_activity_onclick_teacher"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.OnclickBooksActivity"
-            android:label="@string/title_activity_onclick_books"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.OnclickDiscriptionActivity"
-            android:label="@string/title_activity_onclick_discription"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.OnclickSchduleActivity"
-            android:label="@string/title_activity_onclick_schdule"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ShowBooks" />
-        <activity android:name=".activities.ShowDescription" />
-        <activity android:name=".activities.ShowTeacher" />
-        <activity android:name=".activities.ShowSchedule" />
-        <activity android:name=".activities.ShowSyllabus" />
-        <activity
-            android:name=".activities.ScheduleTable">
+            android:name=".activities.ScheduleTable"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
     </application>
 

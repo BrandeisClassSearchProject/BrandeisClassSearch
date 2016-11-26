@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,9 @@ public class ScheduleTable extends AppCompatActivity {
 
         Intent i =getIntent();
         ArrayList<String> list =i.getExtras().getStringArrayList("list");
+        for(String s:list){
+            Log.i("ScheduleTable",s);
+        }
         Fragment fr = new FragmentSchedule();
         Bundle b = new Bundle();
         b.putStringArrayList("list",list);
