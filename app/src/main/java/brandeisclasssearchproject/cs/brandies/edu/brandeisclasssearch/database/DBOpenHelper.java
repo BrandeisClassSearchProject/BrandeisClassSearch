@@ -45,7 +45,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // creating required tables
-        db.execSQL(TABLE_COURSE_SELECTION);
+        db.execSQL(DATABASE_COURSE_SELECTION_CREATE);
     }
 
     @Override
@@ -57,18 +57,18 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addLog(String courseName, String courseTime, String table, SQLiteDatabase db) {
+    public void addCourse(String courseName, String courseTime, SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(this.KEY_COURSE_NAME,courseName);
         contentValues.put(this.KEY_COURSE_TIME,courseTime);
-        db.insert(table,null,contentValues);
+        db.insert(TABLE_COURSE_SELECTION,null,contentValues);
     }
 
-    public Cursor getLog(String table, SQLiteDatabase db) {
+    public Cursor getCourse(SQLiteDatabase db) {
         Cursor cursor;
 
         String[] projections = {this.KEY_ID, this.KEY_COURSE_NAME, this.KEY_COURSE_TIME,};
-        cursor = db.query(table, projections, null, null, null, null, null);
+        cursor = db.query(TABLE_COURSE_SELECTION, projections, null, null, null, null, null);
         if (cursor != null) {
 
             cursor.moveToFirst();
@@ -77,8 +77,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void deleteLog(long id, String table, SQLiteDatabase db) {
-        db.delete(table, this.KEY_ID + "=" + id, null);
+    public void deleteCourse(long id, SQLiteDatabase db) {
+        db.delete(TABLE_COURSE_SELECTION, this.KEY_ID + "=" + id, null);
     }
 }
-

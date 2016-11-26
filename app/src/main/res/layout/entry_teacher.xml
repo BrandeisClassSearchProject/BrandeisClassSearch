@@ -3,12 +3,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/Layout_Teacher_Image_Preview"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/Layout_Teacher_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:textSize="24sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/Layout_Teacher_depts"
@@ -21,8 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000" />
-
-
 
 
 </LinearLayout>

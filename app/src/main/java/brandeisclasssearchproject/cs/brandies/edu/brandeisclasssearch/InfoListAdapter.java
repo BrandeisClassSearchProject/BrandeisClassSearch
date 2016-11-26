@@ -1,12 +1,19 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
@@ -26,6 +33,8 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.
 
 public class InfoListAdapter extends BaseAdapter {
 
+    ImageView imageview ;
+    Bitmap bitmap;
     ArrayList<Producers> producerList;
 
     public InfoListAdapter(ArrayList<Producers> ap) {
@@ -79,33 +88,57 @@ public class InfoListAdapter extends BaseAdapter {
     private View getViewTeacher(Producers p, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_teacher, parent, false);
-        //do something!
-        if (p.getResult().size()==8) {
-            teacherHolder holder = new teacherHolder();
-            holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
-            holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
-            holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
-
+        teacherHolder holder = new teacherHolder();
+        holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
+        holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
+        holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
+        imageview = (ImageView) temp.findViewById(R.id.Layout_Teacher_Image_Preview);
+        if (p.getResult().size() == 9) {
             holder.name.setText(p.getResult().get(0));
-            holder.department.setText(p.getResult().get(1));
-            holder.degrees.setText(p.getResult().get(2));
-
+            holder.department.setText("Department: " + p.getResult().get(1));
+            holder.degrees.setText("Expertise: " + p.getResult().get(3));
+            operationBG task = new operationBG();
+            String url;
+            if(p.getResult().size() == 9)
+                url = p.getResult().get(8);
+            else
+                url = "";
+            task.execute(url);
+            holder.picPreview = imageview;
             temp.setTag(holder);
         }
         else {
-            teacherHolder holder = new teacherHolder();
-            holder.name = (TextView) temp.findViewById(R.id.Layout_Teacher_name);
-            holder.department = (TextView) temp.findViewById(R.id.Layout_Teacher_depts);
-            holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
             holder.name.setText(p.getResult().get(0));
-            holder.department.setText("");
-            holder.degrees.setText("");
-
+            holder.department.setText("D.Va should get nerfed. ");
+            holder.degrees.setText("--- by Sombra");
             temp.setTag(holder);
-
         }
         return temp;
     }
+
+    private class operationBG extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                URL url = new URL(params[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            imageview.setImageBitmap(bitmap);
+            Log.e("MESSAGE", "task finished!");
+        }
+    }
+
 
 
     private View getViewSchedule(Producers p, ViewGroup parent) {
@@ -121,8 +154,6 @@ public class InfoListAdapter extends BaseAdapter {
             holder.entry.setText(tempS);
             temp.setTag(holder);
         }
-
-
         return temp;
     }
 
@@ -130,7 +161,6 @@ public class InfoListAdapter extends BaseAdapter {
     private View getViewBooks(Producers p, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_books, parent, false);
-
         ArrayList<String> al = p.getResult();
         if (al.size()>0) {
             defaultHolder holder = new defaultHolder();
@@ -154,7 +184,12 @@ public class InfoListAdapter extends BaseAdapter {
         if (al.size()>0) {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
-            String s = al.get(0).substring(0, 300) + "\nclick for more";
+            String s;
+            if (al.get(0).length()>300) {
+                s = al.get(0).substring(0, 300) + "\nclick for more";
+            } else {
+                s = al.get(0) + "\nclick for more";
+            }
             holder.entry.setText(s);
             temp.setTag(holder);
         }
@@ -178,6 +213,7 @@ public class InfoListAdapter extends BaseAdapter {
         TextView name;
         TextView department;
         TextView degrees;
+        ImageView picPreview;
     }
 
     static class bookHolder
