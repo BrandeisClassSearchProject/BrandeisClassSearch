@@ -52,11 +52,11 @@ public class ProducersTearcherInfo extends ProducersAbstract {
         content = document.getElementById(keyWord);
         if(content != null)
             if (content.text().length() >= numTmp)
-                return content.text().substring(numTmp) + "\n";
+                return content.text().substring(numTmp);
             else
-                return content.text() + "\n";
+                return content.text();
         else
-            return "no information about " + keyWord + " found\n";
+            return "no information about " + keyWord + " found.";
     }
 
     private String convertStringList(String keyWord, String tagName, int numTmp){
@@ -72,7 +72,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             else
                 return tmpString;
         } else
-            return "no information about " + keyWord + " found\n";
+            return "no information about " + keyWord + " found.";
     }
 
     private String convertTeacherName(String keyWord, String tagName){
@@ -83,7 +83,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             return node.text() + "\n";
         }
         else
-            return "no information about " + keyWord + " found\n";
+            return "no information about " + keyWord + " found.\n";
     }
 
     private String convertTeacherImage(String keyWord) {
