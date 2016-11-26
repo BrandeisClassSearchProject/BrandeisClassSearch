@@ -154,7 +154,12 @@ public class InfoListAdapter extends BaseAdapter {
         if (al.size()>0) {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
-            String s = al.get(0).substring(0, 300) + "\nclick for more";
+            String s;
+            if (al.get(0).length()>300) {
+                s = al.get(0).substring(0, 300) + "\nclick for more";
+            } else {
+                s = al.get(0) + "\nclick for more";
+            }
             holder.entry.setText(s);
             temp.setTag(holder);
         }
