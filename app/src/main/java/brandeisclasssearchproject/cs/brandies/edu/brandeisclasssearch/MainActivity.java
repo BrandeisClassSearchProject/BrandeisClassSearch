@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ScheduleTable;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSchedule;
@@ -53,6 +54,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassSchdule;
@@ -77,14 +79,17 @@ public class MainActivity extends AppCompatActivity
     LinkedList<String> sortedClasses;
     Toolbar toolbar;
     Fragment fr;
+    String currentClassName;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentClassName=null;
         pb=(ProgressBar) findViewById(R.id.theProgressBar);
         pb.setVisibility(View.INVISIBLE);
 
@@ -115,13 +120,25 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Save this Course?", Snackbar.LENGTH_SHORT)
-                        .setAction("√ SAVE", new View.OnClickListener(){
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
-                            }
-                        }).show();
+                if(currentClassName==null){
+                    Snackbar.make(view, "Click the search icon to find your class~", Snackbar.LENGTH_SHORT)
+                            .setAction("√", new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    Log.i("Main","no currentClassName yet");
+                                }
+                            }).show();
+                }else{
+                    Snackbar.make(view, "Save "+currentClassName+"?", Snackbar.LENGTH_SHORT)
+                            .setAction("√ SAVE", new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                                }
+                            }).show();
+                }
+
+
             }
         });//set the on Click of fab buttom
 
@@ -331,6 +348,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
             Toast.makeText(getApplicationContext(), "Showing", Toast.LENGTH_SHORT).show();
+            currentClassName=producersList.get(0).getResult().get(0);
             ListView lv = (ListView) findViewById(R.id.theContentList);
             adapter = new InfoListAdapter(producersList);
             lv.setAdapter(adapter);
@@ -349,7 +367,13 @@ public class MainActivity extends AppCompatActivity
                     }else if(p instanceof ProducersSyllabus){
                         i = new Intent(getApplicationContext(),ShowSyllabus.class);
                     }else if(p instanceof ProducersClassSchdule){
-                        i = new Intent(getApplicationContext(),ShowSchedule.class);
+                        ArrayList<String> al = new ArrayList<>();
+                        al.add("CLASS");
+                        al.add(currentClassName);
+                        al.addAll(p.getResult());
+                        i = new Intent(getApplicationContext(),ScheduleTable.class);
+                        i.putExtra("list",al);
+
                     }
                     if(i != null){
                         i.putExtra("list",p.getResult());

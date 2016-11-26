@@ -1,15 +1,15 @@
 package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import java.util.ArrayList;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
-import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 
 /**
  * Larry's proposal:
@@ -29,8 +29,14 @@ public class ScheduleTable extends AppCompatActivity {
 
         Intent i =getIntent();
         ArrayList<String> list =i.getExtras().getStringArrayList("list");
+        Fragment fr = new FragmentSchedule();
+        Bundle b = new Bundle();
+        b.putStringArrayList("list",list);
+        fr.setArguments(b);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.placeHolder, fr);
+        fragmentTransaction.commit();
 
-        // parse arrayList and generate a schedule
 
     }
 
