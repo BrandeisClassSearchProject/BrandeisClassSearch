@@ -57,14 +57,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addLog(String courseName, String courseTime, SQLiteDatabase db) {
+    public void addCourse(String courseName, String courseTime, SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(this.KEY_COURSE_NAME,courseName);
         contentValues.put(this.KEY_COURSE_TIME,courseTime);
         db.insert(TABLE_COURSE_SELECTION,null,contentValues);
     }
 
-    public Cursor getLog(SQLiteDatabase db) {
+    public Cursor getCourse(SQLiteDatabase db) {
         Cursor cursor;
 
         String[] projections = {this.KEY_ID, this.KEY_COURSE_NAME, this.KEY_COURSE_TIME,};
@@ -77,7 +77,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void deleteLog(long id, SQLiteDatabase db) {
+    public void deleteCourse(long id, SQLiteDatabase db) {
         db.delete(TABLE_COURSE_SELECTION, this.KEY_ID + "=" + id, null);
     }
 }
