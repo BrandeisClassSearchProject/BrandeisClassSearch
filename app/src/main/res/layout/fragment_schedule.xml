@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule">
+
+
+    <RelativeLayout
+        android:id="@+id/relativelayoutTIME"
+        android:orientation="vertical"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/classColor"
+        ></RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/relativelayoutTIME"
+        android:layout_toEndOf="@+id/relativelayoutTIME"
+        android:layout_above="@+id/classColor"
+
+        >
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/t1"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:text="MON"/>
+
+            <TextView
+                android:id="@+id/t2"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:text="TUE"/>
+
+            <TextView
+                android:id="@+id/t3"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:text="WED"/>
+
+            <TextView
+                android:id="@+id/t4"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:text="THUR"/>
+
+            <TextView
+                android:id="@+id/t5"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:text="FRI"/>
+
+
+            </TableRow>
+
+    </TableLayout>
+
+    <ListView
+        android:id="@+id/classColor"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+    </ListView>
+
+
+</RelativeLayout>
