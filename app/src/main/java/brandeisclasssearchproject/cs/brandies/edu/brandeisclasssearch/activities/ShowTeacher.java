@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +31,6 @@ public class ShowTeacher extends AppCompatActivity {
         Intent i =getIntent();
         ArrayList<String> list = i.getExtras().getStringArrayList("list");
 
-
         imageView = (ImageView) findViewById(R.id.Teacher_Image);
         operationBG task = new operationBG();
         String url;
@@ -42,15 +42,20 @@ public class ShowTeacher extends AppCompatActivity {
         Log.e("URL IS: ",url);
         task.execute(url);
 
-
-
-
         String content = "";
         TextView tv = (TextView) findViewById(R.id.teacher_show_teacher);
-        for (String s : list) {
-            content += s+"\n";
+        tv.setMovementMethod(new ScrollingMovementMethod());
+        if(list.size() == 9){
+            for (int j = 0; j < 8; j++) {
+                content += list.get(j) + "\n";
+            }
+            tv.setText(content);
+        } else {
+            for (String s : list) {
+                content += s + "\n";
+            }
+            tv.setText(content);
         }
-        tv.setText(content);
     }
 
     @Override
@@ -83,5 +88,4 @@ public class ShowTeacher extends AppCompatActivity {
             Log.e("MESSAGE", "task finished!");
         }
     }
-
 }
