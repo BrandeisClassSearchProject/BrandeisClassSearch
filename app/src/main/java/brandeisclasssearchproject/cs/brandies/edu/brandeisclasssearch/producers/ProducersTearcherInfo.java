@@ -51,7 +51,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
     private String convertSimpleString(String keyWord, int numTmp){
         content = document.getElementById(keyWord);
         if(content != null)
-            if (content.text().length() <= numTmp)
+            if (content.text().length() >= numTmp)
                 return content.text().substring(numTmp) + "\n";
             else
                 return content.text() + "\n";
@@ -67,7 +67,10 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             for (org.jsoup.nodes.Element tmpNode : list){
                 tmpString = tmpString + tmpNode.text() + "\n";
             }
-            return tmpString.substring(numTmp);
+            if(content.text().length() >= numTmp)
+                return tmpString.substring(numTmp);
+            else
+                return tmpString;
         } else
             return "no information about " + keyWord + " found\n";
     }
@@ -83,6 +86,22 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             return "no information about " + keyWord + " found\n";
     }
 
+    private String convertTeacherImage(String keyWord) {
+        content = document.getElementById(keyWord);
+        if(content != null){
+            String tmpString = content.html();
+            if(tmpString.contains("jpg")){
+                int tmpNum = tmpString.indexOf("jpg");
+                tmpString = tmpString.substring(0, tmpNum + 3);
+            }
+            if(tmpString.contains("<img src=\""))
+                tmpString = tmpString.replace("<img src=\"", "");
+            return tmpString;
+        } else
+            return "";
+    }
+
+
     private void CalcResult(){
         try {
             this.document = Jsoup.connect(inputURL).get();
@@ -94,6 +113,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             Results.add(convertStringList("courses", "tr", 0));
             Results.add(convertStringList("awards", "p", 18));
             Results.add(convertStringList("scholarship", "p", 15));
+            Results.add(convertTeacherImage("photo"));
         } catch (UnknownHostException e) {
             System.err.println("invalid URL");
         } catch (IOException e) {
