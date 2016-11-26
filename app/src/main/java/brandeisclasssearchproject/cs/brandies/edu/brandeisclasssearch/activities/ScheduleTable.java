@@ -33,4 +33,11 @@ public class ScheduleTable extends AppCompatActivity {
         // parse arrayList and generate a schedule
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.right_out,R.anim.left_in);
+    }
 }

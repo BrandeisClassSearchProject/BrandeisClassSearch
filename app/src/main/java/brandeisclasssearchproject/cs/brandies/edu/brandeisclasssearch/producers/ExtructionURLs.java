@@ -113,7 +113,7 @@ public class ExtructionURLs {
                     break;
                 case "        BLOCK":
                     Log.i("ExtructionURLs","       BLOCKS: "+contents);
-                    timeProducer.add(contents);
+                    timeProducer.add("Block: "+contents);
                     break;
                 case "        TIMES":
                     Log.i("ExtructionURLs","        TIMES: "+contents);

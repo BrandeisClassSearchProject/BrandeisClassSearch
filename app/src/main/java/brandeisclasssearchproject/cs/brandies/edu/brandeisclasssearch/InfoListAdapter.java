@@ -111,13 +111,18 @@ public class InfoListAdapter extends BaseAdapter {
     private View getViewSchedule(Producers p, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View temp = inflater.inflate(R.layout.entry_schedule, parent, false);
-        //do something!
         if (p.getResult().size()>0) {
+            String tempS=p.getResult().get(0);
+            for(int i=1;i<p.getResult().size();i++){
+                tempS=tempS+"\n"+p.getResult().get(i);
+            }
             defaultHolder holder = new defaultHolder();
-            holder.entry = (TextView) temp.findViewById(R.id.Layout_schedule_entryOne);
-            holder.entry.setText(p.getResult().get(0));
+            holder.entry = (TextView) temp.findViewById(R.id.Layout_schedule_entry1);
+            holder.entry.setText(tempS);
             temp.setTag(holder);
         }
+
+
         return temp;
     }
 
