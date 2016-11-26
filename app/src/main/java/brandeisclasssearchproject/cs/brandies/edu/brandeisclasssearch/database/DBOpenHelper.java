@@ -45,7 +45,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // creating required tables
-        db.execSQL(TABLE_COURSE_SELECTION);
+        db.execSQL(DATABASE_COURSE_SELECTION_CREATE);
     }
 
     @Override
