@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -50,6 +51,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSyllabus;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
@@ -80,6 +82,9 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fr;
     String currentClassName;
+
+    SQLiteDatabase db;
+    DBOpenHelper dbOpenHelper;
 
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
@@ -133,7 +138,10 @@ public class MainActivity extends AppCompatActivity
                             .setAction("√ SAVE", new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                                    dbOpenHelper = new DBOpenHelper(getApplicationContext());
+                                    db = dbOpenHelper.getWritableDatabase();
+                                    dbOpenHelper.addCourse(currentClassName, producersList.get(1).getResult().get(1), db);
+                                    //Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
                 }
