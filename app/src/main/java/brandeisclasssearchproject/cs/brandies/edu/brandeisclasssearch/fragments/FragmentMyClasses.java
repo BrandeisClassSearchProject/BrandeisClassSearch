@@ -63,8 +63,8 @@ public class FragmentMyClasses extends Fragment {
         db = dbOpenHelper.getReadableDatabase();
 
         Cursor cursor = dbOpenHelper.getCourse(db);
-        String[] columns = new String[] {DBOpenHelper.KEY_ID, DBOpenHelper.KEY_COURSE_NAME, DBOpenHelper.KEY_COURSE_TIME};
-        int[] views = new int[] {R.id.myClass_id, R.id.myClass_courseName, R.id.myClass_courseTime};
+        String[] columns = new String[] {DBOpenHelper.KEY_ID, DBOpenHelper.KEY_COURSE_NAME, DBOpenHelper.KEY_COURSE_SEASON, DBOpenHelper.KEY_COURSE_TIME};
+        int[] views = new int[] {R.id.myClass_id, R.id.myClass_courseName, R.id.myClass_courseSeason, R.id.myClass_courseTime};
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(container.getContext(), R.layout.fragment_my_classes_listentry, cursor, columns, views, 0);
 
         adapter.notifyDataSetChanged();

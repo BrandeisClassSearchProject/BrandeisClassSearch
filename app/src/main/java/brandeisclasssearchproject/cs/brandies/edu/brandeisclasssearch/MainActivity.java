@@ -145,11 +145,12 @@ public class MainActivity extends AppCompatActivity
                                     dbOpenHelper = new DBOpenHelper(getApplicationContext());
                                     db = dbOpenHelper.getWritableDatabase();
 
-                                    String add = "";
+                                    String courseTime = "";
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
-                                        add += producersList.get(1).getResult().get(j)+" ";
+                                        courseTime += producersList.get(1).getResult().get(j)+" ";
                                     }
-                                    dbOpenHelper.addCourse(currentClassName, add, db);
+                                    String courseSeason = producersList.get(0).getResult().get(1);
+                                    dbOpenHelper.addCourse(currentClassName, courseSeason, courseTime, db);
                                     //Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
