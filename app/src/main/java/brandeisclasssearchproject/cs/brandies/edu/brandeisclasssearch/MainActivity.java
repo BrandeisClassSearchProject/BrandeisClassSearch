@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
     ArrayList<HashMap<String,ArrayList<String>>> datasMap;
-    ArrayList<Producers> producersList = new ArrayList<Producers>();
+    ArrayList<Producers> producersList;
+    ArrayList<Producers> producersList_copy ;
     InfoListAdapter adapter;
     ProgressBar pb;
     ListView lv;
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity
         currentClassName=null;
         pb=(ProgressBar) findViewById(R.id.theProgressBar);
         pb.setVisibility(View.INVISIBLE);
-
+        producersList = new ArrayList<Producers>();
+        producersList_copy=producersList;
 //        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
 //            @Override
 //            public void processFinish(HashMap<String, ArrayList<String>> output) {
@@ -365,8 +367,10 @@ public class MainActivity extends AppCompatActivity
             //update the list
             if(producersList==null){
                 Toast.makeText(getApplicationContext(), "We cannot find relevant information, maybe the class ID is wrong?", Toast.LENGTH_LONG).show();
+                producersList=producersList_copy;
                 return;
             }
+            producersList_copy=producersList;
             Toast.makeText(getApplicationContext(), "Showing", Toast.LENGTH_SHORT).show();
             currentClassName=producersList.get(0).getResult().get(0);
             ListView lv = (ListView) findViewById(R.id.theContentList);

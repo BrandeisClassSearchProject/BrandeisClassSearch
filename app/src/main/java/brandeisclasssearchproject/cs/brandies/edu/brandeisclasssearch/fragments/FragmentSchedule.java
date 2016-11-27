@@ -101,7 +101,7 @@ public class FragmentSchedule extends Fragment {
         int i=0;
         int current=-1;
         for(String s:al){
-            if(classes.size()>=(COLORS.length+1)){
+            if(classes.size()>(COLORS.length+1)){
                 break;
             }
 
