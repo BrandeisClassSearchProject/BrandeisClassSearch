@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fr;
     String currentClassName;
+    final String separator = "~~";
 
     SQLiteDatabase db;
     DBOpenHelper dbOpenHelper;
@@ -349,22 +350,28 @@ public class MainActivity extends AppCompatActivity
         db = dbOpenHelper.getWritableDatabase();
         Cursor cursor= dbOpenHelper.getCourse(db);
         ArrayList<String> al = new ArrayList<>();
-        al.add("CLASS");
-        al.add(currentClassName);
-        String itemname =  cursor.getString(cursor.getColumnIndex("item_name"));
+        if(cursor!=null && cursor.getCount()!=0){
+            do{
+                al.add("CLASS");
+                al.add(currentClassName);
+                String itemname =  cursor.getString(cursor.getColumnIndex("courseTerm"));
+                String[] timeArray = itemname.split(separator);
+                for(String temp:timeArray){
+                    al.add(temp);
+                }
+            }while (cursor.moveToNext());
+            cursor.close();
 
-
-
-        while (cursor.moveToNext()) {
-
+            fr = new FragmentMyClasses();
+            Bundle b = new Bundle();
+            b.putStringArrayList("list",al);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
         }
 
-        fr = new FragmentMyClasses();
-        Bundle b = new Bundle();
-        b.putStringArrayList("list",al);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fr);
-        fragmentTransaction.commit();
+
+
 
 
 
