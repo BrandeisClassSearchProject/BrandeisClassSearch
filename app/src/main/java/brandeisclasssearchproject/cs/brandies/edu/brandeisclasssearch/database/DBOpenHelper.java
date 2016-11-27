@@ -19,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "coursesForSchedule.db";
+    public static final String DATABASE_NAME = "coursesForSchedule1.db";
 
     // table names
     public static final String TABLE_COURSE_SELECTION = "tableForCourseSelection";
@@ -27,7 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     // column names
     public static final String KEY_COURSE_NAME = "courseName";
     public static final String KEY_COURSE_TIME = "courseTime";
-    public static final String KEY_COURSE_TERM = "courseTerm";
+    public static final String KEY_COURSE_SEASON = "courseSeason";
     public static final String KEY_ID = "_id";
     public static final int DATABASE_VERSION = 1;
 
@@ -36,6 +36,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             + " (" + KEY_ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + KEY_COURSE_NAME + " TEXT NOT NULL,"
+            + KEY_COURSE_SEASON + " TEXT,"
             + KEY_COURSE_TIME + " TEXT);";
 
     public DBOpenHelper(Context context) {
@@ -58,9 +59,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addCourse(String courseName, String courseTime, SQLiteDatabase db) {
+    public void addCourse(String courseName, String courseSeason, String courseTime, SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(this.KEY_COURSE_NAME,courseName);
+        contentValues.put(this.KEY_COURSE_SEASON,courseSeason);
         contentValues.put(this.KEY_COURSE_TIME,courseTime);
         db.insert(TABLE_COURSE_SELECTION,null,contentValues);
     }
@@ -68,7 +70,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public Cursor getCourse(SQLiteDatabase db) {
         Cursor cursor;
 
-        String[] projections = {this.KEY_ID, this.KEY_COURSE_NAME, this.KEY_COURSE_TIME,};
+        String[] projections = {this.KEY_ID, this.KEY_COURSE_NAME, this.KEY_COURSE_SEASON, this.KEY_COURSE_TIME,};
         cursor = db.query(TABLE_COURSE_SELECTION, projections, null, null, null, null, null);
         if (cursor != null) {
 

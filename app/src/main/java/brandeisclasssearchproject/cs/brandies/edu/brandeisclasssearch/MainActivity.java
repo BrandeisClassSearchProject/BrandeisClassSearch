@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fr;
     String currentClassName;
-    final String separator = "~~";
 
     SQLiteDatabase db;
     DBOpenHelper dbOpenHelper;
@@ -151,7 +150,8 @@ public class MainActivity extends AppCompatActivity
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
                                         add += producersList.get(1).getResult().get(j)+" ";
                                     }
-                                    dbOpenHelper.addCourse(currentClassName, add, db);
+                                    String courseSeason = producersList.get(0).getResult().get(1);
+                                    dbOpenHelper.addCourse(currentClassName, courseSeason, add, db);
                                     Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
@@ -350,34 +350,39 @@ public class MainActivity extends AppCompatActivity
         db = dbOpenHelper.getWritableDatabase();
         Cursor cursor= dbOpenHelper.getCourse(db);
         ArrayList<String> al = new ArrayList<>();
-        if(cursor!=null && cursor.getCount()!=0){
-            do{
-                al.add("CLASS");
-                al.add(currentClassName);
-                String itemname =  cursor.getString(cursor.getColumnIndex("courseTerm"));
-                String[] timeArray = itemname.split(separator);
-                for(String temp:timeArray){
-                    al.add(temp);
-                }
-            }while (cursor.moveToNext());
-            cursor.close();
+        al.add("CLASS");
+        al.add(currentClassName);
+        String itemname =  cursor.getString(cursor.getColumnIndex("item_name"));
 
-            fr = new FragmentMyClasses();
-            Bundle b = new Bundle();
-            b.putStringArrayList("list",al);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fr);
-            fragmentTransaction.commit();
+
+
+        while (cursor.moveToNext()) {
+
         }
 
-
-
+        fr = new FragmentMyClasses();
+        Bundle b = new Bundle();
+        b.putStringArrayList("list",al);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fr);
+        fragmentTransaction.commit();
 
 
 
 
 
     }
+
+    /*
+    public static void jumpToMainPage() {
+        toolbar.setTitle("Brandeis Class Search");
+        fr = new FragmentBlank();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fr);
+        fragmentTransaction.commit();
+        lv.setVisibility(View.VISIBLE);
+    }
+    */
 
 
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {

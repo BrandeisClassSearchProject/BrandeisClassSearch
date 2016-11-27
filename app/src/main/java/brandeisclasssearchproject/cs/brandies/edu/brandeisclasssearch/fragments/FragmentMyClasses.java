@@ -2,6 +2,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments
 
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +65,8 @@ public class FragmentMyClasses extends Fragment {
         db = dbOpenHelper.getReadableDatabase();
 
         Cursor cursor = dbOpenHelper.getCourse(db);
-        String[] columns = new String[] {DBOpenHelper.KEY_ID, DBOpenHelper.KEY_COURSE_NAME, DBOpenHelper.KEY_COURSE_TIME};
-        int[] views = new int[] {R.id.myClass_id, R.id.myClass_courseName, R.id.myClass_courseTime};
+        String[] columns = new String[] {DBOpenHelper.KEY_ID, DBOpenHelper.KEY_COURSE_NAME, DBOpenHelper.KEY_COURSE_SEASON, DBOpenHelper.KEY_COURSE_TIME};
+        int[] views = new int[] {R.id.myClass_id, R.id.myClass_courseName, R.id.myClass_courseSeason, R.id.myClass_courseTime};
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(container.getContext(), R.layout.fragment_my_classes_listentry, cursor, columns, views, 0);
 
         adapter.notifyDataSetChanged();
@@ -85,8 +87,12 @@ public class FragmentMyClasses extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbOpenHelper.deleteCourse(Long.parseLong(id2), db);
-                                //Intent refresh = new Intent(context, getActivity());
-                                //startActivity(refresh);
+
+                                // refresh fragment
+                                Fragment fr = new FragmentMyClasses();
+                                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.content_main, fr);
+                                fragmentTransaction.commit();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -107,8 +113,18 @@ public class FragmentMyClasses extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView t_id = (TextView) view.findViewById(R.id.myClass_id);
                 id2 = t_id.getText().toString();
-                Intent i = new Intent(getActivity(), MainActivity.class);
-                startActivity(i);
+                //Intent i = new Intent(getActivity(), MainActivity.class);
+                //startActivity(i);
+
+
+                Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+                toolbar.setTitle("Brandeis Class Search");
+                Fragment fr = new FragmentBlank();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fr);
+                fragmentTransaction.commit();
+
+
             }
         });
 
