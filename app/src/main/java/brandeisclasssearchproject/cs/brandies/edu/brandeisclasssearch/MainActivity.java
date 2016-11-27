@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -145,13 +146,12 @@ public class MainActivity extends AppCompatActivity
                                     dbOpenHelper = new DBOpenHelper(getApplicationContext());
                                     db = dbOpenHelper.getWritableDatabase();
 
-                                    String courseTime = "";
+                                    String add = "";
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
-                                        courseTime += producersList.get(1).getResult().get(j)+" ";
+                                        add += producersList.get(1).getResult().get(j)+" ";
                                     }
-                                    String courseSeason = producersList.get(0).getResult().get(1);
-                                    dbOpenHelper.addCourse(currentClassName, courseSeason, courseTime, db);
-                                    //Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                                    dbOpenHelper.addCourse(currentClassName, add, db);
+                                    Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
                 }
@@ -327,7 +327,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.content_main, fr);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_time) {
-            toolbar.setTitle("My Schedule");
+
+            startScheduleFrag();
+
         }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -339,6 +341,35 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void startScheduleFrag() {
+        toolbar.setTitle("My Schedule");
+        dbOpenHelper = new DBOpenHelper(getApplicationContext());
+        db = dbOpenHelper.getWritableDatabase();
+        Cursor cursor= dbOpenHelper.getCourse(db);
+        ArrayList<String> al = new ArrayList<>();
+        al.add("CLASS");
+        al.add(currentClassName);
+        String itemname =  cursor.getString(cursor.getColumnIndex("item_name"));
+
+
+
+        while (cursor.moveToNext()) {
+
+        }
+
+        fr = new FragmentMyClasses();
+        Bundle b = new Bundle();
+        b.putStringArrayList("list",al);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fr);
+        fragmentTransaction.commit();
+
+
+
+
+
     }
 
 
