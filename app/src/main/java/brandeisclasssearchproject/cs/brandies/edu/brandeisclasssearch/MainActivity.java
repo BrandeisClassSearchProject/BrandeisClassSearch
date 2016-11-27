@@ -88,8 +88,9 @@ public class MainActivity extends AppCompatActivity
     SQLiteDatabase db;
     DBOpenHelper dbOpenHelper;
 
-
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -433,6 +434,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
+        protected void onProgressUpdate(Void... params) {
+            Log.i("Main","Search on progress update, thread sleep 400ms");
+        }
+
+        @Override
         protected Void doInBackground(Object... params) {
             while (datas==null){Log.i("ClassSearchTask","waiting for map");}
             if (classInfos != null) {
@@ -440,9 +446,19 @@ public class MainActivity extends AppCompatActivity
                 //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
                 producersList = new ExtructionURLs(classId,datas).getProducers();
                 if (producersList==null){
-                    //isDone=true;
-                    Log.i("ClassSearchTask", "Class not found");
-                    return null;
+                    while (datasMap==null){
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            Log.i("Main.search","interruptedException");
+                        }
+                    }
+                    producersList = new ExtructionURLs(classId,datasMap).getProducers();
+
+                    if(producersList==null ) {
+                        Log.i("ClassSearchTask", "Class not found");
+                        return null;
+                    }
 
                 }
                 Log.i("ClassSearchTask", "found it ");

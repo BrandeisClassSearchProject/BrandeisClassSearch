@@ -34,7 +34,8 @@ public class ExtructionURLs {
     private String classID;
     private ArrayList<Producers>producersList=null;
     private HashMap<String, ArrayList<String>> datas;
-
+    ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
 
 
@@ -65,6 +66,113 @@ public class ExtructionURLs {
         setOutWithMap(classID);
     }
 
+    public ExtructionURLs(String id, ArrayList<HashMap<String, ArrayList<String>>> dm) {
+        this.datasMap=dm;
+        this.isFound=false;
+        this.classID=id;
+
+        setOutWithBigMap(classID);
+
+    }
+
+    private String getTerm(int term) {
+        String year = String.valueOf((term-1000)/10);
+        String semester=null;
+        switch (term%10){
+            case 1:
+                semester="Spring";
+                break;
+            case 2:
+                semester="Summer";
+                break;
+            case 3:
+                semester="Fall";
+                break;
+            default:
+                Log.wtf("ExtructionURLs",String.valueOf(term)+" is Wrong");
+                break;
+        }
+        return "20"+year+" "+semester;
+    }
+
+    private void setOutWithBigMap(String subjectID) {
+        String term = "";
+        Log.i("ExtructionURLs","Search for "+subjectID+"from all years");
+        String[] tempS = subjectID.split(" ");
+        if(tempS.length!=2){
+            isFound=false;
+            return;
+        }
+        String a = tempS[0].trim();
+        String b = tempS[1].trim();
+        if(b.length()==4){
+            b="  "+b;
+        }else if(b.length()==3){
+            b="   "+b;
+        }else if(b.length()==2){
+            b="    "+b;
+        }
+        Log.i("ExtructionURLs","Search for "+a+b+"from all years");
+        ArrayList<String> temp=null;
+        for(int i=1;i<datasMap.size();i++){
+            temp = datasMap.get(i).get(a+b);
+            if(temp!=null){
+                isFound=true;
+                term=getTerm(terms[i]);
+                Log.i("ExtructionURLs","found it "+String.valueOf(terms[i]));
+                break;
+            }
+        }
+
+        if(temp==null){
+            isFound=false;
+            return;
+        }
+
+
+        producersList = new ArrayList<>();
+        producersList.add(new ProducersBasic(term,a+b));
+        ProducersClassSchdule timeProducer = new ProducersClassSchdule();
+        for(String s : temp){
+
+            String contents=s.substring(14).trim();
+            String attr = s.substring(0,13);
+            //Log.i("ExtructionURLs",attr);
+            switch(attr){
+                case "  DESCRIPTION":
+                    Log.i("ExtructionURLs","  DESCRIPTION: "+contents);
+                    producersList.add(new ProducersClassDescription(contents));
+                    break;
+                case "      TEACHER":
+                    Log.i("ExtructionURLs","      TEACHER: "+contents);
+                    producersList.add(new ProducersTearcherInfo(contents));
+                    break;
+                case "        BOOKS":
+                    Log.i("ExtructionURLs","        BOOKS: "+contents);
+                    producersList.add(new ProducersBooksInfo(contents));
+                    break;
+                case "        BLOCK":
+                    Log.i("ExtructionURLs","       BLOCKS: "+contents);
+                    timeProducer.add("Block: "+contents);
+                    break;
+                case "        TIMES":
+                    Log.i("ExtructionURLs","        TIMES: "+contents);
+                    timeProducer.add(contents);
+                    break;
+                default: //Log.i("ExtructionURLs","setOutWithMap String s is"+s);
+                    break;
+
+            }
+        }
+        Producers tempP=producersList.get(1);
+        producersList.set(1,timeProducer);
+        producersList.add(tempP);
+
+
+
+
+
+    }
 
 
     private void setOutWithMap(String subjectID){
