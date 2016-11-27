@@ -4,6 +4,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.MatrixCursor;
@@ -29,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
     ArrayList<HashMap<String,ArrayList<String>>> datasMap;
-    AsyncTask dataLoader;
     ArrayList<Producers> producersList = new ArrayList<Producers>();
     InfoListAdapter adapter;
     ProgressBar pb;
@@ -199,6 +200,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if(datas!=null){
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
                     //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
                     //lv.setVisibility(View.INVISIBLE);
                     CST= new ClassSearchingTask(query);
@@ -348,8 +354,14 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            pb.setVisibility(View.INVISIBLE);
+            toolbar.setTitle("Brandeis Class Search");
+            fr = new FragmentBlank();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
             lv.setVisibility(View.VISIBLE);
+
+            pb.setVisibility(View.INVISIBLE);
             //update the list
             if(producersList==null){
                 Toast.makeText(getApplicationContext(), "We cannot find relevant information, maybe the class ID is wrong?", Toast.LENGTH_LONG).show();
@@ -363,6 +375,12 @@ public class MainActivity extends AppCompatActivity
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+
                     Producers p = producersList.get(position);
                     ArrayList<String> al = new ArrayList<>();
                     boolean isSchedule=false;

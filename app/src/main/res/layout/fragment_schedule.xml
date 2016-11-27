@@ -13,13 +13,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/classColor"
+        android:layout_above="@+id/grid"
         >
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.02" >
 
             <TextView
                 android:layout_width="match_parent"
@@ -302,6 +302,7 @@
 
 
 
+
     </TableLayout>
 
     <TableLayout
@@ -311,7 +312,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/relativelayoutTIME"
         android:layout_toEndOf="@+id/relativelayoutTIME"
-        android:layout_above="@+id/classColor"
+        android:layout_above="@+id/grid"
         >
 
 
@@ -355,7 +356,8 @@
             android:id="@+id/r080"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04">
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t080_1"
@@ -429,7 +431,8 @@
             android:id="@+id/r090"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t090_1"
@@ -503,7 +506,8 @@
             android:id="@+id/r100"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t100_1"
@@ -577,7 +581,8 @@
             android:id="@+id/r110"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t110_1"
@@ -651,7 +656,8 @@
             android:id="@+id/r120"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t120_1"
@@ -725,7 +731,8 @@
             android:id="@+id/r130"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t130_1"
@@ -799,7 +806,8 @@
             android:id="@+id/r140"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t140_1"
@@ -873,7 +881,8 @@
             android:id="@+id/r150"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t150_1"
@@ -947,7 +956,8 @@
             android:id="@+id/r160"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t160_1"
@@ -1021,7 +1031,8 @@
             android:id="@+id/r170"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t170_1"
@@ -1095,7 +1106,8 @@
             android:id="@+id/r180"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t180_1"
@@ -1169,7 +1181,8 @@
             android:id="@+id/r190"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t190_1"
@@ -1243,7 +1256,8 @@
             android:id="@+id/r200"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.04" >
+            android:layout_weight="0.04"
+            android:background="?attr/colorControlHighlight">
 
             <TextView
                 android:id="@+id/t200_1"
@@ -1283,6 +1297,14 @@
 
 
     </TableLayout>
+
+
+    <TextView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_above="@+id/classColor"
+        />
 
     <ListView
         android:id="@+id/classColor"

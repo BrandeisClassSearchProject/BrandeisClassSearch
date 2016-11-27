@@ -5,17 +5,17 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.MainActivity;
+
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
 
 /**
@@ -27,12 +27,52 @@ public class FragmentSchedule extends Fragment {
     ArrayList<Integer> colors;
     final String[] COLORS =  new String[]{"255 101 101","255 108 0","0 102 0","0 204 204","0 128 255","0 0 204","255 0 255","255 102 255","96 96 96"};
     View v;
+    ListView classColors;
 
 
     public FragmentSchedule() {
         classes=new ArrayList<>();
+        classes.add("");
         colors=new ArrayList<>();
+        colors.add(-1);
         // Required empty public constructor
+    }
+
+
+    private class colorListAdapter extends BaseAdapter{
+
+        public colorListAdapter() {
+        }
+
+        @Override
+        public int getCount() {
+            return classes.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            if(position==0){
+                return inflater.inflate(R.layout.mr_empty, parent, false);
+            }
+            View temp = inflater.inflate(R.layout.fragment_schedule_list_entry, parent, false);
+            TextView tv =(TextView)temp.findViewById(R.id.EntryText);
+            TextView tvc = (TextView)temp.findViewById(R.id.EntryColor);
+            tv.setText(classes.get(position));
+            String[] rgb = COLORS[colors.get(position)].split(" ");
+            tvc.setBackgroundColor(Color.rgb(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2])));
+            return temp;
+        }
     }
 
 
@@ -40,12 +80,15 @@ public class FragmentSchedule extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v =inflater.inflate(R.layout.fragment_schedule, container, false);
+        classColors=(ListView)v.findViewById(R.id.classColor);
+
         ArrayList<String> al = getArguments().getStringArrayList("list");
         for(String s:al){
             Log.i("FragmentSchedule",s);
         }
         processInput(al);
-
+        BaseAdapter ba = new colorListAdapter();
+        classColors.setAdapter(ba);
 
 
 
@@ -58,6 +101,10 @@ public class FragmentSchedule extends Fragment {
         int i=0;
         int current=-1;
         for(String s:al){
+            if(classes.size()>=(COLORS.length+1)){
+                break;
+            }
+
             Log.i("FragmentSchedule",s);
             if (s.equals("CLASS")){
                 isClass=true;

@@ -4,6 +4,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp">
+    </View>
 
     <TableRow
         android:layout_width="match_parent"
@@ -13,33 +17,28 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.618"
             android:id="@+id/EntryText"
+            android:textColor="?attr/colorControlNormal"
+            android:text=" "
+            android:textStyle="normal|bold"
             />
+
+
 
         <TextView
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="0.25"
-            />
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
+            android:layout_weight="0.382"
             android:id="@+id/EntryColor"
             android:background="@android:color/darker_gray" />
 
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
-            />
+
         </TableRow>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp">
+        android:layout_height="3dp">
     </View>
 
 
