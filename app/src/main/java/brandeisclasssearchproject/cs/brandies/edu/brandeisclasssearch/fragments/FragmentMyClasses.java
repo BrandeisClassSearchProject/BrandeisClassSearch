@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,6 +112,14 @@ public class FragmentMyClasses extends Fragment {
                 //Intent i = new Intent(getActivity(), MainActivity.class);
                 //startActivity(i);
 
+                /*
+                Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+                toolbar.setTitle("Brandeis Class Search");
+                Fragment fr = new FragmentBlank();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fr);
+                fragmentTransaction.commit();
+                */
             }
         });
 

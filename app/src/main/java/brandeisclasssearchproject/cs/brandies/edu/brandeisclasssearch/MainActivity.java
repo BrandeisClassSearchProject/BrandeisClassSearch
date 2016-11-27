@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
                                         add += producersList.get(1).getResult().get(j)+" ";
                                     }
-                                    dbOpenHelper.addCourse(currentClassName, add, db);
+                                    String courseSeason = producersList.get(0).getResult().get(1);
+                                    dbOpenHelper.addCourse(currentClassName, courseSeason, add, db);
                                     Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
