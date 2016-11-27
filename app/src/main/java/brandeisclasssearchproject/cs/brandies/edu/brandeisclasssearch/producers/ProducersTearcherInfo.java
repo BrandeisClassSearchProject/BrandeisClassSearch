@@ -50,13 +50,16 @@ public class ProducersTearcherInfo extends ProducersAbstract {
 
     private String convertSimpleString(String keyWord, int numTmp){
         content = document.getElementById(keyWord);
-        if(content != null)
+        if(content != null) {
+            if (content.text().trim().equals(""))
+                return "no information about " + keyWord + " found.\n";
             if (content.text().length() >= numTmp)
-                return content.text().substring(numTmp);
+                return content.text().substring(numTmp) + "\n";
             else
-                return content.text();
+                return content.text() + "\n";
+        }
         else
-            return "no information about " + keyWord + " found.";
+            return "no information about " + keyWord + " found.\n";
     }
 
     private String convertStringList(String keyWord, String tagName, int numTmp){
@@ -72,7 +75,7 @@ public class ProducersTearcherInfo extends ProducersAbstract {
             else
                 return tmpString;
         } else
-            return "no information about " + keyWord + " found.";
+            return "no information about " + keyWord + " found.\n";
     }
 
     private String convertTeacherName(String keyWord, String tagName){

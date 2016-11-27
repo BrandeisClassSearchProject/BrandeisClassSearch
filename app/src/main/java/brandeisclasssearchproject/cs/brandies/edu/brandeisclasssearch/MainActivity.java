@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                                 public void onClick(View v) {
                                     dbOpenHelper = new DBOpenHelper(getApplicationContext());
                                     db = dbOpenHelper.getWritableDatabase();
-                                    dbOpenHelper.addCourse(currentClassName, producersList.get(1).getResult().get(0), db);
+                                    dbOpenHelper.addCourse(currentClassName, producersList.get(1).getResult().get(1), db);
                                     //Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
