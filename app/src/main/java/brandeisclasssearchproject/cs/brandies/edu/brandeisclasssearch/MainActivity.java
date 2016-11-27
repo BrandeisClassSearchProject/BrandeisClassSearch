@@ -379,6 +379,17 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /*
+    public static void jumpToMainPage() {
+        toolbar.setTitle("Brandeis Class Search");
+        fr = new FragmentBlank();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fr);
+        fragmentTransaction.commit();
+        lv.setVisibility(View.VISIBLE);
+    }
+    */
+
 
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
         private ArrayList<String> classInfos;

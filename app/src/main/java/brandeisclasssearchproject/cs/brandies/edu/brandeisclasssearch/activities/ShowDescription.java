@@ -3,6 +3,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activitie
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,20 +17,10 @@ public class ShowDescription extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_description);
-
         Intent i =getIntent();
         ArrayList<String> list =i.getExtras().getStringArrayList("list");
-
-
-//        /**for testing purpose, delete after implementation*/
-//        if(list!=null&&!list.isEmpty()){
-//            Toast.makeText(getApplicationContext(),list.get(0),Toast.LENGTH_SHORT).show();
-//        }else{
-//            Toast.makeText(getApplicationContext(),"nothing in the list",Toast.LENGTH_SHORT).show();
-//        }
-//        /**for testing purpose, delete after implementation*/
-
         TextView tv = (TextView) findViewById(R.id.description_show_description);
+        tv.setMovementMethod(new ScrollingMovementMethod());
         tv.setText(list.get(0));
     }
 

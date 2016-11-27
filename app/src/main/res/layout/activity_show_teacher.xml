@@ -19,6 +19,7 @@
 
     <TextView
         android:text="Instructor Information: "
+        android:textSize="18dp"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
 
     <TextView
         android:text="Lecturer for this course not found!"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

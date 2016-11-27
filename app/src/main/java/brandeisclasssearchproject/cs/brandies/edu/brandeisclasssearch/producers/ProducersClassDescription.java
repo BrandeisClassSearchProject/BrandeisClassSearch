@@ -37,10 +37,11 @@ public class ProducersClassDescription extends ProducersAbstract{
             content = document.getElementById("coursepage");
             String tmpString = content.html();
             tmpString = tmpString.replaceAll("<h2>", "");
-            tmpString = tmpString.replaceAll("</h2> \\[", "");
+            tmpString = tmpString.replaceAll("</h2> \\[", "\n");
             tmpString = tmpString.replaceAll("<span class=\"requirement\" title=", "");
-            tmpString = tmpString.replaceAll(" </span> \\]", "");
-            tmpString = tmpString.replaceAll("<p>", "");
+            tmpString = tmpString.replaceAll(" </span> ", "");
+            tmpString = tmpString.replaceAll("\\]", "");
+            tmpString = tmpString.replaceAll("<p>", "\n");
             tmpString = tmpString.replaceAll("</p>", "");
             tmpString = tmpString.replaceAll("<br>", "\n");
             tmpString = tmpString.replaceAll(">", "");

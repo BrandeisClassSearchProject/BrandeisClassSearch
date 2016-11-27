@@ -87,8 +87,12 @@ public class FragmentMyClasses extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dbOpenHelper.deleteCourse(Long.parseLong(id2), db);
-                                //Intent refresh = new Intent(context, getActivity());
-                                //startActivity(refresh);
+
+                                // refresh fragment
+                                Fragment fr = new FragmentMyClasses();
+                                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.content_main, fr);
+                                fragmentTransaction.commit();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -112,14 +116,15 @@ public class FragmentMyClasses extends Fragment {
                 //Intent i = new Intent(getActivity(), MainActivity.class);
                 //startActivity(i);
 
-                /*
-                Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+
+                Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
                 toolbar.setTitle("Brandeis Class Search");
                 Fragment fr = new FragmentBlank();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fr);
                 fragmentTransaction.commit();
-                */
+
+
             }
         });
 
