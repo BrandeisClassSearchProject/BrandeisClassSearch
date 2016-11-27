@@ -35,6 +35,7 @@ public class ExtructionURLs {
     private ArrayList<Producers>producersList=null;
     private HashMap<String, ArrayList<String>> datas;
     ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    int currentTerm=0;
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
 
@@ -118,7 +119,8 @@ public class ExtructionURLs {
             temp = datasMap.get(i).get(a+b);
             if(temp!=null){
                 isFound=true;
-                term=getTerm(terms[i]);
+                currentTerm=terms[i];
+                term=getTerm(currentTerm);
                 Log.i("ExtructionURLs","found it "+String.valueOf(terms[i]));
                 break;
             }
@@ -148,8 +150,12 @@ public class ExtructionURLs {
                     producersList.add(new ProducersTearcherInfo(contents));
                     break;
                 case "        BOOKS":
-                    Log.i("ExtructionURLs","        BOOKS: "+contents);
-                    producersList.add(new ProducersBooksInfo(contents));
+                    String template = "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1163&div-1=&dept-1=PHYS&course-1=105A&sect-1=1";
+                    template=template.replace("1163",String.valueOf(currentTerm));
+                    template=template.replace("PHYS",a);
+                    template=template.replace("105A",b.trim());
+                    Log.i("ExtructionURLs","        BOOKS: "+template);
+                    producersList.add(new ProducersBooksInfo(template));
                     break;
                 case "        BLOCK":
                     Log.i("ExtructionURLs","       BLOCKS: "+contents);
