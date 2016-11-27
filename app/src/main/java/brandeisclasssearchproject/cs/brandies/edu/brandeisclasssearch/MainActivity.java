@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity
                                         add += producersList.get(1).getResult().get(j)+" ";
                                     }
                                     dbOpenHelper.addCourse(currentClassName, add, db);
-                                    //Toast.makeText(MainActivity.this,"Nothing yet",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
                 }
