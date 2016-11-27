@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                                     db = dbOpenHelper.getWritableDatabase();
 
                                     String add = "";
-                                    for (int j=1; j<producersList.get(1).getResult().size(); j++) {
+                                    for (int j=0; j<producersList.get(1).getResult().size(); j++) {
                                         add += producersList.get(1).getResult().get(j)+" ";
                                     }
                                     dbOpenHelper.addCourse(currentClassName, add, db);
