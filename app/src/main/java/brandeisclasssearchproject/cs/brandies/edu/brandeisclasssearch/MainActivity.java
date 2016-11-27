@@ -57,6 +57,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fr;
     String currentClassName;
-
+    final String separtor=" | ";
     SQLiteDatabase db;
     DBOpenHelper dbOpenHelper;
 
@@ -103,15 +104,7 @@ public class MainActivity extends AppCompatActivity
         pb.setVisibility(View.INVISIBLE);
         producersList = new ArrayList<Producers>();
         producersList_copy=producersList;
-//        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
-//            @Override
-//            public void processFinish(HashMap<String, ArrayList<String>> output) {
-//                datas=output;//set the hashmap for use in the main thread;
-//            }
-//        },getApplicationContext());
-//        Log.i("Main","dataLoader.execute()");
-//        //dataLoader.execute();
-        new LoadingData().execute();//not ready yet
+        new LoadingData().execute();
 
         mAdapter = new SimpleCursorAdapter(this,
                 R.layout.suggestion_entry,
@@ -148,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
                                     String add = "";
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
-                                        add += producersList.get(1).getResult().get(j)+" ";
+                                        add += producersList.get(1).getResult().get(j)+separtor;
                                     }
                                     String courseSeason = producersList.get(0).getResult().get(1);
                                     dbOpenHelper.addCourse(currentClassName, courseSeason, add, db);
@@ -312,6 +305,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.show();
             toolbar.setTitle("Brandeis Class Search");
             fr = new FragmentBlank();
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -320,6 +315,8 @@ public class MainActivity extends AppCompatActivity
             lv.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_my) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.hide();
             lv.setVisibility(View.INVISIBLE);
             Log.i("onNavigationItemS","my class selected");
             toolbar.setTitle("My Classes");
@@ -345,30 +342,39 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startScheduleFrag() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
         toolbar.setTitle("My Schedule");
+        lv.setVisibility(View.INVISIBLE);
         dbOpenHelper = new DBOpenHelper(getApplicationContext());
         db = dbOpenHelper.getWritableDatabase();
         Cursor cursor= dbOpenHelper.getCourse(db);
         ArrayList<String> al = new ArrayList<>();
-        al.add("CLASS");
-        al.add(currentClassName);
-        String itemname =  cursor.getString(cursor.getColumnIndex("item_name"));
-
-
-
-        while (cursor.moveToNext()) {
-
+        if(cursor!=null && cursor.getCount()!=0) {
+            do {
+                al.add("CLASS");
+                al.add(cursor.getString(cursor.getColumnIndex("courseName")));
+                String itemname = cursor.getString(cursor.getColumnIndex("courseTime"));
+                String[] times = itemname.split(" \\| ");
+                for (String s : times) {
+                    al.add(s);
+                }
+            } while (cursor.moveToNext());
+            for(String s:al){
+                Log.i("Main","startScheduleFrag: "+s);
+            }
+            fr = new FragmentSchedule();
+            Bundle b = new Bundle();
+            b.putStringArrayList("list", al);
+            fr.setArguments(b);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
+            db.close();
+            cursor.close();
+        }else{
+            Log.wtf("Main","db cursor is null or empty");
         }
-
-        fr = new FragmentMyClasses();
-        Bundle b = new Bundle();
-        b.putStringArrayList("list",al);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fr);
-        fragmentTransaction.commit();
-
-
-
 
 
     }
