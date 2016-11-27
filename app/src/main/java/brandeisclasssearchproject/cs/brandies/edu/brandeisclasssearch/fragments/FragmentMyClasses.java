@@ -69,10 +69,13 @@ public class FragmentMyClasses extends Fragment {
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
 
-        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // long click listener
+        ls.setLongClickable(true);
+        ls.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView t_id = (TextView) view.findViewById(R.id.myClass_id);
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                TextView t_id = (TextView) arg1.findViewById(R.id.myClass_id);
                 id2 = t_id.getText().toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -92,6 +95,16 @@ public class FragmentMyClasses extends Fragment {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
+
+                return true;
+            }
+        });
+
+        // short click listener
+        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
             }
         });
 
