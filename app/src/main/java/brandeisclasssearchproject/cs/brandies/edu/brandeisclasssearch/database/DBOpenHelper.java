@@ -27,6 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     // column names
     public static final String KEY_COURSE_NAME = "courseName";
     public static final String KEY_COURSE_TIME = "courseTime";
+    public static final String KEY_COURSE_TERM = "courseTerm";
     public static final String KEY_ID = "_id";
     public static final int DATABASE_VERSION = 1;
 
