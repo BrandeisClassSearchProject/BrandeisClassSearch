@@ -2,6 +2,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments
 
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -107,8 +108,9 @@ public class FragmentMyClasses extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView t_id = (TextView) view.findViewById(R.id.myClass_id);
                 id2 = t_id.getText().toString();
-                Intent i = new Intent(getActivity(), MainActivity.class);
-                startActivity(i);
+                //Intent i = new Intent(getActivity(), MainActivity.class);
+                //startActivity(i);
+
             }
         });
 
