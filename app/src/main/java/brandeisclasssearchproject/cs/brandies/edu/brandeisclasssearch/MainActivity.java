@@ -4,6 +4,7 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -198,18 +199,40 @@ public class MainActivity extends AppCompatActivity
         sv.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
 
             public boolean onSuggestionSelect(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                sv.setQuery(suggestion,true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
             public boolean onSuggestionClick(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                sv.setQuery(suggestion,true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
+                return true;
             }
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
+
         });
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
 
 
             @Override
@@ -220,9 +243,16 @@ public class MainActivity extends AppCompatActivity
 
                     inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
-                    //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
-                    //lv.setVisibility(View.INVISIBLE);
-                    CST= new ClassSearchingTask(query);
+                    String s="";
+                    try {
+                        s = getSuggestion(0);
+                    }catch (Exception e){
+                        Log.i("onQueryTextSubmit","sth wrong use the orignal query");
+                    }
+
+
+
+                    CST= new ClassSearchingTask(s.equals("")?query:s);
                     CST.execute();
                     return true;
                 }
