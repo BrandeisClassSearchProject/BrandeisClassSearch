@@ -85,6 +85,17 @@ public class FragmentMyClasses extends Fragment {
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
 
+        String testResult = dbOpenHelper.testConflict(db);
+        //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
+        sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.  "+testResult, Snackbar.LENGTH_INDEFINITE)
+                .setAction("ok", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("Frag","class conflict");
+                    }
+                });
+        sb.show();
+
         Boolean testResult = dbOpenHelper.testConflict(db);
         if (testResult) {
             Toast.makeText(getActivity(),"WARNING, COURSE CONFLICTS EXIST!",Toast.LENGTH_LONG).show();

@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
     public static ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    HashMap<String,String> NameToID;
+    HashMap<String,String> IDToName;
     ArrayList<Producers> producersList;
     ArrayList<Producers> producersList_copy ;
     InfoListAdapter adapter;
@@ -201,7 +203,8 @@ public class MainActivity extends AppCompatActivity
 
             public boolean onSuggestionSelect(int position) {
                 String suggestion = getSuggestion(position);
-                sv.setQuery(suggestion,true);
+                String textStr[] = suggestion.split("\\r\\n|\\n|\\r");
+                sv.setQuery(textStr[0],true);
                 //Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -209,7 +212,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onSuggestionClick(int position) {
                 String suggestion = getSuggestion(position);
-                sv.setQuery(suggestion,true);
+                //String textStr[] = suggestion.split("\\r\\n|\\n|\\r");
+                String[] s =  suggestion.split("\\r\\n|\\n|\\r")[0].split(" ");
+
+                sv.setQuery(s[0]+" "+s[s.length-1],true);
                 //Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -270,7 +276,6 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-            //implement suggestion here!
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(sortedClasses==null||newText.isEmpty()){
@@ -285,13 +290,22 @@ public class MainActivity extends AppCompatActivity
 
     //http://stackoverflow.com/questions/23658567/android-actionbar-searchview-suggestions-with-a-simple-string-array
     private void polulateAdapter(String query) {
+
+        String fixedQ=query.toUpperCase().trim();
         Log.i("Main.polulateAdapter","new query is "+query);
         MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
         int i=0;
+        ArrayList<String> resultLists = new ArrayList<>();
+
+        if(sortedClasses==null){
+            return;
+        }
+
         for (String s:sortedClasses) {
-            if (s.startsWith(query.toUpperCase())) {
+            if (s.startsWith(fixedQ)) {
                 Log.wtf("Main.polulateAdapter",s+"  "+query.toUpperCase());
-                c.addRow(new Object[] {i, s});
+                resultLists.add(s);
+                //c.addRow(new Object[] {i, s});
                 i++;
             }
 
@@ -299,6 +313,32 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
         }
+
+        if(query.length()>=3&&NameToID!=null&&i<8){
+            //Log.i("Main.polulateAdapter","size of Nametoid "+String.valueOf(NameToID.size()));
+            for(String names:NameToID.keySet()){
+                Log.i("polulateAdapter",fixedQ+" "+names);
+                if(names.toUpperCase().contains(fixedQ)){
+                    resultLists.add(NameToID.get(names)+"\n"+names);
+                    Log.i("polulateAdapter",names);
+                    i++;
+                }
+
+                if(i==8){
+                    break;
+                }
+            }
+
+        }
+
+        int j=0;
+        for(String r:resultLists){
+            c.addRow(new Object[] {j, r});
+            j++;
+        }
+
+
+
         Log.i("Main.polulateAdapter",String.valueOf(i));
         mAdapter.changeCursor(c);
 
@@ -583,11 +623,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
+        HashMap<String,String> tempNameToID;
+        HashMap<String,String> tempIDToName;
         private TreeSet<String> tempClasses;
         long startTime;
         //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
         private String filename = "DATA.txt";
+        private String filenamewithName = "DATA_with_name.txt";
 
         public LoadingData() {
             startTime = System.currentTimeMillis();
@@ -602,7 +645,8 @@ public class MainActivity extends AppCompatActivity
 
             AssetManager am = getApplicationContext().getAssets();
             try {
-                InputStream is = am.open(filename);
+                //InputStream is = am.open(filename);
+                InputStream is = am.open(filenamewithName);
                 InputStreamReader isr= new InputStreamReader(is);
                 dataMap=putInMap(isr);
             } catch (IOException e) {
@@ -619,6 +663,8 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             pb.setVisibility(View.INVISIBLE);
             datasMap=dataMap;
+            IDToName=tempIDToName;
+            NameToID=tempNameToID;
             LinkedList<String> l= new LinkedList<>();
             l.addAll(tempClasses);
             sortedClasses=l;
@@ -638,6 +684,8 @@ public class MainActivity extends AppCompatActivity
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
             tempClasses=new TreeSet<>();
+            tempIDToName=new HashMap<>();
+            tempNameToID=new HashMap<>();
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
             BufferedReader br = new BufferedReader(isr);
@@ -667,6 +715,7 @@ public class MainActivity extends AppCompatActivity
                     }else{
                         String[] tempS=title.split(" ");
                         tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
+
                     }
                 }else if(counter%14==0){
                     Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
@@ -683,6 +732,14 @@ public class MainActivity extends AppCompatActivity
                 }else{
                     if(!temp.equals(".")){
                         tempArray.add(temp);
+                        if(temp.startsWith("         NAME: ")){
+                            String tempN = temp.replace("         NAME: ","");
+                            if(tempNameToID.get(tempN)==null){
+                                Log.i("loading",title+"\n"+tempN);
+                                tempIDToName.put(title,tempN);
+                                tempNameToID.put(tempN,title);
+                            }
+                        }
                     }
                 }
                 counter++;
