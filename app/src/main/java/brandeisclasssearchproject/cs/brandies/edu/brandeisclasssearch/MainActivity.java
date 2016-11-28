@@ -62,6 +62,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentLinks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
@@ -250,7 +251,12 @@ public class MainActivity extends AppCompatActivity
                         Log.i("onQueryTextSubmit","sth wrong use the orignal query");
                     }
 
-
+                    toolbar.setTitle("Brandeis Class Search");
+                    fr = new FragmentBlank();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, fr);
+                    fragmentTransaction.commit();
+                    //lv.setVisibility(View.VISIBLE);
 
                     CST= new ClassSearchingTask(s.equals("")?query:s);
                     CST.execute();
@@ -370,12 +376,25 @@ public class MainActivity extends AppCompatActivity
 
             startScheduleFrag();
 
-        }  else if (id == R.id.nav_share) {
+        }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+        else if (id==R.id.nav_maj){
+            toolbar.setTitle("Links");
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.hide();
+            lv.setVisibility(View.INVISIBLE);
+            Log.i("onNavigationItemS","link selected");
+            fr = new FragmentLinks();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_send) {
 
-        }else if (id==R.id.nav_maj){
-            toolbar.setTitle("Majors");
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -442,13 +461,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            toolbar.setTitle("Brandeis Class Search");
-            fr = new FragmentBlank();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fr);
-            fragmentTransaction.commit();
-            lv.setVisibility(View.VISIBLE);
 
+            lv.setVisibility(View.VISIBLE);
             pb.setVisibility(View.INVISIBLE);
             //update the list
             if(producersList==null){
