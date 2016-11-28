@@ -28,6 +28,7 @@ import java.util.List;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.MainActivity;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.CourseDetail;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 
 /**
@@ -39,6 +40,7 @@ public class FragmentMyClasses extends Fragment {
     Context context;
     DBOpenHelper dbOpenHelper;
     String id2;
+    String courseName2;
     SQLiteDatabase db;
 
     public FragmentMyClasses() {
@@ -111,18 +113,23 @@ public class FragmentMyClasses extends Fragment {
         ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView t_id = (TextView) view.findViewById(R.id.myClass_id);
-                id2 = t_id.getText().toString();
-                //Intent i = new Intent(getActivity(), MainActivity.class);
-                //startActivity(i);
+                TextView t_courseName = (TextView) view.findViewById(R.id.myClass_courseName);
+                courseName2 = t_courseName.getText().toString();
+                Intent i = new Intent(getActivity(), CourseDetail.class);
+                i.putExtra("courseName", courseName2);
+                startActivity(i);
 
-
+                /*
                 Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
                 toolbar.setTitle("Brandeis Class Search");
                 Fragment fr = new FragmentBlank();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fr);
                 fragmentTransaction.commit();
+
+
+                MainActivity.lv.setVisibility(View.VISIBLE);
+                */
 
 
             }
