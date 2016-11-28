@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by Larry on 2016/11/24.
@@ -82,5 +85,35 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public void deleteCourse(long id, SQLiteDatabase db) {
         db.delete(TABLE_COURSE_SELECTION, this.KEY_ID + "=" + id, null);
+    }
+
+    public String testConflict(SQLiteDatabase db){
+        String timeRowTmp = "";
+        ArrayList<String> timeList = new ArrayList<>();
+        Cursor testCursor = getCourse(db);
+        //int rowCount = testCursor.getCount();
+        //Log.e("NUMBER OF ENTRIES","" + rowCount);
+        while(true){
+            timeRowTmp = testCursor.getString(testCursor.getColumnIndex("courseTime"));
+            String[] listTmp = timeRowTmp.split("\\|");
+            for (int i = 1; i < listTmp.length; i++) {
+                timeList.add(listTmp[i].trim());
+            }
+            if(testCursor.isLast()){
+                break;
+            }
+            testCursor.moveToNext();
+        }
+
+        timeRowTmp = "";
+        for (String str : timeList) {
+            timeRowTmp = timeRowTmp + str;
+        }
+        Log.e("THE FIRST ENTRY", timeRowTmp);
+
+        // compare time in ArrayList<String>
+
+
+        return "666";
     }
 }
