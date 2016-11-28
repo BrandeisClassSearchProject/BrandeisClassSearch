@@ -108,7 +108,7 @@ public class InfoListAdapter extends BaseAdapter {
             temp.setTag(holder);
         }
         else {
-            if(p != null) {
+            if(p != null && p.getResult().size() > 0) {
                 holder.name.setText("\n" + p.getResult().get(0) + "\n");
             } else {
                 holder.name.setText("\nThe faculty member you requested cannot be found");
