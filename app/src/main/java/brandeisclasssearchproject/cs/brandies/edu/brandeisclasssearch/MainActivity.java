@@ -4,7 +4,9 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -20,7 +22,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,10 +35,12 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -56,6 +62,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentLinks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
@@ -73,12 +80,12 @@ public class MainActivity extends AppCompatActivity
 
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
-    ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    public static ArrayList<HashMap<String,ArrayList<String>>> datasMap;
     ArrayList<Producers> producersList;
     ArrayList<Producers> producersList_copy ;
     InfoListAdapter adapter;
     ProgressBar pb;
-    public static ListView lv;
+    ListView lv;
     SearchView sv;
     MenuItem mi;
     private SimpleCursorAdapter mAdapter;
@@ -92,6 +99,9 @@ public class MainActivity extends AppCompatActivity
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
+    public void dosth(){
+
+    }
 
 
     @Override
@@ -180,24 +190,50 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public ArrayList<HashMap<String,ArrayList<String>>> getMap(){
+        return datasMap;
+    }
+
     private void setSV(){
 
         sv.setSuggestionsAdapter(mAdapter);
         sv.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
 
             public boolean onSuggestionSelect(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                sv.setQuery(suggestion,true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
             public boolean onSuggestionClick(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                sv.setQuery(suggestion,true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
+                return true;
             }
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
+
         });
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
 
 
             @Override
@@ -208,9 +244,21 @@ public class MainActivity extends AppCompatActivity
 
                     inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
-                    //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
-                    //lv.setVisibility(View.INVISIBLE);
-                    CST= new ClassSearchingTask(query);
+                    String s="";
+                    try {
+                        s = getSuggestion(0);
+                    }catch (Exception e){
+                        Log.i("onQueryTextSubmit","sth wrong use the orignal query");
+                    }
+
+                    toolbar.setTitle("Brandeis Class Search");
+                    fr = new FragmentBlank();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, fr);
+                    fragmentTransaction.commit();
+                    //lv.setVisibility(View.VISIBLE);
+
+                    CST= new ClassSearchingTask(s.equals("")?query:s);
                     CST.execute();
                     return true;
                 }
@@ -328,12 +376,25 @@ public class MainActivity extends AppCompatActivity
 
             startScheduleFrag();
 
-        }  else if (id == R.id.nav_share) {
+        }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+        else if (id==R.id.nav_maj){
+            toolbar.setTitle("Links");
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.hide();
+            lv.setVisibility(View.INVISIBLE);
+            Log.i("onNavigationItemS","link selected");
+            fr = new FragmentLinks();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_send) {
 
-        }else if (id==R.id.nav_maj){
-            toolbar.setTitle("Majors");
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -400,13 +461,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            toolbar.setTitle("Brandeis Class Search");
-            fr = new FragmentBlank();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fr);
-            fragmentTransaction.commit();
-            lv.setVisibility(View.VISIBLE);
 
+            lv.setVisibility(View.VISIBLE);
             pb.setVisibility(View.INVISIBLE);
             //update the list
             if(producersList==null){
@@ -636,10 +692,5 @@ public class MainActivity extends AppCompatActivity
             br.close();
             return data;
         }
-
-
-
-
     }
-
 }

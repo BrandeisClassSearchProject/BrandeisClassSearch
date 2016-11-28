@@ -37,13 +37,14 @@ public class ExtructionURLs {
     ArrayList<HashMap<String,ArrayList<String>>> datasMap;
     int currentTerm=0;
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
-
+    private ArrayList<String> searchResults;
+    private boolean isSmall;
 
 
     //input need to be guaranteed to have form COSI 131A ,Computer Science, 1400, 131
     public ExtructionURLs(ArrayList<String> classInfo, AcademicSeason s, AcademicYear y,  HashMap<String, ArrayList<String>> d) {
         this.datas=d;
-
+        isSmall=false;
         this.isFound=false;
         this.classID=classInfo.get(0);
         this.subjectID=classInfo.get(2);
@@ -59,7 +60,21 @@ public class ExtructionURLs {
 
     }
 
+    public ExtructionURLs(String id, ArrayList<HashMap<String, ArrayList<String>>> dm, boolean b) {
+        this.datasMap=dm;
+        this.isFound=false;
+        this.classID=id;
+        isSmall=b;
+        setOutWithBigMap(classID);
+    }
+
+    public int getCurrentTerm(){
+        return currentTerm;
+    }
+
     public ExtructionURLs(String classID,HashMap<String, ArrayList<String>> d){
+        isSmall=false;
+        searchResults=null;
         this.datas=d;
         this.isFound=false;
         this.classID=classID;
@@ -68,12 +83,17 @@ public class ExtructionURLs {
     }
 
     public ExtructionURLs(String id, ArrayList<HashMap<String, ArrayList<String>>> dm) {
+        isSmall=false;
         this.datasMap=dm;
         this.isFound=false;
         this.classID=id;
 
         setOutWithBigMap(classID);
 
+    }
+
+    public ArrayList<String> getSearchResults(){
+        return searchResults;
     }
 
     private String getTerm(int term) {
@@ -115,7 +135,15 @@ public class ExtructionURLs {
         }
         Log.i("ExtructionURLs","Search for "+a+b+"from all years");
         ArrayList<String> temp=null;
-        for(int i=1;i<datasMap.size();i++){
+        if(datasMap==null) {
+            Log.wtf("ExtructionURLs", "the datasMap is null");
+        }else{
+            Log.i("ExtructionURLs", "the datasMap size is "+String.valueOf(datasMap.size()));
+        }
+
+
+
+        for(int i=isSmall?0:1;i<datasMap.size();i++){
             temp = datasMap.get(i).get(a+b);
             if(temp!=null){
                 isFound=true;
@@ -131,7 +159,15 @@ public class ExtructionURLs {
             return;
         }
 
+        searchResults=temp;
 
+        for(String st:searchResults){
+            Log.i("small.ExtructionURLs",st);
+        }
+
+        if(isSmall){
+            return;
+        }
         producersList = new ArrayList<>();
         producersList.add(new ProducersBasic(term,a+b));
         ProducersClassSchdule timeProducer = new ProducersClassSchdule();
