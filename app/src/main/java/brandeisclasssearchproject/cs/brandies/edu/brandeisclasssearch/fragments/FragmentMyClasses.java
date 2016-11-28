@@ -85,9 +85,10 @@ public class FragmentMyClasses extends Fragment {
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
 
-        String testResult = dbOpenHelper.testConflict(db);
-        Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
-
+        Boolean testResult = dbOpenHelper.testConflict(db);
+        if (testResult) {
+            Toast.makeText(getActivity(),"WARNING, COURSE CONFLICTS EXIST!",Toast.LENGTH_LONG).show();
+        }
 
         // long click listener
         ls.setLongClickable(true);

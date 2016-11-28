@@ -87,7 +87,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.delete(TABLE_COURSE_SELECTION, this.KEY_ID + "=" + id, null);
     }
 
-    public String testConflict(SQLiteDatabase db){
+    public Boolean testConflict(SQLiteDatabase db){
         String timeRowTmp = "";
         ArrayList<String> timeList = new ArrayList<>();
         Cursor testCursor = getCourse(db);
@@ -114,13 +114,76 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         Log.e("Processed schedule:", timeRowTmp);
 
         // compare times in ArrayList<String>
-        ArrayList<ArrayList<String>> timeTable = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<Period>> timeTable = new ArrayList<ArrayList<Period>>();
         for (int i=0; i<5; i++) {
-            timeTable.add(new ArrayList<String>());
+            timeTable.add(new ArrayList<Period>());
         }
 
+        for (String s : timeList) {
+            String[] sep = s.split(" ");
+            String[] days = sep[0].split(",");     // eg. {M, W, Th}
+            Period p = new Period(convertToMin(sep[1]+" "+sep[2]), convertToMin(sep[4]+" "+sep[5]));
+            for (String d : days) {
+                if (d.equals("M")) {
+                    timeTable.get(0).add(p);
+                } else if (d.equals(("T"))) {
+                    timeTable.get(1).add(p);
+                } else if (d.equals("W")) {
+                    timeTable.get(2).add(p);
+                } else if (d.equals("Th")) {
+                    timeTable.get(3).add(p);
+                } else if (d.equals("F")) {
+                    timeTable.get(4).add(p);
+                }
+            }
+        }
 
+        Boolean checkResult = false;
+        for (ArrayList<Period> ls : timeTable) {
+            for (int i=0; i<ls.size(); i++) {
+                for (int j=i+1; j<ls.size(); j++) {
+                    if (ls.get(i).checkConflict(ls.get(j))) {
+                        checkResult = true;
+                    }
+                }
+            }
+        }
 
-        return "666";
+        return checkResult;
+    }
+
+    public int convertToMin(String time) {
+        Log.i("time", time);
+        String[] temp = time.split(" ");
+        int hour = Integer.parseInt(temp[0].split(":")[0]);
+        int min = Integer.parseInt(temp[0].split(":")[1]);
+        if (temp[1].equals("PM")) {
+            hour += 12;
+        }
+        return 60 * hour + min;
+    }
+
+    private class Period {
+        private int startMin;
+        private int endMin;
+
+        public Period(int s, int e) {
+            this.startMin = s;
+            this.endMin = e;
+        }
+
+        public int getStartMin() {
+            return startMin;
+        }
+
+        public int getEndMin() {
+            return endMin;
+        }
+
+        public boolean checkConflict(Period p) {
+            return (p.getStartMin()>startMin && p.getStartMin()<endMin)
+                    || (p.getEndMin()>startMin && p.getEndMin()<endMin)
+                    || (p.getStartMin()<startMin && p.getEndMin()>endMin);
+        }
     }
 }
