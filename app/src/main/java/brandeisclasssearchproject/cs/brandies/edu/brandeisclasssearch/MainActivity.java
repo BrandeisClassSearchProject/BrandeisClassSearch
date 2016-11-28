@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList<Producers> producersList_copy ;
     InfoListAdapter adapter;
     ProgressBar pb;
-    public static ListView lv;
+    ListView lv;
     SearchView sv;
     MenuItem mi;
     private SimpleCursorAdapter mAdapter;
@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
+    public void dosth(){
+
+    }
 
 
     @Override
@@ -183,6 +186,10 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    }
+
+    public ArrayList<HashMap<String,ArrayList<String>>> getMap(){
+        return datasMap;
     }
 
     private void setSV(){

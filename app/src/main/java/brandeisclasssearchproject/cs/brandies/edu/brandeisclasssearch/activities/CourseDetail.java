@@ -12,17 +12,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.InfoListAdapter;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.MainActivity;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassSchdule;
@@ -38,11 +41,13 @@ public class CourseDetail extends AppCompatActivity {
 
     ListView lv;
     ArrayList<Producers> producersList = new ArrayList<>();
-    ArrayList<Producers> producersList_copy ;
+    ArrayList<String> searchResult ;
     String currentClassName;
     InfoListAdapter adapter;
-    HashMap<String, ArrayList<String>> datas;
-    ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    ProgressBar pb ;
+
+    String term;
+    int intTerm;
     String courseName;
 
     @Override
@@ -50,16 +55,22 @@ public class CourseDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
         lv = (ListView) findViewById(R.id.courseDetail_listView);
+        pb = (ProgressBar)findViewById(R.id.thePB) ;
         Intent i = getIntent();
-        courseName = i.getStringExtra("courseName");
-        //producersList.add(courseName);
-
-        //Log.i("courseName", courseName);
-
-
-        ClassSearchingTask CST = new ClassSearchingTask(courseName);
+        intTerm=i.getIntExtra("term",1171);
+        courseName=i.getStringExtra("className");
+        term=i.getStringExtra("classTerm");
+        searchResult = i.getStringArrayListExtra("list");
+        ClassSearchingTask CST = new ClassSearchingTask();
         CST.execute();
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.right_out,R.anim.left_in);
     }
 
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
@@ -67,31 +78,23 @@ public class CourseDetail extends AppCompatActivity {
         private String classId;
         //private Boolean isDone;
 
-        public ClassSearchingTask(String s) {
-            classId=s.toUpperCase();
-            classInfos=new inpInterpreter(classId).getClassInfos();
-            //Log.i("classInfos", classInfos.toString());
+        public ClassSearchingTask() {
         }
 
 
 
         @Override
         protected void onPreExecute() {
+            pb.setVisibility(View.VISIBLE);
             lv.setVisibility(View.INVISIBLE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             //update the list
-            if(producersList==null){
-                Toast.makeText(getApplicationContext(), "We cannot find relevant information, maybe the class ID is wrong?", Toast.LENGTH_LONG).show();
-                producersList=producersList_copy;
-                return;
-            }
-            producersList_copy=producersList;
-            Toast.makeText(getApplicationContext(), "Showing", Toast.LENGTH_SHORT).show();
+            lv.setVisibility(View.VISIBLE);
+            pb.setVisibility(View.INVISIBLE);
             currentClassName=producersList.get(0).getResult().get(0);
-            ListView lv = (ListView) findViewById(R.id.theContentList);
             adapter = new InfoListAdapter(producersList);
             lv.setAdapter(adapter);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -150,35 +153,61 @@ public class CourseDetail extends AppCompatActivity {
 
         }
 
-        @Override
-        protected void onProgressUpdate(Void... params) {
-            Log.i("Main","Search on progress update, thread sleep 400ms");
-        }
 
         @Override
         protected Void doInBackground(Object... params) {
-            while (datas==null){Log.i("ClassSearchTask","waiting for map");}
-            if (classInfos != null) {
-                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
-                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
-                producersList = new ExtructionURLs(classId,datas).getProducers();
-                if (producersList==null){
-                    while (datasMap==null){
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-                            Log.i("Main.search","interruptedException");
-                        }
-                    }
-                    producersList = new ExtructionURLs(classId,datasMap).getProducers();
 
-                    if(producersList==null ) {
-                        Log.i("ClassSearchTask", "Class not found");
-                        return null;
-                    }
+            if (searchResult != null) {
+                Log.i("SmallClassSearchTask", "ready, go");
 
+                producersList = new ArrayList<>();
+                producersList.add(new ProducersBasic( term,courseName));
+                ProducersClassSchdule timeProducer = new ProducersClassSchdule();
+                for(String s : searchResult){
+
+                    String contents=s.substring(14).trim();
+                    String attr = s.substring(0,13);
+                    //Log.i("ExtructionURLs",attr);
+                    switch(attr){
+                        case "  DESCRIPTION":
+                            Log.i("ExtructionURLs","  DESCRIPTION: "+contents);
+                            producersList.add(new ProducersClassDescription(contents));
+                            break;
+                        case "      TEACHER":
+                            Log.i("ExtructionURLs","      TEACHER: "+contents);
+                            producersList.add(new ProducersTearcherInfo(contents));
+                            break;
+                        case "        BOOKS":
+                            String template = "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=1391&term_id-1=1163&div-1=&dept-1=PHYS&course-1=105A&sect-1=1";
+                            template=template.replace("1163",String.valueOf(intTerm));
+                            String[] ssss = courseName.split(" ");
+                            template=template.replace("PHYS",ssss[0]);
+                            template=template.replace("105A",ssss[ssss.length-1]);
+                            Log.i("ExtructionURLs","        BOOKS: "+template);
+                            producersList.add(new ProducersBooksInfo(template));
+                            break;
+                        case "        BLOCK":
+                            Log.i("ExtructionURLs","       BLOCKS: "+contents);
+                            timeProducer.add("Block: "+contents);
+                            break;
+                        case "        TIMES":
+                            Log.i("ExtructionURLs","        TIMES: "+contents);
+                            timeProducer.add(contents);
+                            break;
+                        default: //Log.i("ExtructionURLs","setOutWithMap String s is"+s);
+                            break;
+
+                    }
                 }
-                Log.i("ClassSearchTask", "found it ");
+                Producers tempP=producersList.get(1);
+                producersList.set(1,timeProducer);
+                producersList.add(tempP);
+
+
+
+
+
+
                 for (Producers p : producersList) {
                     ArrayList<String> al = p.getResult();
                     if (p instanceof ProducersTearcherInfo) {
