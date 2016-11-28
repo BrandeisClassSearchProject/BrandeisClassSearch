@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +58,7 @@ public class FragmentMyClasses extends Fragment {
     String currentClassName;
     ArrayList<HashMap<String,ArrayList<String>>> datasMap;
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
+    Snackbar sb;
 
     public FragmentMyClasses() {
         //new LoadingData().execute();
@@ -85,7 +87,7 @@ public class FragmentMyClasses extends Fragment {
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
 
-        String testResult = dbOpenHelper.testConflict(db);
+        //String testResult = dbOpenHelper.testConflict(db);
         //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
         sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.  "+testResult, Snackbar.LENGTH_INDEFINITE)
                 .setAction("ok", new View.OnClickListener(){
@@ -96,8 +98,9 @@ public class FragmentMyClasses extends Fragment {
                 });
         sb.show();
 
-        Boolean testResult = dbOpenHelper.testConflict(db);
-        if (testResult) {
+        Boolean testResult2 = dbOpenHelper.testConflict(db);
+
+        if (testResult2) {
             Toast.makeText(getActivity(),"WARNING, COURSE CONFLICTS EXIST!",Toast.LENGTH_LONG).show();
         }
 
