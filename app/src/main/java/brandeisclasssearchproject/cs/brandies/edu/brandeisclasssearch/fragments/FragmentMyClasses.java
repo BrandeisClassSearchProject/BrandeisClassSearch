@@ -73,7 +73,7 @@ public class FragmentMyClasses extends Fragment {
 
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
-
+        testConflict();
         // long click listener
         ls.setLongClickable(true);
         ls.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -138,4 +138,31 @@ public class FragmentMyClasses extends Fragment {
         return v;
     }
 
+    public void testConflict(){
+        String timeRowTmp = "";
+        ArrayList<String> timeList = new ArrayList<>();
+        dbOpenHelper = new DBOpenHelper(context);
+        db = dbOpenHelper.getReadableDatabase();
+        Cursor testCursor = dbOpenHelper.getCourse(db);
+        //int rowCount = testCursor.getCount();
+        //Log.e("NUMBER OF ENTRIES","" + rowCount);
+        while(true){
+            timeRowTmp = testCursor.getString(testCursor.getColumnIndex("courseTime"));
+            String[] listTmp = timeRowTmp.split("\\|");
+            for (int i = 1; i < listTmp.length; i++) {
+                timeList.add(listTmp[i].trim());
+            }
+            if(testCursor.isLast()){
+                break;
+            }
+            testCursor.moveToNext();
+        }
+
+        timeRowTmp = "";
+        for (String str : timeList) {
+            timeRowTmp = timeRowTmp + str;
+        }
+        Log.e("THE FIRST ENTRY",timeRowTmp);
+
+    }
 }
