@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.
  */
 public class FragmentMyClasses extends Fragment {
 
-
+    Snackbar sb;
     Context context;
     DBOpenHelper dbOpenHelper;
     String id2;
@@ -63,9 +64,12 @@ public class FragmentMyClasses extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onDestroy() {
+        sb.dismiss();
+        super.onDestroy();
 
-
-
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -86,9 +90,15 @@ public class FragmentMyClasses extends Fragment {
         ls.setAdapter(adapter);
 
         String testResult = dbOpenHelper.testConflict(db);
-        Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
-
-
+        //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
+        sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.  "+testResult, Snackbar.LENGTH_INDEFINITE)
+                .setAction("ok", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("Frag","class conflict");
+                    }
+                });
+        sb.show();
         // long click listener
         ls.setLongClickable(true);
         ls.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
