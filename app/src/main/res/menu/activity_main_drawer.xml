@@ -6,10 +6,7 @@
             android:id="@+id/nav_main"
             android:icon="@android:drawable/ic_menu_search"
             android:title="Search Class" />
-        <item
-            android:id="@+id/nav_maj"
-            android:icon="@android:drawable/ic_menu_myplaces"
-            android:title="Majors" />
+
         <item
             android:id="@+id/nav_my"
             android:icon="@drawable/ic_menu_gallery"
@@ -19,8 +16,14 @@
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:title="My Schedule" />
 
+        <item
+            android:id="@+id/nav_maj"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Links" />
+
     </group>
 
+    <!--
     <item android:title="Communicate">
         <menu>
             <item
@@ -33,5 +36,6 @@
                 android:title="Send" />
         </menu>
     </item>
+    -->
 
 </menu>
