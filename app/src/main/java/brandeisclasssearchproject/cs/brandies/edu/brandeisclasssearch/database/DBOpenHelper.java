@@ -97,7 +97,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             timeRowTmp = testCursor.getString(testCursor.getColumnIndex("courseTime"));
             String[] listTmp = timeRowTmp.split("\\|");
             for (int i = 1; i < listTmp.length; i++) {
-                timeList.add(listTmp[i].trim());
+                if (!listTmp[i].trim().equals("")) {
+                    timeList.add(listTmp[i].trim());
+                }
             }
             if(testCursor.isLast()){
                 break;
@@ -107,11 +109,16 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
         timeRowTmp = "";
         for (String str : timeList) {
-            timeRowTmp = timeRowTmp + str;
+            timeRowTmp = timeRowTmp + str + "\n";
         }
-        Log.e("THE FIRST ENTRY", timeRowTmp);
+        Log.e("Processed schedule:", timeRowTmp);
 
-        // compare time in ArrayList<String>
+        // compare times in ArrayList<String>
+        ArrayList<ArrayList<String>> timeTable = new ArrayList<ArrayList<String>>();
+        for (int i=0; i<5; i++) {
+            timeTable.add(new ArrayList<String>());
+        }
+
 
 
         return "666";
