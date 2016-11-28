@@ -36,7 +36,7 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.
 
 public class CourseDetail extends AppCompatActivity {
 
-    ListView lv = (ListView) findViewById(R.id.courseDetail_listView);
+    ListView lv;
     ArrayList<Producers> producersList = new ArrayList<>();
     ArrayList<Producers> producersList_copy ;
     String currentClassName;
@@ -49,12 +49,12 @@ public class CourseDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
-
+        lv = (ListView) findViewById(R.id.courseDetail_listView);
         Intent i = getIntent();
         courseName = i.getStringExtra("courseName");
         //producersList.add(courseName);
 
-        Log.i("courseName", courseName);
+        //Log.i("courseName", courseName);
 
 
         ClassSearchingTask CST = new ClassSearchingTask(courseName);
@@ -70,6 +70,7 @@ public class CourseDetail extends AppCompatActivity {
         public ClassSearchingTask(String s) {
             classId=s.toUpperCase();
             classInfos=new inpInterpreter(classId).getClassInfos();
+            //Log.i("classInfos", classInfos.toString());
         }
 
 

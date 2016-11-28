@@ -115,9 +115,12 @@ public class FragmentMyClasses extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView t_courseName = (TextView) view.findViewById(R.id.myClass_courseName);
                 courseName2 = t_courseName.getText().toString();
+
+                /*
                 Intent i = new Intent(getActivity(), CourseDetail.class);
                 i.putExtra("courseName", courseName2);
                 startActivity(i);
+                */
 
                 /*
                 Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
