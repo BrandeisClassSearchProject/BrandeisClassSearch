@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.MainActivity;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
@@ -82,6 +84,10 @@ public class FragmentMyClasses extends Fragment {
 
         adapter.notifyDataSetChanged();
         ls.setAdapter(adapter);
+
+        String testResult = dbOpenHelper.testConflict(db);
+        Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
+
 
         // long click listener
         ls.setLongClickable(true);
