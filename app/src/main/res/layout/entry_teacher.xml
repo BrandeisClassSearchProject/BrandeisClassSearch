@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorEntryBG"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
@@ -13,20 +15,22 @@
         android:id="@+id/Layout_Teacher_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="18sp"/>
+        android:textColor="@color/colorEntryTitle"
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/Layout_Teacher_depts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000" />
+        android:textColor="@color/colorEntryTitle"
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/Layout_Teacher_degrees"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000" />
+        android:textColor="@color/colorEntryTitle"
+        android:textSize="18dp" />
 
 
 </LinearLayout>
