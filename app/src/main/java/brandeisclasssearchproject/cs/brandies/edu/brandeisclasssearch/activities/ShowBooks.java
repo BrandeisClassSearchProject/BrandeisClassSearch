@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.R;
 
 public class ShowBooks extends AppCompatActivity {
