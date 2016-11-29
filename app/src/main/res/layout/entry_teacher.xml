@@ -19,7 +19,11 @@
         android:textColor="#000000"
         android:textSize="24sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/Layout_Teacher_Image_Preview"
+        android:layout_toLeftOf="@+id/Layout_Teacher_Image_Preview"/>
 
     <TextView
         android:layout_below="@+id/Layout_Teacher_name"
@@ -27,6 +31,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?android:attr/textColorPrimary"
+        android:layout_toStartOf="@+id/Layout_Teacher_Image_Preview"
+        android:layout_toLeftOf="@+id/Layout_Teacher_Image_Preview"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textSize="18dp" />
 
     <TextView
@@ -35,6 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?android:attr/textColorPrimary"
+
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textSize="18dp" />
 
 

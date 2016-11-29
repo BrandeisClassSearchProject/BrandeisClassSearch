@@ -29,6 +29,8 @@ public class ProducersBooksInfo extends ProducersAbstract{
 
             if(document==null){
                 Log.e("ProducersBooksInfo","the document is null!");
+            }else{
+                Log.i("ProducersBooksInfo","the document is not null");
             }
 
             Element error = document.getElementById("efCourseErrorSection");

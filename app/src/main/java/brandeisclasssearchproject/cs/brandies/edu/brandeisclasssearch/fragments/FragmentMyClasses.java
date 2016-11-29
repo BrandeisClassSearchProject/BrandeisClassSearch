@@ -97,7 +97,7 @@ public class FragmentMyClasses extends Fragment {
         //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
 
         if (testResult) {
-            sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.", Snackbar.LENGTH_INDEFINITE)
+            sb=Snackbar.make(container, "You have conflict on class time.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("ok", new View.OnClickListener(){
                         @Override
                         public void onClick(View v) {
