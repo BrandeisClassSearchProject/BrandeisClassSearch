@@ -96,6 +96,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         while(true){
             timeRowTmp = testCursor.getString(testCursor.getColumnIndex("courseTime"));
             String[] listTmp = timeRowTmp.split("\\|");
+            if (listTmp[0].indexOf("Block")==-1) {
+                timeList.add(listTmp[0].trim());
+            }
             for (int i = 1; i < listTmp.length; i++) {
                 if (!listTmp[i].trim().equals("")) {
                     timeList.add(listTmp[i].trim());
