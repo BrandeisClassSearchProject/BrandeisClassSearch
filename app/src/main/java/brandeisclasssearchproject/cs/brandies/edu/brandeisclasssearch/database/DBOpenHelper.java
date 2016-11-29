@@ -94,6 +94,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         //int rowCount = testCursor.getCount();
         //Log.e("NUMBER OF ENTRIES","" + rowCount);
         while(true){
+            if (testCursor.getCount()==0) {
+                return false;
+            }
             timeRowTmp = testCursor.getString(testCursor.getColumnIndex("courseTime"));
             String[] listTmp = timeRowTmp.split("\\|");
             if (listTmp[0].indexOf("Block")==-1) {
