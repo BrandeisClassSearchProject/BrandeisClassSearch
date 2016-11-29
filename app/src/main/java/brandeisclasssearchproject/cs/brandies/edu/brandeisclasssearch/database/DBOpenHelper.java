@@ -10,14 +10,12 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * Created by Larry on 2016/11/24.
- *
- * stolen from my hw3.
+ * A customized database open helper
  *
  * database table should have columns:  course_name (string)
+ *                                      course_season (string)
  *                                      course_time (string)
  *
- * Still need clear entire table method.
  */
 
 public class DBOpenHelper extends SQLiteOpenHelper {
