@@ -69,7 +69,9 @@ public class FragmentMyClasses extends Fragment {
 
     @Override
     public void onDestroy() {
-        sb.dismiss();
+        if(sb!=null){
+            sb.dismiss();
+        }
         super.onDestroy();
     }
 

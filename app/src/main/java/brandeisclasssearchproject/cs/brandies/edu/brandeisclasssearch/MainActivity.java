@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity
     ProgressBar pb;
     ListView lv;
     SearchView sv;
-    MenuItem mi;
     private SimpleCursorAdapter mAdapter;
     LinkedList<String> sortedClasses;
     Toolbar toolbar;
@@ -100,6 +99,8 @@ public class MainActivity extends AppCompatActivity
     DBOpenHelper dbOpenHelper;
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
+    private Menu me;
+
 
     public void dosth(){
 
@@ -362,7 +363,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        mi = menu.findItem(R.id.action_settings);
+        MenuItem mi = menu.findItem(R.id.action_settings);
         sv = (SearchView) MenuItemCompat.getActionView(mi);
         setSV();
         //
@@ -400,6 +401,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main, fr);
             fragmentTransaction.commit();
+
             lv.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_my) {
