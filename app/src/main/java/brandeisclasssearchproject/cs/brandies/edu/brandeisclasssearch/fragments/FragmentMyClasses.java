@@ -60,14 +60,18 @@ public class FragmentMyClasses extends Fragment {
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
     Snackbar sb;
 
+
     public FragmentMyClasses() {
         //new LoadingData().execute();
         // Required empty public constructor
     }
 
 
-
-
+    @Override
+    public void onDestroy() {
+        sb.dismiss();
+        super.onDestroy();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -128,6 +132,17 @@ public class FragmentMyClasses extends Fragment {
                                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                                 fragmentTransaction.replace(R.id.content_main, fr);
                                 fragmentTransaction.commit();
+                                if (dbOpenHelper.testConflict(db)) {
+                                    sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.", Snackbar.LENGTH_INDEFINITE)
+                                            .setAction("ok", new View.OnClickListener(){
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Log.i("Frag","class conflict");
+                                                }
+                                            });
+                                    sb.show();
+                                }
+
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
