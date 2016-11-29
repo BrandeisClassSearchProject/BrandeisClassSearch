@@ -79,7 +79,6 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     builder.insert(0, tmpString + "\n\n");
 
                     allText = builder.toString();
-                    allText.replaceAll("A\nuthor", "Author");
                     results.add(allText);
                 }
             } else {
