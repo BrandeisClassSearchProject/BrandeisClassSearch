@@ -96,7 +96,7 @@ public class InfoListAdapter extends BaseAdapter {
         if (p.getResult().size() == 9) {
             holder.name.setText(p.getResult().get(0));
             holder.department.setText("Department: " + p.getResult().get(1));
-            holder.degrees.setText("Expertise: " + p.getResult().get(3));
+            holder.degrees.setText("Expertise: " + p.getResult().get(3) + "\nclick for more");
             operationBG task = new operationBG();
             String url;
             if(p.getResult().size() == 9)
@@ -108,9 +108,13 @@ public class InfoListAdapter extends BaseAdapter {
             temp.setTag(holder);
         }
         else {
-            holder.name.setText(p.getResult().get(0));
-            holder.department.setText("D.Va should get nerfed. ");
-            holder.degrees.setText("--- by Sombra");
+            if(p != null && p.getResult().size() > 0) {
+                holder.name.setText(p.getResult().get(0) + "\n");
+            } else {
+                holder.name.setText("The faculty member you requested cannot be found");
+            }
+            holder.department.setText("Yes, pharah is my daughter.\n");
+            holder.degrees.setText("--- Reinhardt");
             temp.setTag(holder);
         }
         return temp;
@@ -185,10 +189,13 @@ public class InfoListAdapter extends BaseAdapter {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Description_entryOne);
             String s;
-            if (al.get(0).length()>300) {
-                s = al.get(0).substring(0, 300) + "\nclick for more";
+            if (al.get(0).length() > 300) {
+                s = al.get(0).substring(0, 300);
+                int k = s.lastIndexOf(" ");
+                s.substring(0, k);
+                s = s + "..." + "\n\nclick for more";
             } else {
-                s = al.get(0) + "\nclick for more";
+                s = al.get(0) + "\n\nclick for more";
             }
             holder.entry.setText(s);
             temp.setTag(holder);

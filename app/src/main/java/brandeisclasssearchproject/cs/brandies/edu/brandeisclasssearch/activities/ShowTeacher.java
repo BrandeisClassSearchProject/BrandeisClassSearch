@@ -36,7 +36,7 @@ public class ShowTeacher extends AppCompatActivity {
         if(list.size() == 9){
             url = list.get(8);
         } else {
-            url = "";
+            url = "http://data.whicdn.com/images/217490772/superthumb.gif";
         }
         Log.e("URL IS: ",url);
         task.execute(url);

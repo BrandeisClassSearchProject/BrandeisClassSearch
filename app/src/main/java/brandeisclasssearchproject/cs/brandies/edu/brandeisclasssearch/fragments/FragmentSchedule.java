@@ -25,7 +25,7 @@ public class FragmentSchedule extends Fragment {
 
     ArrayList<String> classes;
     ArrayList<Integer> colors;
-    final String[] COLORS =  new String[]{"255 101 101","255 108 0","0 102 0","0 204 204","0 128 255","0 0 204","255 0 255","255 102 255","96 96 96"};
+    final String[] COLORS =  new String[]{"255 101 101","255 165 0","144 238 144","0 204 204","0 128 255","0 0 204","255 0 255","255 102 255","96 96 96"};
     View v;
     ListView classColors;
 

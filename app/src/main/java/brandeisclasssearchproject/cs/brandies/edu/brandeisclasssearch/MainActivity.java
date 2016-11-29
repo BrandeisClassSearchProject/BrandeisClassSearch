@@ -4,7 +4,9 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -20,7 +22,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,10 +35,12 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -56,7 +62,9 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentBlank;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentLinks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentMyClasses;
+import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
@@ -72,7 +80,9 @@ public class MainActivity extends AppCompatActivity
 
     ClassSearchingTask CST;
     HashMap<String, ArrayList<String>> datas;
-    ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    public static ArrayList<HashMap<String,ArrayList<String>>> datasMap;
+    HashMap<String,String> NameToID;
+    HashMap<String,String> IDToName;
     ArrayList<Producers> producersList;
     ArrayList<Producers> producersList_copy ;
     InfoListAdapter adapter;
@@ -85,12 +95,15 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fr;
     String currentClassName;
-
+    final String separtor=" | ";
     SQLiteDatabase db;
     DBOpenHelper dbOpenHelper;
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
 
+    public void dosth(){
+
+    }
 
 
     @Override
@@ -103,15 +116,7 @@ public class MainActivity extends AppCompatActivity
         pb.setVisibility(View.INVISIBLE);
         producersList = new ArrayList<Producers>();
         producersList_copy=producersList;
-//        dataLoader=new DataLoader(new DataLoader.AsyncResponse() {
-//            @Override
-//            public void processFinish(HashMap<String, ArrayList<String>> output) {
-//                datas=output;//set the hashmap for use in the main thread;
-//            }
-//        },getApplicationContext());
-//        Log.i("Main","dataLoader.execute()");
-//        //dataLoader.execute();
-        new LoadingData().execute();//not ready yet
+        new LoadingData().execute();
 
         mAdapter = new SimpleCursorAdapter(this,
                 R.layout.suggestion_entry,
@@ -148,9 +153,10 @@ public class MainActivity extends AppCompatActivity
 
                                     String add = "";
                                     for (int j=0; j<producersList.get(1).getResult().size(); j++) {
-                                        add += producersList.get(1).getResult().get(j)+" ";
+                                        add += producersList.get(1).getResult().get(j)+separtor;
                                     }
-                                    dbOpenHelper.addCourse(currentClassName, add, db);
+                                    String courseSeason = producersList.get(0).getResult().get(1);
+                                    dbOpenHelper.addCourse(currentClassName, courseSeason, add, db);
                                     Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
@@ -186,24 +192,54 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public ArrayList<HashMap<String,ArrayList<String>>> getMap(){
+        return datasMap;
+    }
+
     private void setSV(){
 
         sv.setSuggestionsAdapter(mAdapter);
         sv.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
 
             public boolean onSuggestionSelect(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                String textStr[] = suggestion.split("\\r\\n|\\n|\\r");
+                sv.setQuery(textStr[0],true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionSelect", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
             public boolean onSuggestionClick(int position) {
-                Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
-                return false;
+                String suggestion = getSuggestion(position);
+                //String textStr[] = suggestion.split("\\r\\n|\\n|\\r");
+                String[] s =  suggestion.split("\\r\\n|\\n|\\r")[0].split(" ");
+
+                sv.setQuery(s[0]+" "+s[s.length-1],true);
+                //Toast.makeText(getApplicationContext(), "onSugggestionClick", Toast.LENGTH_SHORT).show();
+                return true;
             }
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
+
         });
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(
+                        position);
+                String suggest1 = cursor.getString(cursor
+                        .getColumnIndex("className"));
+                return suggest1;
+            }
 
 
             @Override
@@ -214,9 +250,21 @@ public class MainActivity extends AppCompatActivity
 
                     inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
-                    //if(dataLoader.getStatus() == AsyncTask.Status.FINISHED){
-                    //lv.setVisibility(View.INVISIBLE);
-                    CST= new ClassSearchingTask(query);
+                    String s="";
+                    try {
+                        s = getSuggestion(0);
+                    }catch (Exception e){
+                        Log.i("onQueryTextSubmit","sth wrong use the orignal query");
+                    }
+
+                    toolbar.setTitle("Brandeis Class Search");
+                    fr = new FragmentBlank();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, fr);
+                    fragmentTransaction.commit();
+                    //lv.setVisibility(View.VISIBLE);
+
+                    CST= new ClassSearchingTask(s.equals("")?query:s);
                     CST.execute();
                     return true;
                 }
@@ -228,7 +276,6 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-            //implement suggestion here!
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(sortedClasses==null||newText.isEmpty()){
@@ -243,13 +290,22 @@ public class MainActivity extends AppCompatActivity
 
     //http://stackoverflow.com/questions/23658567/android-actionbar-searchview-suggestions-with-a-simple-string-array
     private void polulateAdapter(String query) {
+
+        String fixedQ=query.toUpperCase().trim();
         Log.i("Main.polulateAdapter","new query is "+query);
         MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "className" });
         int i=0;
+        ArrayList<String> resultLists = new ArrayList<>();
+
+        if(sortedClasses==null){
+            return;
+        }
+
         for (String s:sortedClasses) {
-            if (s.startsWith(query.toUpperCase())) {
+            if (s.startsWith(fixedQ)) {
                 Log.wtf("Main.polulateAdapter",s+"  "+query.toUpperCase());
-                c.addRow(new Object[] {i, s});
+                resultLists.add(s);
+                //c.addRow(new Object[] {i, s});
                 i++;
             }
 
@@ -257,6 +313,32 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
         }
+
+        if(query.length()>=3&&NameToID!=null&&i<8){
+            //Log.i("Main.polulateAdapter","size of Nametoid "+String.valueOf(NameToID.size()));
+            for(String names:NameToID.keySet()){
+                Log.i("polulateAdapter",fixedQ+" "+names);
+                if(names.toUpperCase().contains(fixedQ)){
+                    resultLists.add(NameToID.get(names)+"\n"+names);
+                    Log.i("polulateAdapter",names);
+                    i++;
+                }
+
+                if(i==8){
+                    break;
+                }
+            }
+
+        }
+
+        int j=0;
+        for(String r:resultLists){
+            c.addRow(new Object[] {j, r});
+            j++;
+        }
+
+
+
         Log.i("Main.polulateAdapter",String.valueOf(i));
         mAdapter.changeCursor(c);
 
@@ -311,6 +393,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.show();
             toolbar.setTitle("Brandeis Class Search");
             fr = new FragmentBlank();
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -319,6 +403,8 @@ public class MainActivity extends AppCompatActivity
             lv.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_my) {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.hide();
             lv.setVisibility(View.INVISIBLE);
             Log.i("onNavigationItemS","my class selected");
             toolbar.setTitle("My Classes");
@@ -330,12 +416,25 @@ public class MainActivity extends AppCompatActivity
 
             startScheduleFrag();
 
-        }  else if (id == R.id.nav_share) {
+        }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+        else if (id==R.id.nav_maj){
+            toolbar.setTitle("Links");
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.hide();
+            lv.setVisibility(View.INVISIBLE);
+            Log.i("onNavigationItemS","link selected");
+            fr = new FragmentLinks();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_send) {
 
-        }else if (id==R.id.nav_maj){
-            toolbar.setTitle("Majors");
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -344,34 +443,42 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startScheduleFrag() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
         toolbar.setTitle("My Schedule");
+        lv.setVisibility(View.INVISIBLE);
         dbOpenHelper = new DBOpenHelper(getApplicationContext());
         db = dbOpenHelper.getWritableDatabase();
         Cursor cursor= dbOpenHelper.getCourse(db);
         ArrayList<String> al = new ArrayList<>();
-        al.add("CLASS");
-        al.add(currentClassName);
-        String itemname =  cursor.getString(cursor.getColumnIndex("item_name"));
-
-
-
-        while (cursor.moveToNext()) {
-
+        if(cursor!=null && cursor.getCount()!=0) {
+            do {
+                al.add("CLASS");
+                al.add(cursor.getString(cursor.getColumnIndex("courseName")));
+                String itemname = cursor.getString(cursor.getColumnIndex("courseTime"));
+                String[] times = itemname.split(" \\| ");
+                for (String s : times) {
+                    al.add(s);
+                }
+            } while (cursor.moveToNext());
+            for(String s:al){
+                Log.i("Main","startScheduleFrag: "+s);
+            }
+            fr = new FragmentSchedule();
+            Bundle b = new Bundle();
+            b.putStringArrayList("list", al);
+            fr.setArguments(b);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fr);
+            fragmentTransaction.commit();
+            db.close();
+            cursor.close();
+        }else{
+            Log.wtf("Main","db cursor is null or empty");
         }
-
-        fr = new FragmentMyClasses();
-        Bundle b = new Bundle();
-        b.putStringArrayList("list",al);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fr);
-        fragmentTransaction.commit();
-
-
-
 
 
     }
-
 
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
         private ArrayList<String> classInfos;
@@ -394,13 +501,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            toolbar.setTitle("Brandeis Class Search");
-            fr = new FragmentBlank();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fr);
-            fragmentTransaction.commit();
-            lv.setVisibility(View.VISIBLE);
 
+            lv.setVisibility(View.VISIBLE);
             pb.setVisibility(View.INVISIBLE);
             //update the list
             if(producersList==null){
@@ -521,11 +623,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class LoadingData extends AsyncTask<Object,Void,Void>{
+        HashMap<String,String> tempNameToID;
+        HashMap<String,String> tempIDToName;
         private TreeSet<String> tempClasses;
         long startTime;
         //ProgressDialog pDialog;
         ArrayList<HashMap<String,ArrayList<String>>> dataMap;
         private String filename = "DATA.txt";
+        private String filenamewithName = "DATA_with_name.txt";
 
         public LoadingData() {
             startTime = System.currentTimeMillis();
@@ -540,7 +645,8 @@ public class MainActivity extends AppCompatActivity
 
             AssetManager am = getApplicationContext().getAssets();
             try {
-                InputStream is = am.open(filename);
+                //InputStream is = am.open(filename);
+                InputStream is = am.open(filenamewithName);
                 InputStreamReader isr= new InputStreamReader(is);
                 dataMap=putInMap(isr);
             } catch (IOException e) {
@@ -557,6 +663,8 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             pb.setVisibility(View.INVISIBLE);
             datasMap=dataMap;
+            IDToName=tempIDToName;
+            NameToID=tempNameToID;
             LinkedList<String> l= new LinkedList<>();
             l.addAll(tempClasses);
             sortedClasses=l;
@@ -576,6 +684,8 @@ public class MainActivity extends AppCompatActivity
 
         private ArrayList<HashMap<String,ArrayList<String>>> putInMap(InputStreamReader isr) throws IOException {
             tempClasses=new TreeSet<>();
+            tempIDToName=new HashMap<>();
+            tempNameToID=new HashMap<>();
             ArrayList<HashMap<String,ArrayList<String>>> data = new ArrayList<>(terms.length);
             HashMap<String,ArrayList<String>> hm = new HashMap<>();
             BufferedReader br = new BufferedReader(isr);
@@ -605,6 +715,7 @@ public class MainActivity extends AppCompatActivity
                     }else{
                         String[] tempS=title.split(" ");
                         tempClasses.add(tempS[0]+" "+tempS[tempS.length-1]);
+
                     }
                 }else if(counter%14==0){
                     Log.i("DataLoader",String.valueOf(hm.size())+" "+title);
@@ -621,6 +732,14 @@ public class MainActivity extends AppCompatActivity
                 }else{
                     if(!temp.equals(".")){
                         tempArray.add(temp);
+                        if(temp.startsWith("         NAME: ")){
+                            String tempN = temp.replace("         NAME: ","");
+                            if(tempNameToID.get(tempN)==null){
+                                Log.i("loading",title+"\n"+tempN);
+                                tempIDToName.put(title,tempN);
+                                tempNameToID.put(tempN,title);
+                            }
+                        }
                     }
                 }
                 counter++;
@@ -630,10 +749,5 @@ public class MainActivity extends AppCompatActivity
             br.close();
             return data;
         }
-
-
-
-
     }
-
 }
