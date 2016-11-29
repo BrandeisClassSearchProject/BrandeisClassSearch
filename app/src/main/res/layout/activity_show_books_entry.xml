@@ -14,8 +14,6 @@
     <TextView
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/Book_Image"
-        android:text="Instructor Information: "
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
