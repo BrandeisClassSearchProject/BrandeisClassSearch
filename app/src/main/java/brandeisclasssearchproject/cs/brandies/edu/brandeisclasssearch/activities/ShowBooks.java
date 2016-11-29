@@ -108,7 +108,7 @@ public class ShowBooks extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             bitmapList = new ArrayList<>();
             try {
-                for(int j = 0; j <= bookList.size(); j++){
+                for(int j = 0; j < bookList.size(); j++){
                     URL url = new URL(bookList.get(j).getImageURL());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoInput(true);
