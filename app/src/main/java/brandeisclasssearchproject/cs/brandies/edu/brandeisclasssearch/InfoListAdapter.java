@@ -166,9 +166,9 @@ public class InfoListAdapter extends BaseAdapter {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Book_entryOne);
 
-            String s = al.get(0);
-            if (al.size()>1) {
-                s = s + "\n" + "and more...";
+            String s = al.get(1);
+            if (al.size()>2) {
+                s = s + "\n" + "click for " + (al.size()/2-1) + " more books...";
             }
             holder.entry.setText(s);
             temp.setTag(holder);
@@ -215,15 +215,4 @@ public class InfoListAdapter extends BaseAdapter {
         TextView degrees;
         ImageView picPreview;
     }
-
-    static class bookHolder
-    {
-        TextView name;
-        TextView department;
-        TextView degrees;
-        TextView expertise;
-        TextView profile;
-        TextView courses;
-    }
-
 }

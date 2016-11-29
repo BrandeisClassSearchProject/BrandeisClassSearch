@@ -12,6 +12,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
     private String inputURL;
     private ArrayList<String> results;
     private Document document;
+    private String pictureLink;
 
     public ProducersBooksInfo(String URL) {
         Name="Books";
@@ -20,15 +21,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
         CalcResult();
     }
 
-    public ArrayList<String> getResult() {
-        return results;
-    }
-
-    public String getInput() {
-        return inputURL;
-    }
-
-    private void CalcResult() {
+    public void CalcResult() {
         try {
             Log.i("ProducersBooksInfo",inputURL);
 
@@ -60,9 +53,18 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     String tmpString = name.text();
                     tmpString = tmpString.substring(0,tmpString.indexOf("Edition"));
 
-                    Elements list = information.getElementsByClass("material-group-edition");
+                    //Element picture = document.getElementById("materialTitleImage");
+                    String urlTmp = information.getElementsByAttribute("src").get(2).toString();
 
+                    //pictureLink = picture.html();
+                    urlTmp = urlTmp.substring(0, urlTmp.indexOf("$")+1);
+                    urlTmp = urlTmp.replace("<img src=\"", "");
+
+                    results.add(urlTmp);
+
+                    Elements list = information.getElementsByClass("material-group-edition");
                     allText = "";
+
                     for (org.jsoup.nodes.Element tmpNode : list){
                         allText = allText + tmpNode.text() + "\n";
                     }
@@ -80,10 +82,17 @@ public class ProducersBooksInfo extends ProducersAbstract{
                 allText = error.toString();
                 results.add(allText.substring(allText.indexOf("<b>")+4, allText.indexOf("</b>")-1));
             }
-
         } catch (Exception e) {
             System.err.println("construction failed");
             e.printStackTrace();
         }
+    }
+
+    public String getInput() {
+        return inputURL;
+    }
+
+    public ArrayList<String> getResult() {
+        return results;
     }
 }

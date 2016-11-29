@@ -25,7 +25,7 @@
         android:id="@+id/tittle_show_teacher"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/Teacher_Image"/>
+        android:layout_below="@+id/Book_Image"/>
     <!--
     android:layout_alignParentTop="true"
     -->
