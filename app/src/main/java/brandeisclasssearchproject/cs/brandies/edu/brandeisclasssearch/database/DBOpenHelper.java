@@ -162,7 +162,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         String[] temp = time.split(" ");
         int hour = Integer.parseInt(temp[0].split(":")[0]);
         int min = Integer.parseInt(temp[0].split(":")[1]);
-        if (temp[1].equals("PM")) {
+        if (temp[1].equals("PM") && hour!=12) {
             hour += 12;
         }
         return 60 * hour + min;
