@@ -66,11 +66,18 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     }
 
                     StringBuilder builder = new StringBuilder(allText);
+
                     builder.insert(allText.indexOf("Edition:"), "\n");
                     builder.insert(allText.indexOf("ISBN:")+1, "\n");
-                    builder.insert(allText.indexOf("Copyright Year:")+2, "\n");
-                    builder.insert(allText.indexOf("Publisher:")+3, "\n");
-                    builder.insert(0, tmpString+"\n\n");
+                    String check = builder.toString();
+                    if (check.contains("Copyright Year:")) {
+                        builder.insert(allText.indexOf("Copyright Year:") + 2, "\n");
+                        builder.insert(allText.indexOf("Publisher:") + 3, "\n");
+                    } else {
+                        builder.insert(allText.indexOf("Publisher:") + 2, "\n");
+                    }
+                    builder.insert(0, tmpString + "\n\n");
+
                     allText = builder.toString();
                     allText.replaceAll("A\nuthor", "Author");
                     results.add(allText);
