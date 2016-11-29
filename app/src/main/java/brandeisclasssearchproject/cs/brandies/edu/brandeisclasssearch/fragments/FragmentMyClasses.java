@@ -89,20 +89,22 @@ public class FragmentMyClasses extends Fragment {
 
         Boolean testResult = dbOpenHelper.testConflict(db);
         //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
-        sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.  "+testResult, Snackbar.LENGTH_INDEFINITE)
-                .setAction("ok", new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("Frag","class conflict");
-                    }
-                });
-        sb.show();
-
+        if (testResult) {
+            sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("ok", new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("Frag","class conflict");
+                        }
+                    });
+            sb.show();
+        }
+        /*
         Boolean testResult2 = dbOpenHelper.testConflict(db);
-
         if (testResult2) {
             Toast.makeText(getActivity(),"WARNING, COURSE CONFLICTS EXIST!",Toast.LENGTH_LONG).show();
         }
+        */
 
         // long click listener
         ls.setLongClickable(true);

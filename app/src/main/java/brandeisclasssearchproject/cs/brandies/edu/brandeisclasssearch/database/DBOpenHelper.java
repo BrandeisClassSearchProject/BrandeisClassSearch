@@ -122,7 +122,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         for (String s : timeList) {
             String[] sep = s.split(" ");
             String[] days = sep[0].split(",");     // eg. {M, W, Th}
-            Period p = new Period(convertToMin(sep[1]+" "+sep[2]), convertToMin(sep[4]+" "+sep[5]));
+            Period p = new Period(convertToMin(sep[2]+" "+sep[3]), convertToMin(sep[5]+" "+sep[6]));
             for (String d : days) {
                 if (d.equals("M")) {
                     timeTable.get(0).add(p);
@@ -148,12 +148,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 }
             }
         }
-
+        Log.i("has conflict?", checkResult+"");
         return checkResult;
     }
 
     public int convertToMin(String time) {
-        Log.i("time", time);
         String[] temp = time.split(" ");
         int hour = Integer.parseInt(temp[0].split(":")[0]);
         int min = Integer.parseInt(temp[0].split(":")[1]);
@@ -181,9 +180,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         }
 
         public boolean checkConflict(Period p) {
-            return (p.getStartMin()>startMin && p.getStartMin()<endMin)
-                    || (p.getEndMin()>startMin && p.getEndMin()<endMin)
-                    || (p.getStartMin()<startMin && p.getEndMin()>endMin);
+            return (p.getStartMin()>=startMin && p.getStartMin()<=endMin)
+                    || (p.getEndMin()>=startMin && p.getEndMin()<=endMin)
+                    || (p.getStartMin()<=startMin && p.getEndMin()>=endMin);
         }
     }
 }
