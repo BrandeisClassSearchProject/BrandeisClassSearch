@@ -94,7 +94,7 @@ public class InfoListAdapter extends BaseAdapter {
         holder.degrees = (TextView) temp.findViewById(R.id.Layout_Teacher_degrees);
         imageview = (ImageView) temp.findViewById(R.id.Layout_Teacher_Image_Preview);
         if (p.getResult().size() == 9) {
-            holder.name.setText("\n" + p.getResult().get(0));
+            holder.name.setText(p.getResult().get(0));
             holder.department.setText("Department: " + p.getResult().get(1));
             holder.degrees.setText("Expertise: " + p.getResult().get(3) + "\nclick for more");
             operationBG task = new operationBG();
@@ -109,9 +109,9 @@ public class InfoListAdapter extends BaseAdapter {
         }
         else {
             if(p != null && p.getResult().size() > 0) {
-                holder.name.setText("\n" + p.getResult().get(0) + "\n");
+                holder.name.setText(p.getResult().get(0) + "\n");
             } else {
-                holder.name.setText("\nThe faculty member you requested cannot be found");
+                holder.name.setText("The faculty member you requested cannot be found");
             }
             holder.department.setText("Yes, pharah is my daughter.\n");
             holder.degrees.setText("--- Reinhardt");

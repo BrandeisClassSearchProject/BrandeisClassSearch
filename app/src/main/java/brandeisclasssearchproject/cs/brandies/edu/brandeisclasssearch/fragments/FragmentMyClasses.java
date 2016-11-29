@@ -89,6 +89,7 @@ public class FragmentMyClasses extends Fragment {
 
         Boolean testResult = dbOpenHelper.testConflict(db);
         //Toast.makeText(getActivity(),testResult,Toast.LENGTH_LONG).show();
+
         if (testResult) {
             sb=Snackbar.make(container, "You have class time conflict, the schedule might not be shown correctly.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("ok", new View.OnClickListener(){
