@@ -87,12 +87,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.delete(TABLE_COURSE_SELECTION, this.KEY_ID + "=" + id, null);
     }
 
+    // test if selected courses have time conflicts
     public Boolean testConflict(SQLiteDatabase db){
         String timeRowTmp = "";
         ArrayList<String> timeList = new ArrayList<>();
         Cursor testCursor = getCourse(db);
-        //int rowCount = testCursor.getCount();
-        //Log.e("NUMBER OF ENTRIES","" + rowCount);
+
+        // grab times into an ArrayList<String>
         while(true){
             if (testCursor.getCount()==0) {
                 return false;
@@ -119,15 +120,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         }
         Log.e("Processed schedule:", timeRowTmp);
 
-        // compare times in ArrayList<String>
+        // compare times in the ArrayList<String>
         ArrayList<ArrayList<Period>> timeTable = new ArrayList<ArrayList<Period>>();
         for (int i=0; i<5; i++) {
             timeTable.add(new ArrayList<Period>());
         }
 
         for (String s : timeList) {
-            String[] sep = s.split(" ");
-            String[] days = sep[0].split(",");     // eg. {M, W, Th}
+            String[] sep = s.split(" ");            // eg. {"T,F", " ", "11:00", "AM", "-", "12:20", "PM"}
+            String[] days = sep[0].split(",");      // eg. {"M", "W", "Th"}
             Period p = new Period(convertToMin(sep[2]+" "+sep[3]), convertToMin(sep[5]+" "+sep[6]));
             for (String d : days) {
                 if (d.equals("M")) {
@@ -158,14 +159,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return checkResult;
     }
 
-    public int convertToMin(String time) {
+    public int convertToMin(String time) {          // time in form: "1:30 PM"
         String[] temp = time.split(" ");
         int hour = Integer.parseInt(temp[0].split(":")[0]);
         int min = Integer.parseInt(temp[0].split(":")[1]);
         if (temp[1].equals("PM") && hour!=12) {
             hour += 12;
         }
-        return 60 * hour + min;
+        return 60 * hour + min;                     // return: 810, meaning 1:30 PM is the 810th min of a day
     }
 
     private class Period {
