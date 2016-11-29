@@ -12,7 +12,6 @@ public class ProducersBooksInfo extends ProducersAbstract{
     private String inputURL;
     private ArrayList<String> results;
     private Document document;
-    private String pictureLink;
 
     public ProducersBooksInfo(String URL) {
         Name="Books";
@@ -53,10 +52,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     String tmpString = name.text();
                     tmpString = tmpString.substring(0,tmpString.indexOf("Edition"));
 
-                    //Element picture = document.getElementById("materialTitleImage");
                     String urlTmp = information.getElementsByAttribute("src").get(2).toString();
-
-                    //pictureLink = picture.html();
                     urlTmp = urlTmp.substring(0, urlTmp.indexOf("$")+1);
                     urlTmp = urlTmp.replace("<img src=\"", "");
 
@@ -74,8 +70,9 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     builder.insert(allText.indexOf("ISBN:")+1, "\n");
                     builder.insert(allText.indexOf("Copyright Year:")+2, "\n");
                     builder.insert(allText.indexOf("Publisher:")+3, "\n");
-                    builder.insert(0, tmpString+"\n"+"\n");
+                    builder.insert(0, tmpString+"\n\n");
                     allText = builder.toString();
+                    allText.replaceAll("A\nuthor", "Author");
                     results.add(allText);
                 }
             } else {

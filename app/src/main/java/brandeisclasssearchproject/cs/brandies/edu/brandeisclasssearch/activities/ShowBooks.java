@@ -14,8 +14,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ public class ShowBooks extends AppCompatActivity {
     private ArrayList<Bitmap> bitmapList;
     private Bitmap bitmap;
     private ListView listView;
-    private ImageView imageView;
     private ArrayList<Book> bookList= new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +49,7 @@ public class ShowBooks extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.BookList);
 
         operationBI task = new operationBI();
-        //String url = book.getImageURL();
         task.execute();
-        //Log.e("URL IS: ",url);
-
-//        BooksAdapter adapter = new BooksAdapter ((ArrayList<Book>)bookList);
-//        listView.setAdapter(adapter);
     }
 
     @Override
@@ -94,7 +86,6 @@ public class ShowBooks extends AppCompatActivity {
         }
 
         public View getView (int index, View view, ViewGroup parent) {
-            //if (view!= null) { return view;}
             Log.i("getView",String.valueOf(index));
             LayoutInflater inflaterOne = LayoutInflater.from(parent.getContext());
             view = inflaterOne.inflate(R.layout.activity_show_books_entry, null);
@@ -103,8 +94,6 @@ public class ShowBooks extends AppCompatActivity {
             viewHolder.image = (ImageView) view.findViewById(R.id.Book_Image);
             viewHolder.text = (TextView) view.findViewById(R.id.Book_Text);
             view.setTag (viewHolder);
-
-            imageView = (ImageView) findViewById(R.id.Book_Image);
 
             viewHolder.image.setImageBitmap(bitmapList.get(index));
             viewHolder.text.setText(bookList.get(index).getText());
@@ -121,7 +110,6 @@ public class ShowBooks extends AppCompatActivity {
             bitmapList = new ArrayList<>();
             try {
                 for(int j = 0; j <= bookList.size(); j++){
-                    //URL url = new URL(params[j]);
                     URL url = new URL(bookList.get(j).getImageURL());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoInput(true);
@@ -140,9 +128,6 @@ public class ShowBooks extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            //imageView.setImageBitmap(bitmap);
-
-
             BooksAdapter adapter = new BooksAdapter (bookList);
             listView.setAdapter(adapter);
             Log.e("MESSAGE", "task finished!");
