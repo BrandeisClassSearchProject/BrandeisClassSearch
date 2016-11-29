@@ -39,10 +39,14 @@ public class ShowBooks extends AppCompatActivity {
         Intent i =getIntent();
         ArrayList<String> list =i.getExtras().getStringArrayList("list");
 
-        for (int x = 0; x<list.size(); x+=2) {
-            Log.i("showBooks",list.get(x)+" " +list.get(x+1));
-            Book book = new Book(list.get(x), list.get(x+1));
-            bookList.add(book);
+        if (list.size()>1) {
+            for (int x = 0; x<list.size(); x+=2) {
+                Log.i("showBooks",list.get(x)+" " +list.get(x+1));
+                Book book = new Book(list.get(x), list.get(x+1));
+                bookList.add(book);
+            }
+        } else {
+            return;
         }
 
         listView = (ListView) findViewById(R.id.BookList);

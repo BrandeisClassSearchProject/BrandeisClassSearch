@@ -170,7 +170,13 @@ public class InfoListAdapter extends BaseAdapter {
             defaultHolder holder = new defaultHolder();
             holder.entry = (TextView) temp.findViewById(R.id.Layout_Book_entryOne);
 
-            String s = al.get(1);
+            String s="";
+
+            if (al.size()==1) {
+                s = al.get(0);
+            } else {
+                s = al.get(1);
+            }
             if (al.size()>2) {
                 s = s + "\n" + "click for " + (al.size()/2-1) + " more books...";
             }
