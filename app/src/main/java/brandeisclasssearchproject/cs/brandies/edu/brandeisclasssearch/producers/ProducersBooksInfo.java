@@ -25,7 +25,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
             Log.i("ProducersBooksInfo",inputURL);
 
             String allText;
-            document = Jsoup.connect(inputURL).get();
+            document = Jsoup.connect(inputURL).timeout(7000).get();
 
             if(document==null){
                 Log.e("ProducersBooksInfo","the document is null!");
