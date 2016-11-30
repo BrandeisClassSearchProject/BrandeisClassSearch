@@ -8,7 +8,7 @@ It will work perfectly in lower level systems, but only the list of books cannot
 
 The design is kept to a minimalist design. 
 
-The picture in navigation drawer is token by rozoalex, copy right reserved. 
+The picture in navigation drawer is taken by @rozoalex, copy right reserved. 
 
 Demo video:
 
