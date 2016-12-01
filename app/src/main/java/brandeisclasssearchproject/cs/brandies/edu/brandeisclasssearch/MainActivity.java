@@ -99,12 +99,9 @@ public class MainActivity extends AppCompatActivity
     DBOpenHelper dbOpenHelper;
 
     final int[] terms=new int[]{1171,1163,1162,1161,1152,1151,1153} ;
-    private Menu me;
 
 
-    public void dosth(){
 
-    }
 
 
     @Override
@@ -318,7 +315,7 @@ public class MainActivity extends AppCompatActivity
         if(query.length()>=3&&NameToID!=null&&i<8){
             //Log.i("Main.polulateAdapter","size of Nametoid "+String.valueOf(NameToID.size()));
             for(String names:NameToID.keySet()){
-                Log.i("polulateAdapter",fixedQ+" "+names);
+                //Log.i("polulateAdapter",fixedQ+" "+names);
                 if(names.toUpperCase().contains(fixedQ)){
                     resultLists.add(NameToID.get(names)+"\n"+names);
                     Log.i("polulateAdapter",names);
