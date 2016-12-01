@@ -2,11 +2,8 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch;
 
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -22,9 +19,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,12 +30,10 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -49,15 +42,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeSet;
 
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ScheduleTable;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowBooks;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowDescription;
-import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowSyllabus;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.activities.ShowTeacher;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.database.DBOpenHelper;
@@ -67,13 +57,11 @@ import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.fragments.FragmentSchedule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ExtructionURLs;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.Producers;
-import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBasic;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersBooksInfo;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassDescription;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersClassSchdule;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersSyllabus;
 import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.ProducersTearcherInfo;
-import brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers.inpInterpreter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -480,13 +468,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class ClassSearchingTask extends AsyncTask<Object,Void,Void> {
-        private ArrayList<String> classInfos;
         private String classId;
         //private Boolean isDone;
 
         public ClassSearchingTask(String s) {
             classId=s.toUpperCase();
-            classInfos=new inpInterpreter(classId).getClassInfos();
         }
 
 
@@ -579,9 +565,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Object... params) {
             while (datas==null){Log.i("ClassSearchTask","waiting for map");}
-            if (classInfos != null) {
-                Log.i("ClassSearchTask", "array list classInfos is OK. Initialize extractionURLs");
-                //extractionUrls = new ExtructionURLs(classInfos, AcademicSeason.FALL, AcademicYear._2016, datas);
+
+                Log.i("ClassSearchTask", "Initialize extractionURLs");
                 producersList = new ExtructionURLs(classId,datas).getProducers();
                 if (producersList==null){
                     while (datasMap==null){
@@ -617,7 +602,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     //isDone = true;
                 }
-            }return null;
+            return null;
         }
     }
 
@@ -694,7 +679,6 @@ public class MainActivity extends AppCompatActivity
             String updateDate = br.readLine().split(" ")[0];
             int counter=1;
             while((temp=br.readLine())!=null ){
-                //Log.i("DataLoader",temp);
                 if(counter%14==1){
                     title=temp;
 

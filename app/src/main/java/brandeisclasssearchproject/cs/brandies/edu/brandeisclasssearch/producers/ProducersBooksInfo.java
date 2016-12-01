@@ -2,6 +2,12 @@ package brandeisclasssearchproject.cs.brandies.edu.brandeisclasssearch.producers
 
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +31,14 @@ public class ProducersBooksInfo extends ProducersAbstract{
             Log.i("ProducersBooksInfo",inputURL);
 
             String allText;
+
+
+            //InputStream is = new URL(inputURL).openStream();
+
+            //document = Jsoup.parse(is,"UTF-8",inputURL);
+
+            //document = Jsoup.parse(getConnection());
+            //Log.i("ProducersBooksInfo",String.valueOf(document.childNodeSize()+" "+document));
             document = Jsoup.connect(inputURL).timeout(7000).get();
 
             if(document==null){
@@ -34,8 +48,9 @@ public class ProducersBooksInfo extends ProducersAbstract{
             }
 
             Element error = document.getElementById("efCourseErrorSection");
-
+            Log.i("ProducersBooksInfo","error done");
             if (error == null) {
+                Log.i("ProducersBooksInfo","the error is not null");
                 Element e = document.getElementById("material-group-name_REQUIRED_1_1");
 
                 String numberOfBooks = e.text();
@@ -84,6 +99,7 @@ public class ProducersBooksInfo extends ProducersAbstract{
                     results.add(allText);
                 }
             } else {
+                Log.i("ProducersBooksInfo","the error is null");
                 allText = error.toString();
                 results.add(allText.substring(allText.indexOf("<b>")+4, allText.indexOf("</b>")-1));
             }
@@ -91,6 +107,38 @@ public class ProducersBooksInfo extends ProducersAbstract{
             System.err.println("construction failed");
             e.printStackTrace();
         }
+    }
+
+    private String getConnection() {
+        URL url;
+        try {
+            url = new URL(inputURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            //conn.setRequestProperty ("Authorization", encodedCredentials);
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    conn.getInputStream()));
+
+            String s="";
+            StringBuilder sb = new StringBuilder();
+            while((s=in.readLine())!=null){
+                sb.append(s);
+                Log.i("ProducersBooks",s);
+            }
+
+            return sb.toString();
+
+
+
+        } catch (Exception e) {
+            Log.i("ProducersBooks","exception in getConnection");
+            e.printStackTrace();
+        }
+
+
+        Log.i("ProducersBooks","Nothing....");
+        return "";
+
     }
 
     public String getInput() {

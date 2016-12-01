@@ -250,7 +250,6 @@ public class FragmentMyClasses extends Fragment {
             String updateDate = br.readLine().split(" ")[0];
             int counter=1;
             while((temp=br.readLine())!=null ){
-                //Log.i("DataLoader",temp);
                 if(counter%14==1){
                     title=temp;
 
