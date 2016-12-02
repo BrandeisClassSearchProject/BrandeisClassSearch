@@ -10,7 +10,7 @@ The design is kept to a minimalist design.
 
 The picture in navigation drawer is taken by @rozoalex, copy right reserved. 
 
-Demo video:
+Demo video: https://youtu.be/G8xMS-hPh9Y
 
 Google Play store:
 
