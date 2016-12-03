@@ -14,7 +14,7 @@ Demo video : https://youtu.be/G8xMS-hPh9Y
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=G8xMS-hPh9Y
 " target="_blank"><img src="http://img.youtube.com/vi/G8xMS-hPh9Y/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="480" height="270" border="0" /></a>
+alt="IMAGE ALT TEXT HERE" width="480" height="480" border="0" /></a>
 
 
 Demo video : http://www.bilibili.com/video/av7343603/
