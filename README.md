@@ -12,6 +12,11 @@ The picture in navigation drawer is taken by @rozoalex, copy right reserved.
 
 Demo video : https://youtu.be/G8xMS-hPh9Y
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=G8xMS-hPh9Y
+" target="_blank"><img src="http://img.youtube.com/vi/G8xMS-hPh9Y/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+
+
 Demo video : http://www.bilibili.com/video/av7343603/
 
 Google Play store:
