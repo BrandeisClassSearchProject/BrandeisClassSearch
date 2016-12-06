@@ -1,5 +1,4 @@
-
-<div style="text-align:center"><a href="http://www.youtube.com/watch?feature=player_embedded&v=G8xMS-hPh9Y
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=G8xMS-hPh9Y
 " target="_blank"><img src="https://github.com/rozoalex/AVL-tree/blob/master/%E5%9B%BE%E7%89%871.png" 
 alt="IMAGE ALT TEXT HERE" width="500" height="500" border="0" /></a>
 
